@@ -1,17 +1,17 @@
-# Tasks Todo:
+# backend Tasks Todo:
 
-## Database: 
+### Database: 
 - [ ] Design database
 - [ ] make a dummy database for testing 
 - [ ] add roles for future development
-----
-## API Design 
+
+### API Design 
 - [ ] Design API URLs
 - [ ] make `Singleton` API instance Handler In JavaScript for the frontend
 - [ ] Document API URLs
-----
 
-##  Business logic
+
+###  Business logic
 - [ ] Design Business logic 
 - [ ] implement different scheduling strategy
     - from time A to time b strategy
