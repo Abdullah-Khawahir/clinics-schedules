@@ -18,7 +18,7 @@
     - discontinuous from time A to time b strategy with --with brakes--
 - [ ] make palns notification services.
 
-![جدول العيادات](etc/doc/schedule.docx)
+[جدول العيادات](etc/doc/schedule.docx)
 
 
 ## Overview 
