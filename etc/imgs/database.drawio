@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-08-19T19:43:00.238Z" agent="Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/116.0" etag="c0sqjDkfOUUA2XREJ9cf" version="21.6.8" type="github">
+<mxfile host="app.diagrams.net" modified="2023-08-19T19:49:03.433Z" agent="Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/116.0" etag="ZYddc3AObGkM4bp7Bfei" version="21.6.8" type="github">
   <diagram name="Page-1" id="efa7a0a1-bf9b-a30e-e6df-94a7791c09e9">
-    <mxGraphModel dx="730" dy="397" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="826" pageHeight="1169" background="none" math="0" shadow="0">
+    <mxGraphModel dx="922" dy="501" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="826" pageHeight="1169" background="none" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -195,8 +195,8 @@
         <mxCell id="lAj-puRmCjkQIx5VutPU-62" value="&lt;div&gt;owned&lt;/div&gt;&lt;div&gt;by&lt;br&gt;&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry y="230" width="60" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="lAj-puRmCjkQIx5VutPU-74" value="System Managers" style="swimlane;fontStyle=4;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="50" y="600" width="370" height="180" as="geometry" />
+        <mxCell id="lAj-puRmCjkQIx5VutPU-74" value="USER" style="swimlane;fontStyle=4;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="580" width="370" height="300" as="geometry" />
         </mxCell>
         <mxCell id="lAj-puRmCjkQIx5VutPU-75" value="&lt;div&gt;Id&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;int&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;key&lt;/div&gt;" style="text;strokeColor=default;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontStyle=1;labelBorderColor=none;labelBackgroundColor=none;horizontal=1;spacingTop=0;" vertex="1" parent="lAj-puRmCjkQIx5VutPU-74">
           <mxGeometry y="30" width="370" height="30" as="geometry" />
@@ -210,8 +210,11 @@
         <mxCell id="lAj-puRmCjkQIx5VutPU-78" value="password&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;varchar&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;unique" style="text;strokeColor=default;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="lAj-puRmCjkQIx5VutPU-74">
           <mxGeometry y="120" width="370" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="lAj-puRmCjkQIx5VutPU-79" value="Role&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;Enum( ADMIN , USER)" style="text;strokeColor=default;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="lAj-puRmCjkQIx5VutPU-74">
+        <mxCell id="lAj-puRmCjkQIx5VutPU-79" value="Role&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;Enum( ADMIN , DATA_ENTRY)" style="text;strokeColor=default;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="lAj-puRmCjkQIx5VutPU-74">
           <mxGeometry y="150" width="370" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lAj-puRmCjkQIx5VutPU-80" value="&lt;h1&gt;Roles&lt;/h1&gt;&lt;div&gt;- DATA_ENTRY : can add and update and delete data which relate the the organizational structure .&lt;/div&gt;&lt;div&gt;- ADMIN : can do what ever DATA_ENTRY would do and add update and delete USERS.&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="lAj-puRmCjkQIx5VutPU-74">
+          <mxGeometry y="180" width="370" height="120" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
