@@ -16,7 +16,8 @@
     - from time A to time b strategy
     - every number of passed time strategy
     - discontinuous from time A to time b strategy with --with brakes--
-- [ ] make palns notification services.
+- [ ] make palns for notification services.
+- [ ] make reversable actions
 
 [جدول العيادات](etc/جدول%20العيادات%20الخارجية%202023.docx)
 
