@@ -22,7 +22,7 @@ CREATE Table tbl_Clinical_Employee(
     phone_number VARCHAR NULL,
     second_phone_number VARCHAR NULL
 );
-CREATE TYPE enum_time_unit as ENUM ('daily', 'weekly', 'monthly');
+CREATE TYPE enum_time_unit as ENUM ('daily', 'weekly','weekdays', 'weekends' , 'monthly' , );
 
 CREATE TABLE tbl_ClinicSchedule(
     schedule_id SERIAL PRIMARY KEY,
