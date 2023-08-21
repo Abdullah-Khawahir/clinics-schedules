@@ -24,7 +24,7 @@ CREATE Table tbl_Clinical_Employee(
 );
 CREATE TYPE enum_time_unit as ENUM ('daily', 'weekly','weekdays', 'weekends' , 'monthly' , );
 
-CREATE TABLE tbl_ClinicSchedule(
+CREATE TABLE tbl_Clinic_Schedule(
     schedule_id SERIAL PRIMARY KEY,
     clinic_id INT NOT NULL REFERENCES tbl_Clinic(id),
     start_time TIMESTAMP NOT NULL,
