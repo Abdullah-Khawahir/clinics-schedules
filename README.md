@@ -1,8 +1,8 @@
 # TASKs
 
 ## Database: 
-- [ ] Design database
-- [ ] make a dummy database for testing 
+- [x ] Design database
+- [x ] make a dummy database for testing 
 - [ ] add roles for future development
 
 ## API Design 
@@ -11,13 +11,13 @@
 - [ ] Document API URLs
 
 ##  Business logic
-- [ ] Design Business logic 
+- [x ] Design Business logic 
 - [ ] implement different scheduling strategy
     - from time A to time b strategy
     - every number of passed time strategy
     - discontinuous from time A to time b strategy with --with brakes--
-- [ ] make palns for notification services.
-- [ ] make reversable actions
+- [ ] make plans for notification services.
+- [ ] make reversible actions
 
 [جدول العيادات](etc/جدول%20العيادات%20الخارجية%202023.docx)
 
