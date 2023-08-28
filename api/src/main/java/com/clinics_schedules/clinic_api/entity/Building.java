@@ -1,8 +1,7 @@
-package com.clinics_schedules.clinic_api.entities;
+package com.clinics_schedules.clinic_api.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ForeignKey;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -23,15 +22,19 @@ import lombok.Setter;
 @Table(name = "tbl_building")
 public class Building {
     @Id
-    @Column(name = "building_id")
+    @Column(nullable = false, name = "building_id")
     private long id;
-    @Column(name = "building_name")
-    private String name;
-    @Column(name = "building_number")
+    @Column(nullable = false, name = "building_arabic_name")
+    private String arabicName;
+
+    @Column(nullable = false, name = "building_english_name")
+    private String englishName;
+
+    @Column(nullable = false, name = "building_number")
     private long number;
 
     @ManyToOne
-    @JoinColumn(name = "hospital_id" )
+    @JoinColumn(nullable = false, name = "hospital_id")
     private Hospital hospital;
 
 }

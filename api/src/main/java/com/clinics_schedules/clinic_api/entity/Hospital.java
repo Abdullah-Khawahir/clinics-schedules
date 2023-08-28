@@ -1,12 +1,8 @@
-package com.clinics_schedules.clinic_api.entities;
-
-import java.util.List;
+package com.clinics_schedules.clinic_api.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,12 +23,11 @@ public class Hospital {
     @Column(name = "hospital_id")
     private long id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(nullable = false, name = "hospital_arabic_name")
+    private String arabicName;
 
-    
-    // @OneToMany(fetch = FetchType.EAGER )  
-    // @co
-    // private List<Building> buildings;
+    @Column(nullable = false, name = "hospital_english_name")
+    private String englishName;
+
 
 }

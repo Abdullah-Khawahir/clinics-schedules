@@ -1,11 +1,11 @@
-package com.clinics_schedules.clinic_api.controllers;
+package com.clinics_schedules.clinic_api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class HospitalService {
+public class ClinicService {
+    
     @Autowired
-    public HospitalRepository repo;
-
+    ClinicRepository repo;
 }
