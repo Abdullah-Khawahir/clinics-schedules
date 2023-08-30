@@ -57,7 +57,7 @@ public class test {
     @CrossOrigin()
     public Hospital HospitalStructure() throws ResourceNotFoundException {
         return hospitalService.repo
-                .findById(11L)
+                .findById(0L)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "hospital",
                         "id",

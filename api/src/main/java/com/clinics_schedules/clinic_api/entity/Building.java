@@ -3,8 +3,6 @@ package com.clinics_schedules.clinic_api.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,8 +31,5 @@ public class Building {
     @Column(nullable = false, name = "building_number")
     private long number;
 
-    @ManyToOne
-    @JoinColumn(nullable = false, name = "hospital_id")
-    private Hospital hospital;
-
+    
 }
