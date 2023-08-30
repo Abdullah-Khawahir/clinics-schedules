@@ -43,10 +43,10 @@ DROP TABLE IF EXISTS tbl_Clinic_Schedule cascade;
 CREATE TABLE tbl_Clinic_Schedule(
     schedule_id SERIAL PRIMARY KEY,
     clinic_id INT NOT NULL REFERENCES tbl_Clinic(clinic_id),
-    schedule_begin_time TIMESTAMP NOT NULL,
-    schedule_expire_time TIMESTAMP NOT NULL CONSTRAINT START_TIME_MUST_BE_BEFORE_END_TIME check(schedule_begin_time < schedule_expire_time),
-    event_start_time TIMESTAMP NOT NULL,
-    event_finish_time TIMESTAMP NOT NULL CONSTRAINT EVENT_START_TIME_MUST_BE_BEFORE_END_TIME check(event_start_time < event_finish_time),
+    schedule_begin_date TIMESTAMP NOT NULL,
+    schedule_expire_date TIMESTAMP NOT NULL CONSTRAINT START_TIME_MUST_BE_BEFORE_END_TIME check(schedule_begin_date < schedule_expire_date),
+    event_start_time TIME NOT NULL,
+    event_finish_time TIME NOT NULL CONSTRAINT EVENT_START_TIME_MUST_BE_BEFORE_END_TIME check(event_start_time < event_finish_time),
     event_repeat enum_time_unit NOT NULL
 );
 DROP TABLE IF EXISTS tbl_Schedule_Employees_List cascade;

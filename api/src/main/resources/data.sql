@@ -4,21 +4,20 @@ INSERT INTO tbl_Hospital (
         hospital_english_name
     )
 VALUES (0, 'QCH', 'ARABIC_NAME0'),
-    (1, 'PMBFH', 'ARABIC_NAME1'); 
-
+    (1, 'PMBFH', 'ARABIC_NAME1');
 INSERT INTO tbl_building (
+        building_id,
         building_english_name,
         building_arabic_name,
         building_number,
         hospital_id
     )
-VALUES 
-    ('MAIN', 'MAIN_arabic', 0, 0),
-    ('OPD', 'OPD_arabic', 1, 0),
-    ('RESIDENCE', 'RESIDENCE_arabic', 2, 0),
-    ('MAIN', 'MAIN_arabic', 0, 1),
-    ('MAIN-OPD', 'MAIN-OPD_arabic', 1, 1),
-    ('STORAGE', 'STORAGE_arabic', 2, 1);
+VALUES (18, 'MAIN', 'MAIN_arabic', 0, 0),
+    (19, 'OPD', 'OPD_arabic', 1, 0),
+    (1010, 'RESIDENCE', 'RESIDENCE_arabic', 2, 0),
+    (110, 'MAIN', 'MAIN_arabic', 0, 1),
+    (20, 'MAIN-OPD', 'MAIN-OPD_arabic', 1, 1),
+    (350, 'STORAGE', 'STORAGE_arabic', 2, 1);
 INSERT INTO tbl_clinic (
         clinic_english_name,
         clinic_arabic_name,
@@ -49,8 +48,6 @@ VALUES ('dental', 'dental_ARABIC', 19, null, 1),
     ('psychiatric', 'psychiatric_ARABIC', 20, null, 6),
     ('psychiatric', 'psychiatric_ARABIC', 20, null, 7),
     ('phsycatric', 'phsycatric_ARABIC', 20, null, 8);
-
-
 INSERT INTO tbl_clinical_employee (
         employee_english_name,
         employee_arabic_name,
@@ -65,3 +62,26 @@ VALUES ('husan', '0ARABIC_NAME', NULL, NULL, NULL),
     ('salam', 'ARABIaC_NAME', NULL, NULL, NULL),
     ('humaid', '196ARABIaC_NAME', NULL, NULL, NULL),
     ('baker', 'A54RABIC_dsNAME', NULL, NULL, NULL);
+
+INSERT INTO tbl_clinic_schedule (
+        schedule_id,
+        clinic_id,
+        schedule_begin_date,
+        schedule_expire_date,
+        event_start_time,
+        event_finish_time,
+        event_repeat
+    )
+VALUES (
+        0,
+        1,
+        NOW(),
+        '2023-9-10 11:30',
+        '08:00AM',
+        '01:00PM',
+        'daily'
+    );
+
+INSERT INTO tbl_schedule_employees_list (schedule_id, employee_id)
+VALUES (0, 2),
+(0, 5);
