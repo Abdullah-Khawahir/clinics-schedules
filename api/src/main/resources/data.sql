@@ -1,7 +1,7 @@
 INSERT INTO tbl_Hospital (
         hospital_id,
-        hospital_arabic_name,
-        hospital_english_name
+        hospital_english_name,
+        hospital_arabic_name
     )
 VALUES (0, 'QCH', 'ARABIC_NAME0'),
     (1, 'PMBFH', 'ARABIC_NAME1');
