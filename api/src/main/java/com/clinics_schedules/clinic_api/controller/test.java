@@ -1,6 +1,7 @@
 package com.clinics_schedules.clinic_api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import com.clinics_schedules.clinic_api.entity.Building;
 import com.clinics_schedules.clinic_api.entity.Clinic;
 import com.clinics_schedules.clinic_api.entity.Hospital;
 import com.clinics_schedules.clinic_api.exception.ResourceNotFoundException;
+import com.clinics_schedules.clinic_api.service.HospitalService;
 
 @RestController
 @RequestMapping(path = { "/public" })
@@ -30,38 +32,35 @@ public class test {
     public ResponseEntity<List<Clinic>> getMethodName() throws Exception {
 
         return ResponseEntity
-                .ok(clinicService.repo
+                .ok(this.clinicService.repo
                         .findAll());
     }
 
     @GetMapping(value = "/clinic")
     public List<Clinic> getClinic() {
-        return clinicService.repo.findAll();
+        return this.clinicService.repo.findAll();
     }
 
     @GetMapping(value = "/building")
     @CrossOrigin()
     public Iterable<Building> Building() {
         System.out.println("hit");
-        return buildingService.repo.findAll();
+        return this.buildingService.repo.findAll();
     }
 
     @GetMapping(value = "/hospital")
     @CrossOrigin()
     public Iterable<Hospital> Hospital() {
         System.out.println("hit");
-        return hospitalService.repo.findAll();
+        return this.hospitalService.repository.findAll();
     }
 
     @GetMapping(value = "/bad")
     @CrossOrigin()
-    public Hospital HospitalStructure() throws ResourceNotFoundException {
-        return hospitalService.repo
-                .findById(0L)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "hospital",
-                        "id",
-                        "11"));
+    public com.clinics_schedules.clinic_api.entity.Hospital HospitalStructure() throws ResourceNotFoundException {
+        return this.hospitalService.repository
+                .findByArabicName("QCH")
+                .orElseThrow(() -> new ResourceNotFoundException("Hospital", "name", "QCH"));
     }
 
 }

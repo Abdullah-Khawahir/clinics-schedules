@@ -1,13 +1,17 @@
 package com.clinics_schedules.clinic_api;
 
-import org.junit.jupiter.api.Test;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class ClinicApiApplicationTests {
+import com.clinics_schedules.clinic_api.service.HospitalService;
 
-	@Test
-	void contextLoads() {
-	}
+@SpringBootTest
+
+class ClinicApiApplicationTests {
+	@Autowired
+	HospitalService hospitalService;
+	
+
 
 }

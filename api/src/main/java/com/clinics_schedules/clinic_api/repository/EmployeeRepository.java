@@ -2,9 +2,9 @@ package com.clinics_schedules.clinic_api.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.clinics_schedules.clinic_api.entity.Building;
+import com.clinics_schedules.clinic_api.entity.Employee;
 import com.clinics_schedules.clinic_api.interfaces.FindableByName;
 
-public interface BuildingRepository extends JpaRepository<Building ,Long> ,FindableByName<Building> {
-     
+public interface EmployeeRepository extends JpaRepository<Employee ,  Long> ,FindableByName<Employee>{
+    
 }
