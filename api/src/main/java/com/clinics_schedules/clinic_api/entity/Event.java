@@ -20,7 +20,8 @@ public class Event {
     @Id
     @JoinColumn(name = "schedule_id", nullable = false,
      referencedColumnName = "schedule_id" , table = "tbl_clinic_schedule" )
-    private Long scheduleId;
+    
+    private Integer scheduleId;
     @Id
     @Column(name = "event_begin", nullable = false)
     private Date beginTime;

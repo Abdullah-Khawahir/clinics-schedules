@@ -6,6 +6,8 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
@@ -27,7 +29,8 @@ public class Hospital {
 
     @Id()
     @Column(name = "hospital_id")
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @Column(nullable = false, name = "hospital_arabic_name")
     private String arabicName;
@@ -36,7 +39,7 @@ public class Hospital {
     private String englishName;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "hospital_id"  , referencedColumnName = "hospital_id")
+    @JoinColumn(name = "hospital_id", referencedColumnName = "hospital_id")
     private List<Building> buildings;
 
 }

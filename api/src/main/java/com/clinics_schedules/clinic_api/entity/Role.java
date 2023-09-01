@@ -18,9 +18,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "tbl_role")
 public class Role implements GrantedAuthority {
     @Id
-    // @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false, targetEntity = User.class)
     @JoinColumn(name = "user_id" , table = "tbl_user" )
-    private Long userId;
+    private Integer userId;
     @Id
     @Column(name = "role")
     private RoleTitle role;

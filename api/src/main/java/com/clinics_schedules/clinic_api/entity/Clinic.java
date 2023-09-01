@@ -6,6 +6,8 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
@@ -26,8 +28,9 @@ import lombok.Setter;
 public class Clinic {
     @Id
     @Column(name = "clinic_id", nullable = false)
-    private Long id;
-   
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+
     @Column(nullable = false, name = "clinic_arabic_name")
     private String arabicName;
 
@@ -37,13 +40,13 @@ public class Clinic {
     @Column(nullable = false, name = "clinic_number")
     private Long number;
 
-    @Column (name = "building_id" , nullable =  false )
-    private Long buildingId;
+    @Column(name = "building_id", nullable = false)
+    private Integer buildingId;
 
     @Column(name = "clinic_ext")
     private String ext;
 
-    @OneToMany(cascade = CascadeType.ALL  ,fetch = FetchType.EAGER)
-    @JoinColumn(name = "clinic_id" ,referencedColumnName ="clinic_id" )
-    private List<ClinicSchedule> schedules; 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "clinic_id", referencedColumnName = "clinic_id")
+    private List<ClinicSchedule> schedules;
 }

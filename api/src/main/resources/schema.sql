@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS tbl_hospital cascade;
 create Table tbl_hospital (
     hospital_id SERIAL PRIMARY KEY,
-    hospital_arabic_name VARCHAR(255) NOT NULL UNIQUE,
-    hospital_english_name VARCHAR(255) NOT NULL UNIQUE
+    hospital_arabic_name VARCHAR(255) NOT NULL CONSTRAINT HOSPITAL_ARABIC_NAME_ALREADY_EXISTS UNIQUE,
+    hospital_english_name VARCHAR(255) NOT NULL CONSTRAINT HOSPITAL_ENGLISH_NAME_ALREADY_EXISTS UNIQUE
 );
 DROP TABLE IF EXISTS tbl_Building cascade;
 CREATE TABLE tbl_Building(
@@ -10,7 +10,9 @@ CREATE TABLE tbl_Building(
     building_arabic_name VARCHAR(255) NOT NULL,
     building_english_name VARCHAR(255) NOT NULL,
     building_number INT NOT NULL,
-    hospital_id INT NOT NULL REFERENCES tbl_Hospital(hospital_id)
+    hospital_id INT NOT NULL REFERENCES tbl_Hospital(hospital_id),
+    CONSTRAINT BUILDING_ARABIC_NAME_ALREADY_EXISTS_IN_THE_SAME_HOSPITAL UNIQUE(hospital_id, building_arabic_name),
+    CONSTRAINT BUILDING_ENGLISH_NAME_ALREADY_EXISTS_IN_THE_SAME_HOSPITAL UNIQUE(hospital_id, building_english_name)
 );
 DROP TABLE IF EXISTS tbl_Clinic cascade;
 CREATE TABLE tbl_Clinic(
@@ -19,13 +21,15 @@ CREATE TABLE tbl_Clinic(
     clinic_arabic_name VARCHAR(255) NOT NULL,
     building_id INT REFERENCES tbl_Building(building_id),
     clinic_ext VARCHAR(255) NULL,
-    clinic_number INT NULL
+    clinic_number INT NULL,
+    CONSTRAINT CLINIC_ARABIC_NAME_ALREADY_EXISTS UNIQUE(clinic_id, clinic_english_name),
+    CONSTRAINT CLINIC_ENGLISH_NAME_ALREADY_EXISTS UNIQUE(clinic_id, clinic_arabic_name)
 );
 DROP TABLE IF EXISTS tbl_Clinical_Employee cascade;
 CREATE Table tbl_Clinical_Employee(
     employee_id SERIAL PRIMARY KEY,
-    employee_arabic_name VARCHAR(255) NOT NULL UNIQUE,
-    employee_english_name VARCHAR(255) NOT NULL UNIQUE,
+    employee_arabic_name VARCHAR(255) NOT NULL CONSTRAINT EMPLOYEE_ARABIC_NAME_ALREADY_EXISTS UNIQUE,
+    employee_english_name VARCHAR(255) NOT NULL CONSTRAINT EMPLOYEE_ENGLISH_NAM_ALREADY_EXISTS UNIQUE,
     employee_email VARCHAR(255) NULL,
     employee_phone_number VARCHAR(255) NULL,
     employee_second_phone_number VARCHAR(255) NULL
@@ -66,13 +70,13 @@ CREATE TYPE enum_role as ENUM ('DEV', 'ADMIN', 'USER');
 DROP TABLE IF EXISTS tbl_user cascade;
 CREATE TABLE tbl_user(
     user_id SERIAL PRIMARY KEY,
-    user_username VARCHAR(255) NOT NULL UNIQUE,
+    user_username VARCHAR(255) NOT NULL CONSTRAINT USERNAME_ALREADY_EXISTS UNIQUE,
     user_password VARCHAR(255) NOT NULL,
-    user_email VARCHAR(255) NOT NULL UNIQUE
+    user_email VARCHAR(255) NOT NULL CONSTRAINT EMAIL_ALREADY_EXISTS UNIQUE
 );
 DROP TABLE IF EXISTS tbl_user_roles cascade;
 CREATE TABLE tbl_user_roles(
     user_id INT REFERENCES tbl_user(user_id),
     user_role enum_role NOT NULL,
-    UNIQUE(user_id, user_role)
+    CONSTRAINT USER_CAN_ONLY_HAVE_THE_ROLE_ONCE UNIQUE(user_id, user_role)
 );

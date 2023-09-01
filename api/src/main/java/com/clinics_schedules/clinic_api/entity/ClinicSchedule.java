@@ -8,6 +8,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -27,7 +29,8 @@ import lombok.NoArgsConstructor;
 public class ClinicSchedule {
     @Id
     @Column(name = "schedule_id", nullable = false)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     @Column(name = "schedule_begin_date", nullable = false)
     private Date beginTime;
     @Column(name = "schedule_expire_date", nullable = false)
@@ -49,11 +52,7 @@ public class ClinicSchedule {
     // referencedColumnName = "schedule_id"
     // )
     @ManyToMany
-    @JoinTable(
-        name = "tbl_Schedule_Employees_List",
-        joinColumns =@JoinColumn(name = "schedule_id"),
-        inverseJoinColumns = @JoinColumn(name = "employee_id")
-    )
+    @JoinTable(name = "tbl_Schedule_Employees_List", joinColumns = @JoinColumn(name = "schedule_id"), inverseJoinColumns = @JoinColumn(name = "employee_id"))
     private List<Employee> employee;
 
 }
