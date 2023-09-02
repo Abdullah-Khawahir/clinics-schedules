@@ -32,8 +32,9 @@ public class HospitalService {
         return repository.findAll();
     }
 
-    public void deleteById(final int id) {
-
+    public void deleteById(final Integer id) {
+        if (!repository.existsById(id))
+            throw new ResourceNotFoundException("Hospital", "hospital_id", id.toString());
         repository.deleteById(id);
     }
 
