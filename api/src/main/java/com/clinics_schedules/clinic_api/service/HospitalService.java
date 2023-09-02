@@ -37,13 +37,9 @@ public class HospitalService {
         repository.deleteById(id);
     }
 
-    public Hospital updateById(final int id, final HospitalDto hospital) {
-
-        final var currentHospitalOptional = repository.findById(id);
-        if (!currentHospitalOptional.isPresent())
-            throw new ResourceNotFoundException("hospital", "hospital_id", Integer.toString(id));
-
-        final var currentHospital = currentHospitalOptional.get();
+    public Hospital updateById(final Integer id, final HospitalDto hospital) {
+        final Hospital currentHospital = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("hospital", "hospital_id", Integer.toString(id)));
 
         currentHospital.setArabicName(hospital.getArabicName());
         currentHospital.setEnglishName(hospital.getEnglishName());
