@@ -28,7 +28,7 @@ import lombok.Setter;
 public class Clinic {
     @Id
     @Column(name = "clinic_id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false, name = "clinic_arabic_name")
