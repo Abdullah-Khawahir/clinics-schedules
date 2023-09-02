@@ -29,7 +29,7 @@ import lombok.Setter;
 public class Building {
     @Id
     @Column(name = "building_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(nullable = false, name = "building_arabic_name")
     private String arabicName;
@@ -39,6 +39,9 @@ public class Building {
 
     @Column(nullable = false, name = "building_number")
     private Integer number;
+
+    @Column(nullable = false, name = "hospital_id")
+    private Integer hospitalId;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Clinic.class)
     @JoinColumn(name = "building_id", referencedColumnName = "building_id")
