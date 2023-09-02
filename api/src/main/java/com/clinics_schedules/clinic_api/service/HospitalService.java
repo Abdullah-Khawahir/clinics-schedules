@@ -28,11 +28,8 @@ public class HospitalService {
                         .build());
     }
 
-    public List<HospitalDto> getAll() {
-        return repository.findAll()
-                .stream()
-                .map(HospitalDto::new)
-                .toList();
+    public List<Hospital> getAll() {
+        return repository.findAll();
     }
 
     public void deleteById(final int id) {

@@ -3,6 +3,7 @@ package com.clinics_schedules.clinic_api.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingPathVariableException;
@@ -27,13 +28,18 @@ public class HospitalController {
     @GetMapping(path = "/hospital")
     public ResponseEntity<List<HospitalDto>> getHospitals() {
 
-        return ResponseEntity.ok(hospitalService.getAll());
+        return ResponseEntity.ok(
+                hospitalService.getAll()
+                        .stream()
+                        .map(HospitalDto::new)
+                        .toList());
     }
 
     @PostMapping(path = "/hospital")
     public ResponseEntity<HospitalDto> saveHospital(
             @RequestBody(required = true) final HospitalDto hospital)
-            throws MissingPathVariableException {
+            throws MissingPathVariableException,
+            DataIntegrityViolationException {
 
         return new ResponseEntity<>(
                 new HospitalDto(hospitalService.save(hospital)),
