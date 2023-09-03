@@ -8,18 +8,21 @@ import org.springframework.stereotype.Service;
 import com.clinics_schedules.clinic_api.dto.BuildingDto;
 import com.clinics_schedules.clinic_api.entity.Building;
 import com.clinics_schedules.clinic_api.exception.ResourceNotFoundException;
+import com.clinics_schedules.clinic_api.interfaces.BasicCRUDService;
 import com.clinics_schedules.clinic_api.repository.BuildingRepository;
 
 @Service
-public class BuildingService {
+public class BuildingService implements BasicCRUDService<Building, BuildingDto, Integer> {
 
     @Autowired
     private BuildingRepository repository;
 
+    @Override
     public List<Building> getAll() {
         return repository.findAll();
     }
 
+    @Override
     public Building save(final BuildingDto building) {
         return repository.save(
                 Building.builder()
@@ -31,6 +34,7 @@ public class BuildingService {
                         .build());
     }
 
+    @Override
     public Building updateById(final Integer id, final BuildingDto buildingDto) {
         final Building currentBuilding = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("building", "building_id", id.toString()));
@@ -43,9 +47,11 @@ public class BuildingService {
 
     }
 
+    @Override
     public void deleteById(final Integer id) throws ResourceNotFoundException {
         if (!repository.existsById(id))
             throw new ResourceNotFoundException("Building", "building_id", id.toString());
         repository.deleteById(id);
     }
+
 }

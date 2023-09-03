@@ -17,6 +17,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,6 +26,7 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name = "tbl_clinic")
+@Accessors(chain = true)
 public class Clinic {
     @Id
     @Column(name = "clinic_id", nullable = false)
@@ -38,7 +40,7 @@ public class Clinic {
     private String englishName;
 
     @Column(nullable = false, name = "clinic_number")
-    private Long number;
+    private Integer number;
 
     @Column(name = "building_id", nullable = false)
     private Integer buildingId;
