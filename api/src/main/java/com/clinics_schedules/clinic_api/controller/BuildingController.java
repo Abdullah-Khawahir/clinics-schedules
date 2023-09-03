@@ -49,7 +49,7 @@ public class BuildingController {
 
     @PutMapping(path = "/building/{id}")
     public ResponseEntity<BuildingDto> updateBuilding(@PathVariable final Integer id,
-            @RequestBody final BuildingDto buildingDto) {
+            @Valid @RequestBody final BuildingDto buildingDto) {
 
         final Building updateBuilding = buildingService.updateById(id, buildingDto);
         return new ResponseEntity<BuildingDto>(
@@ -58,7 +58,7 @@ public class BuildingController {
     }
 
     @DeleteMapping(path = "/building/{id}")
-    public void deleteById(@Valid @PathVariable(required = true) final Integer id) {
+    public void deleteById(@PathVariable(required = true) final Integer id) {
         buildingService.deleteById(id);
     }
 }

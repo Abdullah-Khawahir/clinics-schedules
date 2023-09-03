@@ -20,6 +20,8 @@ import com.clinics_schedules.clinic_api.dto.ClinicDto;
 import com.clinics_schedules.clinic_api.exception.ResourceNotFoundException;
 import com.clinics_schedules.clinic_api.service.ClinicService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping(path = { "/api/v1" })
 public class ClinicController {
@@ -28,10 +30,10 @@ public class ClinicController {
     private ClinicService clinicService;
 
     @GetMapping(path = "/clinic")
-    public List<ClinicDto> getAllClinics() {
-        return clinicService.getAll().stream()
+    public ResponseEntity<List<ClinicDto>> getAllClinics() {
+        return new ResponseEntity<>(clinicService.getAll().stream()
                 .map(ClinicDto::new)
-                .toList();
+                .toList(), HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping(path = "/clinic/{id}")
@@ -42,7 +44,7 @@ public class ClinicController {
 
     @PutMapping(path = "/clinic/{id}")
     public ResponseEntity<ClinicDto> updateClinic(@PathVariable(required = true) final Integer id,
-            @RequestBody(required = true) final ClinicDto clinicDto)
+            @Valid @RequestBody(required = true) final ClinicDto clinicDto)
             throws MissingPathVariableException, DataIntegrityViolationException, ResourceNotFoundException {
 
         return new ResponseEntity<ClinicDto>(
@@ -51,8 +53,9 @@ public class ClinicController {
     }
 
     @PostMapping(path = "/clinic")
-    public ResponseEntity<ClinicDto> saveClinic(@RequestBody(required = true) final ClinicDto clinicDto)
-            throws MissingPathVariableException, DataIntegrityViolationException, ResourceNotFoundException {
+    public ResponseEntity<ClinicDto> saveClinic(
+            @Valid @RequestBody(required = true) final ClinicDto clinicDto)
+            throws DataIntegrityViolationException, ResourceNotFoundException {
 
         return new ResponseEntity<ClinicDto>(
                 new ClinicDto(clinicService.save(clinicDto)),

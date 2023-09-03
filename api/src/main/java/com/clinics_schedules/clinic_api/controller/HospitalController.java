@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.clinics_schedules.clinic_api.dto.HospitalDto;
 import com.clinics_schedules.clinic_api.service.HospitalService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping({ "/api/v1" })
 public class HospitalController {
@@ -37,7 +39,7 @@ public class HospitalController {
 
     @PostMapping(path = "/hospital")
     public ResponseEntity<HospitalDto> saveHospital(
-            @RequestBody(required = true) final HospitalDto hospital)
+            @Valid @RequestBody(required = true) final HospitalDto hospital)
             throws MissingPathVariableException,
             DataIntegrityViolationException {
 
@@ -56,7 +58,7 @@ public class HospitalController {
     @PutMapping(path = "/hospital/{id}")
     public ResponseEntity<HospitalDto> updateHospital(
             @PathVariable(required = true) final int id,
-            @RequestBody final HospitalDto hospital)
+            @Valid @RequestBody final HospitalDto hospital)
             throws MissingPathVariableException {
 
         return new ResponseEntity<HospitalDto>(

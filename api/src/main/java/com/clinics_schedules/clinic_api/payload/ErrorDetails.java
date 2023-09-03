@@ -8,11 +8,11 @@ import lombok.Getter;
 @Getter()
 @Builder()
 public class ErrorDetails {
-    private Date timestamp;
-    private String message;
-    private String details;
+    private final Date timestamp;
+    private final String message;
+    private final Object details;
 
-    public ErrorDetails(Date timestamp, String message, String details) {
+    public ErrorDetails(final Date timestamp, final String message, final Object details) {
         this.timestamp = timestamp;
         this.message = message;
         this.details = details;

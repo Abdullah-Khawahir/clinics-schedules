@@ -2,6 +2,8 @@ package com.clinics_schedules.clinic_api.entity;
 
 import java.util.List;
 
+import com.clinics_schedules.clinic_api.dto.HospitalDto;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -41,5 +43,11 @@ public class Hospital {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "hospital_id", referencedColumnName = "hospital_id")
     private List<Building> buildings;
+
+    public Hospital(final HospitalDto hospitalDto) {
+        this.id = hospitalDto.getId();
+        this.arabicName = hospitalDto.getArabicName();
+        this.englishName = hospitalDto.getEnglishName();
+    }
 
 }

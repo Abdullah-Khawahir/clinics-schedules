@@ -10,22 +10,16 @@ import com.clinics_schedules.clinic_api.entity.Clinic;
 import com.clinics_schedules.clinic_api.exception.ResourceNotFoundException;
 import com.clinics_schedules.clinic_api.interfaces.BasicCRUDService;
 import com.clinics_schedules.clinic_api.repository.ClinicRepository;
+
 @Service
 public class ClinicService implements BasicCRUDService<Clinic, ClinicDto, Integer> {
     @Autowired
     private ClinicRepository repository;
 
     @Override
-    public Clinic save(final ClinicDto entity) {
-        return repository.save(
-                Clinic.builder()
-                        .id(null)
-                        .arabicName(entity.getArabicName())
-                        .englishName(entity.getEnglishName())
-                        .buildingId(entity.getBuildingId())
-                        .number(entity.getNumber())
-                        .ext(entity.getExt())
-                        .build());
+    public Clinic save(final ClinicDto clinicDto) {
+
+        return repository.save(new Clinic(clinicDto));
     }
 
     @Override
@@ -52,7 +46,7 @@ public class ClinicService implements BasicCRUDService<Clinic, ClinicDto, Intege
     public void deleteById(final Integer id) {
         if (!repository.existsById(id))
             throw new ResourceNotFoundException("Clinic", "clinic_id", id.toString());
-            
+
         repository.deleteById(id);
 
     }
