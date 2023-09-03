@@ -19,7 +19,7 @@ CREATE TABLE tbl_Clinic(
     clinic_id SERIAL PRIMARY KEY,
     clinic_english_name VARCHAR(255) NOT NULL,
     clinic_arabic_name VARCHAR(255) NOT NULL,
-    building_id INT REFERENCES tbl_Building(building_id),
+    building_id INT NOT NULL REFERENCES tbl_Building(building_id),
     clinic_ext VARCHAR(255) NULL,
     clinic_number INT NULL,
     CONSTRAINT CLINIC_MUST_BE_UNIQUE_IN_EVERY_BUILDING UNIQUE(
