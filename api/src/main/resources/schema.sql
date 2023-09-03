@@ -22,8 +22,12 @@ CREATE TABLE tbl_Clinic(
     building_id INT REFERENCES tbl_Building(building_id),
     clinic_ext VARCHAR(255) NULL,
     clinic_number INT NULL,
-    CONSTRAINT CLINIC_ARABIC_NAME_ALREADY_EXISTS UNIQUE(clinic_id, clinic_english_name),
-    CONSTRAINT CLINIC_ENGLISH_NAME_ALREADY_EXISTS UNIQUE(clinic_id, clinic_arabic_name)
+    CONSTRAINT CLINIC_MUST_BE_UNIQUE_IN_EVERY_BUILDING UNIQUE(
+        building_id,
+        clinic_english_name,
+        clinic_arabic_name,
+        clinic_number
+    )
 );
 DROP TABLE IF EXISTS tbl_Clinical_Employee cascade;
 CREATE Table tbl_Clinical_Employee(
