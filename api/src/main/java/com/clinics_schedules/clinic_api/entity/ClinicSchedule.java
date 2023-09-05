@@ -4,6 +4,8 @@ import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
+import com.clinics_schedules.clinic_api.entity.enums.TimeRepeatUnit;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -54,15 +56,5 @@ public class ClinicSchedule {
     @ManyToMany
     @JoinTable(name = "tbl_Schedule_Employees_List", joinColumns = @JoinColumn(name = "schedule_id"), inverseJoinColumns = @JoinColumn(name = "employee_id"))
     private List<Employee> employee;
-
-}
-
-enum TimeRepeatUnit {
-    never,
-    daily,
-    weekends,
-    weekdays,
-    weekly,
-    monthly
 
 }
