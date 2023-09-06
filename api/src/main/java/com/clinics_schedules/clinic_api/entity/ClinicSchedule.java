@@ -4,8 +4,6 @@ import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
-import com.clinics_schedules.clinic_api.entity.enums.TimeRepeatUnit;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -21,6 +19,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 @Builder
 @Data
@@ -28,33 +27,73 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "tbl_clinic_schedule")
+@Accessors(chain = true)
+
 public class ClinicSchedule {
     @Id
     @Column(name = "schedule_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(name = "clinic_id", nullable = false)
+    private Integer clinicId;
+
     @Column(name = "schedule_begin_date", nullable = false)
-    private Date beginTime;
+    private Date beginDate;
     @Column(name = "schedule_expire_date", nullable = false)
-    private Date expireTime;
+    private Date expireDate;
 
     @Column(name = "event_start_time", nullable = false)
     private LocalTime eventStart;
     @Column(name = "event_finish_time", nullable = false)
     private LocalTime eventFinish;
 
+    public static enum TimeRepeatUnit {
+        never,
+        daily,
+        weekends,
+        weekdays,
+        weekly,
+        monthly;
+
+        @Override
+        public String toString() {
+            return switch (this) {
+                case never -> "never";
+                case daily -> "daily";
+                case monthly -> "monthly";
+                case weekdays -> "weekdays";
+                case weekends -> "weekends";
+                case weekly -> "weekly";
+            };
+        }
+
+    }
+
     @Column(name = "event_repeat", nullable = false)
     @Enumerated(EnumType.STRING)
     private TimeRepeatUnit repeat;
 
-    // @OneToMany()
-    // @JoinColumn(
-    // table = "tbl_Schedule_Employees_List",
-    // name = "schedule_id",
-    // referencedColumnName = "schedule_id"
-    // )
     @ManyToMany
     @JoinTable(name = "tbl_Schedule_Employees_List", joinColumns = @JoinColumn(name = "schedule_id"), inverseJoinColumns = @JoinColumn(name = "employee_id"))
     private List<Employee> employee;
+
+    public ClinicSchedule(
+            final Integer id,
+            final Integer clinicId,
+            final Date beginTime,
+            final Date expireTime,
+            final LocalTime eventStart,
+            final LocalTime eventFinish,
+            final TimeRepeatUnit repeat) {
+
+        this.id = id;
+        this.clinicId = clinicId;
+        this.beginDate = beginTime;
+        this.expireDate = expireTime;
+        this.eventStart = eventStart;
+        this.eventFinish = eventFinish;
+        this.repeat = repeat;
+    }
 
 }

@@ -39,14 +39,14 @@ CREATE Table tbl_Clinical_Employee(
     employee_second_phone_number VARCHAR(255) NULL
 );
 DROP TYPE IF EXISTS enum_time_unit cascade;
-CREATE TYPE enum_time_unit as ENUM (
-    'never',
-    'daily',
-    'weekly',
-    'weekdays',
-    'weekends',
-    'monthly'
-);
+-- CREATE TYPE enum_time_unit as ENUM (
+--     'never',
+--     'daily',
+--     'weekly',
+--     'weekdays',
+--     'weekends',
+--     'monthly'
+-- );
 DROP TABLE IF EXISTS tbl_Clinic_Schedule cascade;
 CREATE TABLE tbl_Clinic_Schedule(
     schedule_id SERIAL PRIMARY KEY,
@@ -55,7 +55,13 @@ CREATE TABLE tbl_Clinic_Schedule(
     schedule_expire_date TIMESTAMP NOT NULL CONSTRAINT START_TIME_MUST_BE_BEFORE_END_TIME check(schedule_begin_date < schedule_expire_date),
     event_start_time TIME NOT NULL,
     event_finish_time TIME NOT NULL CONSTRAINT EVENT_START_TIME_MUST_BE_BEFORE_END_TIME check(event_start_time < event_finish_time),
-    event_repeat enum_time_unit NOT NULL
+    event_repeat VARCHAR(255) NOT NULL check(
+event_repeat = 'never' OR
+event_repeat =  'daily' OR
+event_repeat =  'weekly' OR
+event_repeat =  'weekdays' OR
+event_repeat =  'weekends' OR
+event_repeat = 'monthly')
 );
 DROP TABLE IF EXISTS tbl_Schedule_Employees_List cascade;
 CREATE Table tbl_Schedule_Employees_List(
@@ -65,7 +71,8 @@ CREATE Table tbl_Schedule_Employees_List(
 );
 DROP TABLE IF EXISTS tbl_Event cascade;
 CREATE TABLE tbl_Event(
-    schedule_id INT REFERENCES tbl_Clinic_Schedule(schedule_id) NOT NULL,
+    event_id SERIAL PRIMARY KEY,
+    schedule_id INT REFERENCES tbl_Clinic_Schedule(schedule_id),
     event_begin TIMESTAMP NOT NULL,
     event_finish TIMESTAMP NOT NULL CONSTRAINT START_TIME_MUST_BE_BEFORE_END_TIME check(event_begin < event_finish)
 );

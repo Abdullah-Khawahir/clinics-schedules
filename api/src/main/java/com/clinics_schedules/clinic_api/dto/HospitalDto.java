@@ -12,14 +12,14 @@ import lombok.Data;
 @Builder
 @AllArgsConstructor
 public class HospitalDto {
-    
-    private final Integer id;
+
+    private Integer id;
     @Size(min = 3, max = 255)
     @NotBlank
-    private final String englishName;
+    private String englishName;
     @Size(min = 3, max = 255)
     @NotBlank
-    private final String arabicName;
+    private String arabicName;
 
     public HospitalDto(final Hospital hospital) {
         if (hospital == null)

@@ -17,19 +17,19 @@ import lombok.Setter;
 @Setter
 public class BuildingDto {
 
-    private final Integer id;
-    @Size(min = 3, max = 255 )
-    @NotBlank
-    private final String englishName;
+    private Integer id;
     @Size(min = 3, max = 255)
     @NotBlank
-    private final String arabicName;
+    private String englishName;
+    @Size(min = 3, max = 255)
+    @NotBlank
+    private String arabicName;
     @NotNull
     @PositiveOrZero
-    private final Integer hospitalId;
+    private Integer hospitalId;
     @NotNull
     @PositiveOrZero
-    private final Integer number;
+    private Integer number;
 
     public BuildingDto(final Building building) {
         this.id = building.getId();

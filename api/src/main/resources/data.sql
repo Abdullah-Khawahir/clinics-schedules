@@ -62,7 +62,6 @@ VALUES ('husan', '0ARABIC_NAME', NULL, NULL, NULL),
     ('salam', 'ARABIaC_NAME', NULL, NULL, NULL),
     ('humaid', '196ARABIaC_NAME', NULL, NULL, NULL),
     ('baker', 'A54RABIC_dsNAME', NULL, NULL, NULL);
-
 INSERT INTO tbl_clinic_schedule (
         schedule_id,
         clinic_id,
@@ -81,7 +80,6 @@ VALUES (
         '01:00PM',
         'daily'
     );
-
 INSERT INTO tbl_schedule_employees_list (schedule_id, employee_id)
 VALUES (0, 2),
-(0, 5);
+    (0, 5);
