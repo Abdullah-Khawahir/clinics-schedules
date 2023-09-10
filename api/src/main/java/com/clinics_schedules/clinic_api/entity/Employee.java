@@ -10,22 +10,24 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "tbl_clinical_employee")
+@Accessors(chain = true)
 public class Employee {
     @Id()
-    @Column(nullable = false , name = "employee_id")
+    @Column(nullable = false, name = "employee_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(nullable = false , name = "employee_english_name")
+    @Column(nullable = false, name = "employee_english_name")
     private String englishName;
-    @Column(nullable = false , name = "employee_arabic_name")
+    @Column(nullable = false, name = "employee_arabic_name")
     private String arabicName;
-
 
     @Column(name = "employee_email")
     private String email;
