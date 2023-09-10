@@ -9,10 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.clinics_schedules.clinic_api.dto.ClinicScheduleDto;
 import com.clinics_schedules.clinic_api.entity.ClinicSchedule;
-import com.clinics_schedules.clinic_api.entity.Event;
 import com.clinics_schedules.clinic_api.entity.ClinicSchedule.TimeRepeatUnit;
-
-import static com.clinics_schedules.clinic_api.entity.ClinicSchedule.TimeRepeatUnit.*;
+import com.clinics_schedules.clinic_api.entity.Event;
 import com.clinics_schedules.clinic_api.exception.ResourceNotFoundException;
 import com.clinics_schedules.clinic_api.interfaces.BasicCRUDService;
 import com.clinics_schedules.clinic_api.repository.ClinicScheduleRepository;
@@ -35,9 +33,15 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 				scheduleDto.getEventFinish(),
 				scheduleDto.getRepeat());
 
+		var events = getEvents(newSchedule);
+
+		eventService.saveEvents(events);
+
+		return repository.save(newSchedule);
+	}
+
+	private List<Event> getEvents(final ClinicSchedule newSchedule) {
 		final List<Event> events = new ArrayList<Event>(60);
-		// final var eventStart = newSchedule.getEventStart();
-		// final var eventFinish = newSchedule.getEventFinish();
 
 		final Calendar start = Calendar.getInstance();
 		start.setTime(newSchedule.getBeginDate());
@@ -49,26 +53,24 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 		final Calendar datePointer = Calendar.getInstance();
 		datePointer.setTime(start.getTime());
 		do {
-
 			datePointer.set(Calendar.HOUR_OF_DAY, newSchedule.getEventStart().getHour());
 			datePointer.set(Calendar.MINUTE, newSchedule.getEventStart().getMinute());
 			final var eventStart = datePointer.getTime();
 
 			System.out.println(datePointer.get(Calendar.HOUR_OF_DAY));
-			
+
 			datePointer.set(Calendar.HOUR_OF_DAY, newSchedule.getEventFinish().getHour());
 			datePointer.set(Calendar.MINUTE, newSchedule.getEventFinish().getMinute());
 			final var eventEnd = datePointer.getTime();
-			
+
 			System.out.println(datePointer.get(Calendar.HOUR_OF_DAY));
-			
+
 			events.add(new Event(newSchedule.getId(), eventStart, eventEnd));
 
 			addNextRepeatStep(datePointer, newSchedule.getRepeat());
 		} while (datePointer.before(end) && newSchedule.getRepeat() != TimeRepeatUnit.never);
 
-		eventService.saveEvents(events);
-		return repository.save(newSchedule);
+		return events;
 	}
 
 	private void addNextRepeatStep(Calendar date, TimeRepeatUnit repeat) {
@@ -159,7 +161,16 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 				.setEventFinish(scheduleDto.getEventFinish())
 				.setRepeat(scheduleDto.getRepeat());
 
-		return repository.save(currentSchedule);
+		deleteOldEvents(currentSchedule);
+
+		return this.save(new ClinicScheduleDto(currentSchedule));
+	}
+
+	private void deleteOldEvents(final ClinicSchedule currentSchedule) {
+		try {
+			eventService.deleteByScheduleId(currentSchedule.getId());
+		} catch (ResourceNotFoundException rnfe) {
+		}
 	}
 
 	@Override

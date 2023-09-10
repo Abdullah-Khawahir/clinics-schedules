@@ -10,10 +10,12 @@ import com.clinics_schedules.clinic_api.entity.ClinicSchedule.TimeRepeatUnit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@Accessors(chain = true)
 public class ClinicScheduleDto {
     private Integer id;
     private Integer clinicId;

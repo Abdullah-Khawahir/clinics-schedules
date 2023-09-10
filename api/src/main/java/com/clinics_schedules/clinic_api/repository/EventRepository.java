@@ -9,4 +9,9 @@ import com.clinics_schedules.clinic_api.entity.Event;
 public interface EventRepository extends JpaRepository<Event, Integer> {
 
     List<Event> findByScheduleId(Integer scheduleId);
+
+    void deleteByScheduleId(Integer scheduleId);
+
+    boolean existsByScheduleId(Integer scheduleId);
+
 }

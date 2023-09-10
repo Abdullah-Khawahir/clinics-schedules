@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.clinics_schedules.clinic_api.entity.Event;
+import com.clinics_schedules.clinic_api.exception.ResourceNotFoundException;
 import com.clinics_schedules.clinic_api.repository.EventRepository;
 
 @Service
@@ -20,5 +21,12 @@ public class EventService {
 
     public List<Event> getEventsByScheduleID(final Integer Id) {
         return repository.findByScheduleId(Id);
+    }
+
+    public void deleteByScheduleId(Integer id) {
+        if (repository.existsByScheduleId(id))
+            repository.deleteByScheduleId(id);
+        else
+            throw new ResourceNotFoundException("Event", "tbl_event.schedule_id", id.toString());
     }
 }
