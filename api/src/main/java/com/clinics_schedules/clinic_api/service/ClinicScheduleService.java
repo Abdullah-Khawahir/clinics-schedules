@@ -24,8 +24,8 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 
 	@Override
 	public ClinicSchedule save(final ClinicScheduleDto scheduleDto) {
-		final ClinicSchedule newSchedule = new ClinicSchedule(
-				scheduleDto.getId(),
+		final ClinicSchedule scheduleToSave = new ClinicSchedule(
+				null,
 				scheduleDto.getClinicId(),
 				scheduleDto.getBeginTime(),
 				scheduleDto.getExpireTime(),
@@ -33,42 +33,44 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 				scheduleDto.getEventFinish(),
 				scheduleDto.getRepeat());
 
-		var events = getEvents(newSchedule);
+		var conflicts = getConflictList(scheduleToSave);
+		if (!conflicts.isEmpty()) {
+			throw new IllegalStateException("the new schedule has conflict with others :\n\t" + conflicts.toString());
+		}
+		final var savedSchedule = repository.save(scheduleToSave);
+
+		final var events = getEvents(savedSchedule);
 
 		eventService.saveEvents(events);
 
-		return repository.save(newSchedule);
+		return savedSchedule;
 	}
 
-	private List<Event> getEvents(final ClinicSchedule newSchedule) {
+	private List<Event> getEvents(final ClinicSchedule schedule) {
 		final List<Event> events = new ArrayList<Event>(60);
 
 		final Calendar start = Calendar.getInstance();
-		start.setTime(newSchedule.getBeginDate());
+		start.setTime(schedule.getBeginDate());
 
 		final Calendar end = Calendar.getInstance();
-		end.setTime(newSchedule.getExpireDate());
+		end.setTime(schedule.getExpireDate());
 		end.add(Calendar.DAY_OF_WEEK, 1);
 
 		final Calendar datePointer = Calendar.getInstance();
 		datePointer.setTime(start.getTime());
 		do {
-			datePointer.set(Calendar.HOUR_OF_DAY, newSchedule.getEventStart().getHour());
-			datePointer.set(Calendar.MINUTE, newSchedule.getEventStart().getMinute());
+			datePointer.set(Calendar.HOUR_OF_DAY, schedule.getEventStart().getHour());
+			datePointer.set(Calendar.MINUTE, schedule.getEventStart().getMinute());
 			final var eventStart = datePointer.getTime();
 
-			System.out.println(datePointer.get(Calendar.HOUR_OF_DAY));
-
-			datePointer.set(Calendar.HOUR_OF_DAY, newSchedule.getEventFinish().getHour());
-			datePointer.set(Calendar.MINUTE, newSchedule.getEventFinish().getMinute());
+			datePointer.set(Calendar.HOUR_OF_DAY, schedule.getEventFinish().getHour());
+			datePointer.set(Calendar.MINUTE, schedule.getEventFinish().getMinute());
 			final var eventEnd = datePointer.getTime();
 
-			System.out.println(datePointer.get(Calendar.HOUR_OF_DAY));
+			events.add(new Event(schedule.getId(), eventStart, eventEnd));
 
-			events.add(new Event(newSchedule.getId(), eventStart, eventEnd));
-
-			addNextRepeatStep(datePointer, newSchedule.getRepeat());
-		} while (datePointer.before(end) && newSchedule.getRepeat() != TimeRepeatUnit.never);
+			addNextRepeatStep(datePointer, schedule.getRepeat());
+		} while (datePointer.before(end) && schedule.getRepeat() != TimeRepeatUnit.never);
 
 		return events;
 	}
@@ -161,9 +163,65 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 				.setEventFinish(scheduleDto.getEventFinish())
 				.setRepeat(scheduleDto.getRepeat());
 
-		deleteOldEvents(currentSchedule);
+		var conflicts = getConflictList(currentSchedule);
+		if (!conflicts.isEmpty()) {
+			throw new IllegalStateException("the new schedule has conflict with others");
+		}
 
-		return this.save(new ClinicScheduleDto(currentSchedule));
+		deleteOldEvents(currentSchedule);
+		final var updatedSchedule = repository.save(currentSchedule);
+		final var events = this.getEvents(updatedSchedule);
+
+		eventService.saveEvents(events);
+		return updatedSchedule;
+	}
+
+	private List<Event> getConflictList(final ClinicSchedule currentSchedule) {
+		var conflict = new ArrayList<Event>();
+		var schedules = this.getAll()
+				.stream()
+				.filter(s -> s.getClinicId() == currentSchedule.getClinicId())
+				.toList();
+
+		for (ClinicSchedule schedule : schedules) {
+			if (schedule.getId() != currentSchedule.getId()) {
+				if (isScheduleDateOverLapping(schedule, currentSchedule)) {
+					var events = eventService.getEventsByScheduleID(schedule.getId());
+					for (Event event : events) {
+						for (Event currentScheduleEvent : this.getEvents(currentSchedule)) {
+							if (isEventTimeAndDateOverlap(currentScheduleEvent, event)) {
+								conflict.add(event);
+							}
+						}
+					}
+				}
+			}
+		}
+		return conflict;
+	}
+
+	private boolean isEventTimeAndDateOverlap(Event eventA, Event eventB) {
+		Event earlierEvent, laterEvent;
+		if (eventA.getBeginTime().before(eventB.getBeginTime())) {
+			earlierEvent = eventA;
+			laterEvent = eventB;
+		} else {
+			earlierEvent = eventB;
+			laterEvent = eventA;
+		}
+		return earlierEvent.getFinishTime().after(laterEvent.getBeginTime());
+	}
+
+	private boolean isScheduleDateOverLapping(ClinicSchedule scheduleA, ClinicSchedule scheduleB) {
+		ClinicSchedule earlierSchedule, laterSchedule;
+		if (scheduleA.getBeginDate().getTime() <= scheduleB.getBeginDate().getTime()) {
+			earlierSchedule = scheduleA;
+			laterSchedule = scheduleB;
+		} else {
+			earlierSchedule = scheduleB;
+			laterSchedule = scheduleA;
+		}
+		return earlierSchedule.getExpireDate().getTime() >= laterSchedule.getBeginDate().getTime();
 	}
 
 	private void deleteOldEvents(final ClinicSchedule currentSchedule) {

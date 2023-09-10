@@ -4,12 +4,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.clinics_schedules.clinic_api.entity.Event;
-import com.clinics_schedules.clinic_api.exception.ResourceNotFoundException;
 import com.clinics_schedules.clinic_api.repository.EventRepository;
 
 @Service
+@Transactional
 public class EventService {
 
     @Autowired
@@ -24,9 +25,6 @@ public class EventService {
     }
 
     public void deleteByScheduleId(Integer id) {
-        if (repository.existsByScheduleId(id))
-            repository.deleteByScheduleId(id);
-        else
-            throw new ResourceNotFoundException("Event", "tbl_event.schedule_id", id.toString());
+        repository.deleteByScheduleId(id);
     }
 }

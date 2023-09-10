@@ -19,7 +19,7 @@ import com.clinics_schedules.clinic_api.service.ClinicScheduleService;
 import com.clinics_schedules.clinic_api.service.EventService;
 
 @RestController
-@RequestMapping(path = "/api/v1")
+@RequestMapping({ "/api/v1" })
 public class ClinicScheduleController {
     @Autowired
     private ClinicScheduleService scheduleService;
@@ -27,7 +27,7 @@ public class ClinicScheduleController {
     private EventService eventService;
 
     @GetMapping(path = "/clinic-schedule")
-    public ResponseEntity<List<ClinicScheduleDto>> getMethodName() {
+    public ResponseEntity<List<ClinicScheduleDto>> getAllSchedules() {
         return ResponseEntity.ok(
                 scheduleService
                         .getAll()
@@ -53,8 +53,8 @@ public class ClinicScheduleController {
     }
 
     @DeleteMapping("/clinic-schedule/{id}")
-    public void deleteSchedule(@PathVariable(required = true) Integer id) {
-
+    public void deleteSchedule(@PathVariable Integer id) {
+        eventService.deleteByScheduleId(id);
         scheduleService.deleteById(id);
     }
 
@@ -63,7 +63,7 @@ public class ClinicScheduleController {
             @RequestBody(required = true) ClinicScheduleDto scheduleDto) {
 
         return ResponseEntity.ok(
-                new ClinicScheduleDto(scheduleService.save(scheduleDto))
+                new ClinicScheduleDto(scheduleService.updateById(id, scheduleDto))
                         .setEvents(eventService.getEventsByScheduleID(id)
                                 .stream()
                                 .map(EventDto::new)
