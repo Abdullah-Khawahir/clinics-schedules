@@ -15,51 +15,63 @@ import com.clinics_schedules.clinic_api.payload.ErrorDetails;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-        @ExceptionHandler(ResourceNotFoundException.class)
-        public ResponseEntity<ErrorDetails> handleResourceNotFoundException(
-                        final ResourceNotFoundException exception,
-                        final WebRequest webRequest) {
+	@ExceptionHandler(ResourceNotFoundException.class)
+	public ResponseEntity<ErrorDetails> handleResourceNotFoundException(
+			final ResourceNotFoundException exception,
+			final WebRequest webRequest) {
 
-                return new ResponseEntity<ErrorDetails>(
-                                ErrorDetails
-                                                .builder()
-                                                .message(exception.getMessage())
-                                                .details(webRequest.getDescription(false))
-                                                .timestamp(new Date())
-                                                .build(),
-                                HttpStatus.NOT_FOUND);
-        }
+		return new ResponseEntity<ErrorDetails>(
+				ErrorDetails
+						.builder()
+						.message(exception.getMessage())
+						.details(webRequest.getDescription(false))
+						.timestamp(new Date())
+						.build(),
+				HttpStatus.NOT_FOUND);
+	}
 
-        @ExceptionHandler(DataIntegrityViolationException.class)
-        public ResponseEntity<ErrorDetails> DataIntegrityViolationHandler(
-                        final DataIntegrityViolationException exception,
-                        final WebRequest webRequest) {
-                return new ResponseEntity<ErrorDetails>(
-                                ErrorDetails
-                                                .builder()
-                                                .message(exception.getMostSpecificCause().getMessage())
-                                                .details(webRequest.getDescription(false))
-                                                .timestamp(new Date())
-                                                .build(),
-                                HttpStatus.NOT_ACCEPTABLE);
-        }
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<ErrorDetails> DataIntegrityViolationHandler(
+			final DataIntegrityViolationException exception,
+			final WebRequest webRequest) {
+		return new ResponseEntity<ErrorDetails>(
+				ErrorDetails
+						.builder()
+						.message(exception.getMostSpecificCause().getMessage())
+						.details(webRequest.getDescription(false))
+						.timestamp(new Date())
+						.build(),
+				HttpStatus.NOT_ACCEPTABLE);
+	}
 
-        @ExceptionHandler(MethodArgumentNotValidException.class)
-        public ResponseEntity<ErrorDetails> ValidationExceptionHandler(final MethodArgumentNotValidException exception,
-                        final WebRequest webRequest) {
-                return new ResponseEntity<ErrorDetails>(
-                                ErrorDetails
-                                                .builder()
-                                                .message("invalid input")
-                                                .details(exception.getAllErrors()
-                                                                .stream()
-                                                                .map(error -> String.format("%s for %s",
-                                                                                error.getDefaultMessage(),
-                                                                                error.getObjectName()))
-                                                                .toList())
-                                                .timestamp(new Date())
-                                                .build(),
-                                HttpStatus.BAD_REQUEST);
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<ErrorDetails> ValidationExceptionHandler(final MethodArgumentNotValidException exception,
+			final WebRequest webRequest) {
+		return new ResponseEntity<ErrorDetails>(
+				ErrorDetails
+						.builder()
+						.message("invalid input")
+						.details(exception.getAllErrors()
+								.stream()
+								.map(error -> String.format("%s for %s",
+										error.getDefaultMessage(),
+										error.getObjectName()))
+								.toList())
+						.timestamp(new Date())
+						.build(),
+				HttpStatus.BAD_REQUEST);
 
-        }
+	}
+
+	@ExceptionHandler(ScheduleTimeConflictException.class)
+	public ResponseEntity<ErrorDetails> timeConflictHandler(final ScheduleTimeConflictException exception,
+			final WebRequest webRequest) {
+		return new ResponseEntity<ErrorDetails>(
+				ErrorDetails.builder()
+						.message(exception.getMessage())
+						.details(exception.getDetails())
+						.timestamp(new Date())
+						.build(),
+				HttpStatus.CONFLICT);
+	}
 }

@@ -2,7 +2,9 @@ package com.clinics_schedules.clinic_api.service;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import com.clinics_schedules.clinic_api.entity.ClinicSchedule;
 import com.clinics_schedules.clinic_api.entity.ClinicSchedule.TimeRepeatUnit;
 import com.clinics_schedules.clinic_api.entity.Event;
 import com.clinics_schedules.clinic_api.exception.ResourceNotFoundException;
+import com.clinics_schedules.clinic_api.exception.ScheduleTimeConflictException;
 import com.clinics_schedules.clinic_api.interfaces.BasicCRUDService;
 import com.clinics_schedules.clinic_api.repository.ClinicScheduleRepository;
 
@@ -35,7 +38,11 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 
 		var conflicts = getConflictList(scheduleToSave);
 		if (!conflicts.isEmpty()) {
-			throw new IllegalStateException("the new schedule has conflict with others :\n\t" + conflicts.toString());
+			Set<Integer> conflictedScheduleId = new HashSet<>();
+			conflicts.forEach(event -> conflictedScheduleId.add(event.getScheduleId()));
+
+			var conflictSchedules = repository.findAllById(conflictedScheduleId);
+			throw new ScheduleTimeConflictException(scheduleToSave, conflictSchedules);
 		}
 		final var savedSchedule = repository.save(scheduleToSave);
 
