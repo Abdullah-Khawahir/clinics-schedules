@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.clinics_schedules.clinic_api.entity.ClinicSchedule;
+import com.clinics_schedules.clinic_api.entity.Employee;
 import com.clinics_schedules.clinic_api.entity.ClinicSchedule.TimeRepeatUnit;
 
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class ClinicScheduleDto {
     private TimeRepeatUnit repeat;
 
     private List<EventDto> events;
+    private List<Employee> employees;
 
     public ClinicScheduleDto(final ClinicSchedule schedule) {
         this.id = schedule.getId();
@@ -35,7 +37,7 @@ public class ClinicScheduleDto {
         this.eventStart = schedule.getEventStart();
         this.eventFinish = schedule.getEventFinish();
         this.repeat = schedule.getRepeat();
-
+        this.employees = schedule.getEmployees();
     }
 
 }
