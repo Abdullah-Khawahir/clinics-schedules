@@ -76,7 +76,7 @@ public class ClinicSchedule {
 
     @ManyToMany
     @JoinTable(name = "tbl_Schedule_Employees_List", joinColumns = @JoinColumn(name = "schedule_id"), inverseJoinColumns = @JoinColumn(name = "employee_id"))
-    private List<Employee> employee;
+    private List<Employee> employees;
 
     public ClinicSchedule(
             final Integer id,
