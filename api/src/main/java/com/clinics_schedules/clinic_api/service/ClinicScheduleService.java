@@ -172,7 +172,11 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 
 		var conflicts = getConflictList(currentSchedule);
 		if (!conflicts.isEmpty()) {
-			throw new IllegalStateException("the new schedule has conflict with others");
+			Set<Integer> conflictedScheduleId = new HashSet<>();
+			conflicts.forEach(event -> conflictedScheduleId.add(event.getScheduleId()));
+
+			var conflictSchedules = repository.findAllById(conflictedScheduleId);
+			throw new ScheduleTimeConflictException(currentSchedule, conflictSchedules);
 		}
 
 		deleteOldEvents(currentSchedule);
