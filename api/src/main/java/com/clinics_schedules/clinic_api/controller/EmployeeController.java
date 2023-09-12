@@ -39,7 +39,7 @@ public class EmployeeController {
 
         return new ResponseEntity<>(
                 new EmployeeDto(employeeService.save(employeeDto)),
-                HttpStatus.CREATED);
+                HttpStatus.OK);
     }
 
     @PutMapping(path = "/employee/{id}")
