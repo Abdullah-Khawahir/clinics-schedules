@@ -75,10 +75,10 @@ VALUES (
         0,
         1,
         NOW(),
-        '2023-9-10 11:30',
+        '2023-12-22 11:30',
         '08:00AM',
         '01:00PM',
-        'daily'
+        'weekends'
     );
 INSERT INTO tbl_schedule_employees_list (schedule_id, employee_id)
 VALUES (0, 2),

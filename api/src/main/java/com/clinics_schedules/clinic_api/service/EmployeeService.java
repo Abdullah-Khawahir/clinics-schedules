@@ -20,7 +20,7 @@ public class EmployeeService implements BasicCRUDService<Employee, EmployeeDto, 
     public Employee save(EmployeeDto employeeDto) {
 
         return repository.save(new Employee(
-                employeeDto.getId(),
+                null,
                 employeeDto.getEnglishName(),
                 employeeDto.getArabicName(),
                 employeeDto.getEmail(),
