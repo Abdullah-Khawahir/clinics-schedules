@@ -38,15 +38,7 @@ CREATE Table tbl_Clinical_Employee(
     employee_phone_number VARCHAR(255) NULL,
     employee_second_phone_number VARCHAR(255) NULL
 );
-DROP TYPE IF EXISTS enum_time_unit cascade;
--- CREATE TYPE enum_time_unit as ENUM (
---     'never',
---     'daily',
---     'weekly',
---     'weekdays',
---     'weekends',
---     'monthly'
--- );
+
 DROP TABLE IF EXISTS tbl_Clinic_Schedule cascade;
 CREATE TABLE tbl_Clinic_Schedule(
     schedule_id SERIAL PRIMARY KEY,
@@ -56,12 +48,13 @@ CREATE TABLE tbl_Clinic_Schedule(
     event_start_time TIME NOT NULL,
     event_finish_time TIME NOT NULL CONSTRAINT EVENT_START_TIME_MUST_BE_BEFORE_END_TIME check(event_start_time < event_finish_time),
     event_repeat VARCHAR(255) NOT NULL check(
-event_repeat = 'never' OR
-event_repeat =  'daily' OR
-event_repeat =  'weekly' OR
-event_repeat =  'weekdays' OR
-event_repeat =  'weekends' OR
-event_repeat = 'monthly')
+        event_repeat = 'never'
+        OR event_repeat = 'daily'
+        OR event_repeat = 'weekly'
+        OR event_repeat = 'weekdays'
+        OR event_repeat = 'weekends'
+        OR event_repeat = 'monthly'
+    )
 );
 DROP TABLE IF EXISTS tbl_Schedule_Employees_List cascade;
 CREATE Table tbl_Schedule_Employees_List(
@@ -76,8 +69,6 @@ CREATE TABLE tbl_Event(
     event_begin TIMESTAMP NOT NULL,
     event_finish TIMESTAMP NOT NULL CONSTRAINT START_TIME_MUST_BE_BEFORE_END_TIME check(event_begin < event_finish)
 );
-DROP TYPE IF EXISTS enum_role cascade;
-CREATE TYPE enum_role as ENUM ('DEV', 'ADMIN', 'USER');
 DROP TABLE IF EXISTS tbl_user cascade;
 CREATE TABLE tbl_user(
     user_id SERIAL PRIMARY KEY,
@@ -88,6 +79,10 @@ CREATE TABLE tbl_user(
 DROP TABLE IF EXISTS tbl_user_roles cascade;
 CREATE TABLE tbl_user_roles(
     user_id INT REFERENCES tbl_user(user_id),
-    user_role enum_role NOT NULL,
+    user_role VARCHAR NOT NULL check(
+        user_role = 'DEV'
+        OR user_role = 'ADMIN'
+        OR user_role = 'USER'
+    ),
     CONSTRAINT USER_CAN_ONLY_HAVE_THE_ROLE_ONCE UNIQUE(user_id, user_role)
 );
