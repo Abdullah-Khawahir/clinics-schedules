@@ -75,7 +75,11 @@ public class ClinicSchedule {
     private TimeRepeatUnit repeat;
 
     @ManyToMany
-    @JoinTable(name = "tbl_Schedule_Employees_List", joinColumns = @JoinColumn(name = "schedule_id"), inverseJoinColumns = @JoinColumn(name = "employee_id"))
+    @JoinTable(
+     name = "tbl_Schedule_Employees_List",
+     joinColumns = @JoinColumn(name = "schedule_id"),
+     inverseJoinColumns = {@JoinColumn(name = "employee_id")}
+     )
     private List<Employee> employees;
 
     public ClinicSchedule(

@@ -83,3 +83,19 @@ VALUES (
 INSERT INTO tbl_schedule_employees_list (schedule_id, employee_id)
 VALUES (0, 2),
     (0, 5);
+INSERT INTO tbl_user (
+        user_id,
+        user_username,
+        user_password,
+        user_email
+    )
+VALUES (0, 'abdullah', '4484', '0aamk@gmail.com'),
+    (1, 'ali', '4484', '1aamk@gmail.com'),
+    (2, 'ahmed', '4484', '2aamk@gmail.com');
+INSERT INTO tbl_user_roles (user_id, user_role)
+VALUES (0, 'DEV'),
+    (0, 'ADMIN'),
+    (0, 'USER'),
+    (1, 'ADMIN'),
+    (1, 'USER'),
+    (2, 'USER');

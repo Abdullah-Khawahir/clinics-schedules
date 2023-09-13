@@ -38,7 +38,6 @@ CREATE Table tbl_Clinical_Employee(
     employee_phone_number VARCHAR(255) NULL,
     employee_second_phone_number VARCHAR(255) NULL
 );
-
 DROP TABLE IF EXISTS tbl_Clinic_Schedule cascade;
 CREATE TABLE tbl_Clinic_Schedule(
     schedule_id SERIAL PRIMARY KEY,

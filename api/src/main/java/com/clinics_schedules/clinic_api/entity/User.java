@@ -1,22 +1,36 @@
 package com.clinics_schedules.clinic_api.entity;
 
+import java.util.Collection;
+import java.util.Set;
+
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
 @Table(name = "tbl_user")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, name = "user_id")
@@ -26,48 +40,50 @@ public class User {
     @Column(nullable = false, name = "user_password")
     private String password;
 
-    // @OneToMany
-    // @JoinTable(name = "tbl_user_roles", joinColumns = {
-    // @JoinColumn(table = "tbl_user_roles", name = "user_id"),
-    // @JoinColumn(table = "tbl_user", name = "user_id")
-    // })
-    // Collection<RoleTitle> roles;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    Set<Role> roles;
 
-    // @Override
-    // public Collection<RoleTitle> getAuthorities() {
-    // return List.of("ADMIN");
-    // }
+    @JsonIgnore
+    @Override
+    public Collection<Role> getAuthorities() {
+        return this.roles;
+    }
 
-    // @Override
+    @Override
     public String getPassword() {
         return this.password;
     }
 
-    // @Override
+    @Override
     public String getUsername() {
 
         return this.username;
     }
 
-    // @Override
+    @JsonIgnore
+    @Override
     public boolean isAccountNonExpired() {
 
         return true;
     }
 
-    // @Override
+    @JsonIgnore
+    @Override
     public boolean isAccountNonLocked() {
 
         return true;
     }
 
-    // @Override
+    @JsonIgnore
+    @Override
     public boolean isCredentialsNonExpired() {
 
         return true;
     }
 
-    // @Override
+    @JsonIgnore
+    @Override
     public boolean isEnabled() {
 
         return true;

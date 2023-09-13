@@ -2,45 +2,37 @@ package com.clinics_schedules.clinic_api.entity;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Embeddable
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "tbl_role")
+@Table(name = "tbl_user_roles")
 public class Role implements GrantedAuthority {
-    @Id
-    @JoinColumn(name = "user_id" , table = "tbl_user" )
-    private Integer userId;
-    @Id
-    @Column(name = "role")
-    private RoleTitle role;
 
+    @JsonIgnore
+    @Column(name = "user_id")
+    private Integer userId;
+
+    @Id
+    @Column(name = "user_role")
+    private String role;
+
+    @JsonIgnore
     @Override
     public String getAuthority() {
-        return this.role.toString();
-    }
-
-}
-
-enum RoleTitle {
-    Admin,
-    DataEntry;
-
-    @Override
-    public String toString() {
-        return switch (this) {
-            case Admin -> "admin";
-            case DataEntry -> "data_entry";
-        };
+        return this.role;
     }
 
 }
