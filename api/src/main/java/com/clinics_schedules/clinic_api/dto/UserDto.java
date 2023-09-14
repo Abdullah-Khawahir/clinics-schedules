@@ -17,12 +17,15 @@ public class UserDto {
     private Integer id;
     private String username;
     private String password;
+    private String email;
+
     private List<String> roles;
 
     public UserDto(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
         this.password = user.getPassword();
+        this.email = user.getEmail();
         this.roles = user.getRoles()
                 .stream()
                 .map(role -> role.getAuthority().toString())

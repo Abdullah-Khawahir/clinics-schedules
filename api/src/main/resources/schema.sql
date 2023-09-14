@@ -77,6 +77,7 @@ CREATE TABLE tbl_user(
 );
 DROP TABLE IF EXISTS tbl_user_roles cascade;
 CREATE TABLE tbl_user_roles(
+    role_id SERIAL PRIMARY KEY,
     user_id INT REFERENCES tbl_user(user_id),
     user_role VARCHAR NOT NULL check(
         user_role = 'DEV'

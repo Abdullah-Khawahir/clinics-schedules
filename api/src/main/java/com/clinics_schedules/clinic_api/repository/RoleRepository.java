@@ -1,14 +1,14 @@
 package com.clinics_schedules.clinic_api.repository;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.clinics_schedules.clinic_api.entity.Role;
 
-//TODO make an entity with id
-public interface RoleRepository extends JpaRepository<Role, String> {
-    List<Role> findByUserId(Integer userId);
+
+public interface RoleRepository extends JpaRepository<Role, Integer> {
+    Set<Role> findByUserId(Integer userId);
 
     void deleteByUserId(Integer userId);
 

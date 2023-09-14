@@ -1,24 +1,17 @@
 package com.clinics_schedules.clinic_api.entity;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Set;
-
-import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.AttributeOverrides;
-import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -30,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "tbl_user")
-public class User implements UserDetails {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, name = "user_id")
@@ -40,53 +33,15 @@ public class User implements UserDetails {
     @Column(nullable = false, name = "user_password")
     private String password;
 
+    @Column(nullable = false, name = "user_email")
+    private String email;
+
+    @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     Set<Role> roles;
 
-    @JsonIgnore
-    @Override
-    public Collection<Role> getAuthorities() {
-        return this.roles;
+    public List<String> getRolesAsStrings() {
+        return roles.stream().map(Role::toString).toList();
     }
-
-    @Override
-    public String getPassword() {
-        return this.password;
-    }
-
-    @Override
-    public String getUsername() {
-
-        return this.username;
-    }
-
-    @JsonIgnore
-    @Override
-    public boolean isAccountNonExpired() {
-
-        return true;
-    }
-
-    @JsonIgnore
-    @Override
-    public boolean isAccountNonLocked() {
-
-        return true;
-    }
-
-    @JsonIgnore
-    @Override
-    public boolean isCredentialsNonExpired() {
-
-        return true;
-    }
-
-    @JsonIgnore
-    @Override
-    public boolean isEnabled() {
-
-        return true;
-    }
-
 }

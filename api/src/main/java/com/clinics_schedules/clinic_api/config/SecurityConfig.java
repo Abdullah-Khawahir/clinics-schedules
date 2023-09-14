@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.clinics_schedules.clinic_api.service.UserService;
+import com.clinics_schedules.clinic_api.service.UserSecurityService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SecurityConfig {
     @Autowired
-    UserService userService;
+    UserSecurityService userService;
 
     // DigestAuthenticationEntryPoint entryPoint() {
     // DigestAuthenticationEntryPoint result = new DigestAuthenticationEntryPoint();
@@ -43,7 +43,6 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        log.debug(" filtersss");
         return http.csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(
                         auth -> auth.anyRequest().authenticated())
