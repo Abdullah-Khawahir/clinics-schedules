@@ -1,4 +1,4 @@
-package com.clinics_schedules.clinic_api.controller;
+package com.clinics_schedules.clinic_api.controller.v1.privateControllers;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ import com.clinics_schedules.clinic_api.service.ClinicService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(path = { "/api/v1" })
+@RequestMapping(path = { "/private" })
 public class ClinicController {
 
     @Autowired

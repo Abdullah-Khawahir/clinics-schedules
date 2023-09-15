@@ -1,4 +1,4 @@
-package com.clinics_schedules.clinic_api.controller;
+package com.clinics_schedules.clinic_api.controller.v1.privateControllers;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
-@RequestMapping(path = "/api/v1")
+@RequestMapping(path = "/private")
 public class EmployeeController {
 
     @Autowired

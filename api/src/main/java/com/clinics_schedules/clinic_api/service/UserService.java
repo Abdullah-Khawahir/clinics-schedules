@@ -11,7 +11,10 @@ import com.clinics_schedules.clinic_api.exception.ResourceNotFoundException;
 import com.clinics_schedules.clinic_api.interfaces.BasicCRUDService;
 import com.clinics_schedules.clinic_api.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class UserService implements BasicCRUDService<User, UserDto, Integer> {
     @Autowired
     private UserRepository userRepository;
@@ -54,8 +57,12 @@ public class UserService implements BasicCRUDService<User, UserDto, Integer> {
 
     @Override
     public void deleteById(Integer id) {
-        roleService.removeAllRolesFromUser(id);
-        userRepository.deleteById(id);
+        if (userRepository.existsById(id)) {
+            roleService.removeAllRolesFromUser(id);
+            userRepository.deleteById(id);
+        } else
+            throw new ResourceNotFoundException("User", "user_id", id.toString());
+
     }
 
 }

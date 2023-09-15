@@ -1,4 +1,4 @@
-package com.clinics_schedules.clinic_api.controller;
+package com.clinics_schedules.clinic_api.controller.v1.privateControllers;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ import com.clinics_schedules.clinic_api.service.ClinicScheduleService;
 import com.clinics_schedules.clinic_api.service.EventService;
 
 @RestController
-@RequestMapping({ "/api/v1" })
+@RequestMapping({ "/private" })
 public class ClinicScheduleController {
     @Autowired
     private ClinicScheduleService scheduleService;
