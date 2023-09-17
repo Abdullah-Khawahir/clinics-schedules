@@ -17,7 +17,6 @@ import { ClinicFormComponent } from './forms/clinic-form/clinic-form.component';
 import { EmployeeFormComponent } from './forms/employee-form/employee-form.component';
 import { ScheduleFormComponent } from './forms/schedule-form/schedule-form.component';
 import { UserFormComponent } from './forms/user-form/user-form.component';
-import { TestComponent } from './test/test.component';
 import { LoginComponent } from './pages/public/auth/login/login.component';
 import { RegisterComponent } from './pages/public/auth/register/register.component';
 import { HospitalSchedulesComponent } from './pages/public/hospital-schedules/hospital-schedules.component';
@@ -27,10 +26,19 @@ import { HospitalPanelComponent } from './pages/authorized/hospital-panel/hospit
 import { BuildingsPanelComponent } from './pages/authorized/buildings-panel/buildings-panel.component';
 import { ClinicsPanelComponent } from './pages/authorized/clinics-panel/clinics-panel.component';
 
+
+import { MatTableModule } from '@angular/material/table';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatInputModule } from '@angular/material/input';
+import { MatSortModule } from '@angular/material/sort';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { NavbarComponent } from './components/navbar/navbar.component';
+
 @NgModule({
   declarations: [
     AppComponent,
-    TestComponent,
     PopupFormComponent,
     SubmitButtonComponent,
     DirectButtonComponent,
@@ -51,12 +59,19 @@ import { ClinicsPanelComponent } from './pages/authorized/clinics-panel/clinics-
     HospitalPanelComponent,
     BuildingsPanelComponent,
     ClinicsPanelComponent,
-
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatTableModule,
+    MatSlideToggleModule,
+    MatInputModule,
+    MatSortModule,
+    FormsModule,
+    RouterModule
   ],
   providers: [],
   bootstrap: [AppComponent]
