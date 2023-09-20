@@ -8,8 +8,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.clinics_schedules.clinic_api.entity.User;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @AllArgsConstructor
+@Getter
 public class SecurityUser implements UserDetails {
     private User user;
 
@@ -46,6 +48,10 @@ public class SecurityUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public User getUser() {
+        return user;
     }
 
 }

@@ -1,23 +1,28 @@
-import { HttpClient, HttpErrorResponse, HttpResponseBase } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, of, map, throwError, retry, Observable } from 'rxjs'; // don't forget this, or you'll get a runtime error
+import { Observable, catchError, retry, throwError } from 'rxjs'; // don't forget this, or you'll get a runtime error
+import { userDto } from './dto/userDto';
 import Logger from './logger.service';
 
-type Test = number[];
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class API {
-  static readonly SERVER_ADDRESS: string = "http://localhost:8080"
-  
-  private readonly MODELS = {
-    TEST: `${API.SERVER_ADDRESS}/test`
-  }
+  readonly SERVER_ADDRESS: string = "http://localhost:8080"
+
+
 
   constructor(private http: HttpClient) { }
 
 
+  auth(user: userDto) {
+    return this.http.post<userDto>(this.SERVER_ADDRESS + "/auth", JSON.stringify(user))
+      .pipe(
+        catchError(this.handleError)
+      )
+  }
 
 
 
@@ -26,10 +31,9 @@ export class API {
 
 
 
-  
-  getTest(): Observable<number[]> {
+  private getTest(): Observable<number[]> {
     return this.http
-      .get<number[]>(this.MODELS.TEST)
+      .get<number[]>("")
       .pipe(
         retry(2),
         catchError(this.handleError)

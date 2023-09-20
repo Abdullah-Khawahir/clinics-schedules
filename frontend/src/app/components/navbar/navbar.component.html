@@ -1,1 +1,7 @@
-<p>navbar works!</p>
+<div id="nav">
+
+    <a class="navbar-item" *ngFor="let route of routes" routerLink="{{route.path}}">
+        {{route.name}}
+    </a>
+
+</div>

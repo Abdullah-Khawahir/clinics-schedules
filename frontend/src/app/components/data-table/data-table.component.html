@@ -1,1 +1,23 @@
-<p>data-table works!</p>
+<main>
+    <div>
+        <input mat-input 
+        *ngFor="let filerInput of ColumnsDefinition" 
+        placeholder="{{filerInput.displayLabel}}"
+        type="text"
+        (keyup)="filterList($event , filerInput.key)" 
+        />
+    </div>
+    <table mat-table matSort
+    [dataSource]="elementsArray">
+
+        <ng-container *ngFor="let column of ColumnsDefinition;">
+            <ng-container matColumnDef={{column.key}}>
+                <th mat-header-cell mat-sort-header *matHeaderCellDef="">{{column.displayLabel}}</th>
+                <td mat-cell *matCellDef="let rowCell ">{{rowCell[column.key]}}</td>
+            </ng-container>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="getAllKeys()"></tr>
+        <tr mat-row *matRowDef="let row; columns: getAllKeys();"></tr>
+    </table>
+</main>
