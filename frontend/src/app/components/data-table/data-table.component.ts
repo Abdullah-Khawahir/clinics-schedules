@@ -8,19 +8,19 @@ const DELIMITER = "\x01";
 @Component({
   selector: 'app-data-table',
   templateUrl: './data-table.component.html',
-  styleUrls: ['./data-table.component.scss']
+  styleUrls: ['./data-table.component.css']
 })
 export class DataTableComponent implements AfterViewInit, OnInit {
 
 
-  @Input({ alias: "data-list", required: true }) dataArray: any[];
-  @Input({ alias: "columns-definition", required: true }) ColumnsDefinition: Column[];
+  @Input({ alias: "data-list", required: true }) dataArray!: any[];
+  @Input({ alias: "columns-definition", required: true }) ColumnsDefinition!: Column[];
 
   elementsArray = new MatTableDataSource();
   elementsFilters = new Map<string, string>()
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort) sort!: MatSort;
   ngAfterViewInit() {
-    this.elementsArray.sort = this.sort;    
+    this.elementsArray.sort = this.sort;
   }
   ngOnInit() {
     this.elementsArray.data = this.dataArray

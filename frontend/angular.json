@@ -6,9 +6,7 @@
 		"clinics-schedules-frontend": {
 			"projectType": "application",
 			"schematics": {
-				"@schematics/angular:component": {
-					"style": "scss"
-				}
+			
 			},
 			"root": "",
 			"sourceRoot": "src",
@@ -29,8 +27,7 @@
 							"src/assets"
 						],
 						"styles": [
-							"src/custom-theme.scss",
-							"src/styles.scss"
+							"src/styles.css"
 						],
 						"scripts": []
 					},

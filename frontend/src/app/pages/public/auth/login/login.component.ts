@@ -5,20 +5,18 @@ import Logger from 'src/app/logger.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  output: string;
-  password: string;
-  username: string;
+  output!: string;
+  password!: string;
+  username!: string;
   api: API;
 
   constructor(http: API) {
     this.api = http;
   };
   submit() {
-    Logger.info(this.password)
-    Logger.info(this.username)
 
     let user = {
       id: 0,
@@ -29,7 +27,15 @@ export class LoginComponent {
     };
     Logger.info(user)
     this.api.auth(user)
-      .subscribe(user => this.output = JSON.stringify(user))
+      .subscribe({
+        next: (user) => {
+          this.output = JSON.stringify(user)
+          Logger.info(user)
+        },
+        error: (err) => {
+          this.output = "RR"
+        },
+      });
   }
 
 }

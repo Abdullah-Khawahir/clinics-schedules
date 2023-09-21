@@ -17,8 +17,17 @@ export class API {
   constructor(private http: HttpClient) { }
 
 
+  getClinics() {
+    const basicAuth = "abdullah" + ':' + "4484";
+    let Headers = new HttpHeaders();
+    Headers = Headers.append('Authorization', 'Basic ' + btoa(basicAuth));
+
+    return this.http.get<any>(this.SERVER_ADDRESS + '/private/clinic',
+      { headers: Headers, responseType: 'json' },)
+
+  }
   auth(user: userDto) {
-    return this.http.post<userDto>(this.SERVER_ADDRESS + "/auth", JSON.stringify(user))
+    return this.http.post<userDto>(this.SERVER_ADDRESS + "/public/auth", user)
       .pipe(
         catchError(this.handleError)
       )

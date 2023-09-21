@@ -11,7 +11,6 @@ export const routes: Routes = [
   { path: "login", title: "login", component: LoginComponent },
   { path: "hospital-schedules", title: "schedules", component: HospitalSchedulesComponent },
   { path: "**", redirectTo: "" },
-
 ]
 
 @NgModule({

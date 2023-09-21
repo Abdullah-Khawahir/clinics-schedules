@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { Column } from './models/interfaces';
+import { Component, OnInit } from '@angular/core';
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -21,16 +20,17 @@ const ELEMENT_DATA: PeriodicElement[] = [
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent  {
   title = 'clinics-schedules-frontend';
-  // columns: Column[] = [
-  //   { key: "position", displayLabel: "No." },
-  //   { key: "name", displayLabel: "name" },
 
-  // ]
-  // name ="susy paka"
 
-  // data = ELEMENT_DATA
+
+  onSubmit(element: PeriodicElement) {
+    console.log("click");
+    console.log(element);
+  }
 }
+
+
