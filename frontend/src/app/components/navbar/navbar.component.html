@@ -1,7 +1,22 @@
 <div id="nav">
 
-    <a class="navbar-item" *ngFor="let route of routes" routerLink="{{route.path}}">
-        {{route.name}}
+    <a routerLink="/" *ngIf="this.isLoggedIn" class="navbar-item" (click)="this.auth.logout()">
+        logout
     </a>
+    <a routerLink="/dashboard" *ngIf="this.isLoggedIn" class="navbar-item">
+        dashboard
+    </a>
+
+    <a routerLink="/login" *ngIf="!this.isLoggedIn" class="navbar-item">
+        login
+    </a>
+
+    <a routerLink="/hospital-schedules" class="navbar-item">
+        schedules
+    </a>
+    <a routerLink="/" class="navbar-item">
+        home
+    </a>
+
 
 </div>

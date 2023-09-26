@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 
 interface InputField<T> {
   inputType: "text" | "number" | "email" | "radio" | "checkbox"
@@ -23,11 +23,13 @@ export interface ObjectKeyToInputField<T> {
   templateUrl: './popup-form.component.html',
   styleUrls: ['./popup-form.component.css']
 })
-export class PopupFormComponent<T> implements OnInit {
+export class PopupFormComponent<T> implements OnInit, OnDestroy {
+
   formInputObject: any;
   @Input({ required: true }) inputsDefinition!: ObjectKeyToInputField<T>[];
   @Input({ required: true }) onSubmit!: (formObject: any) => void
 
+  constructor(private host: ElementRef<HTMLElement>) { }
 
   ngOnInit(): void {
     for (let i = 0; i < this.inputsDefinition.length; i++) {
@@ -43,4 +45,7 @@ export class PopupFormComponent<T> implements OnInit {
     this.onSubmit(formData)
   }
 
+  ngOnDestroy(): void {
+    console.log("DESTROYED");
+  }
 }

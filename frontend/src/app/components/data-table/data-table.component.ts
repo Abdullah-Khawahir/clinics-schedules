@@ -10,10 +10,10 @@ const DELIMITER = "\x01";
   templateUrl: './data-table.component.html',
   styleUrls: ['./data-table.component.css']
 })
-export class DataTableComponent implements AfterViewInit, OnInit {
+export class DataTableComponent<T> implements AfterViewInit, OnInit {
 
 
-  @Input({ alias: "data-list", required: true }) dataArray!: any[];
+  @Input({ alias: "data-list", required: true }) dataArray!: T[];
   @Input({ alias: "columns-definition", required: true }) ColumnsDefinition!: Column[];
 
   elementsArray = new MatTableDataSource();
@@ -24,7 +24,7 @@ export class DataTableComponent implements AfterViewInit, OnInit {
   }
   ngOnInit() {
     this.elementsArray.data = this.dataArray
-    this.elementsArray.filterPredicate = (dataInList: any, targetKeyAndInput: string) => {
+    this.elementsArray.filterPredicate = (dataInList: T | any, targetKeyAndInput: string) => {
       let [keyTarget, input] = targetKeyAndInput.split(DELIMITER)
       this.elementsFilters.set(keyTarget, input)
 
@@ -48,6 +48,21 @@ export class DataTableComponent implements AfterViewInit, OnInit {
   filterList(event: Event, keyTarget: string) {
     let input = (event.target as HTMLInputElement).value.trim()
     this.elementsArray.filter = [keyTarget, input].join(DELIMITER)
+  }
+
+
+  editAction(dataObject: T) {
+
+  }
+  deleteAction() {
+
+  }
+  addAction() {
+
+  }
+
+  dependencyAddAction() {
+
   }
 
 }

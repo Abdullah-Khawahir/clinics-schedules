@@ -19,7 +19,6 @@ public class Authentication {
   @PostMapping(path = "/auth")
   public ResponseEntity<UserDto> authenticateUser(@RequestBody UserDto entity)
       throws Exception {
-    System.out.println(entity);
     var user = userService.loadUserByUsername(entity.getUsername()).getUser();
 
     if (user.getPassword().equals(entity.getPassword()))

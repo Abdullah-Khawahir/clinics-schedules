@@ -10,6 +10,7 @@
     height: 100%;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.25);
+
 }
 
 .pop-up-form {
@@ -38,17 +39,18 @@
 
 /* "number" | "text" | "email" | "radio" | "checkbox" */
 .pop-up-form-input {
-    width: 75%;
+    width: 60%;
     justify-self: end;
 }
 
 .pop-up-form-label {
-    width: 25%;
+    min-width: 40%;
     justify-self: start;
+
 }
 
 .form-submit-button {
-    width: 75%;
+    width: 60%;
     justify-self: end;
     place-self: end;
 }

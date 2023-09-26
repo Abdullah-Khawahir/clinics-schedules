@@ -1,1 +1,28 @@
-<p>hospital-form works!</p>
+<div class="pop-up-form-background">
+
+    <form class="pop-up-form" ngNativeValidate #form='ngForm' (ngSubmit)="this.submit(form.value)">
+        <div class="pop-up-form-input-and-label-container">
+
+            <div class="pop-up-form-label">
+                <label>
+                    Hospital English Name :
+                </label>
+            </div>
+            <input class="pop-up-form-input text-input" type="text" required cost [(ngModel)]="this.englishName">
+        </div>
+
+
+        <div class="pop-up-form-input-and-label-container">
+            <div class="pop-up-form-label">
+                <label>
+                    Hospital Arabic Name :
+                </label>
+            </div>
+            <input class="pop-up-form-input text-input" name="arabicName" type="text" required
+                [(ngModel)]="this.arabicName">
+        </div>
+
+        <button class="form-submit-button btn" type="submit">submit</button>
+    </form>
+
+</div>

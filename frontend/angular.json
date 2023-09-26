@@ -66,6 +66,7 @@
 						},
 						"development": {
 							"browserTarget": "clinics-schedules-frontend:build:development"
+						
 						}
 					},
 					"defaultConfiguration": "development"

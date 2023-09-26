@@ -1,18 +1,21 @@
-<div class="pop-up-form">
+<div class="pop-up-form-background">
 
-    <form #form='ngForm' (ngSubmit)="this.submit(form.value)" ngNativeValidate>
-        <div *ngFor="let inputField of inputsDefinition">
-            <label>
-                {{ inputField.definition.label || inputField.key }}
-            </label>
+    <form class="pop-up-form" #form='ngForm' (ngSubmit)="this.submit(form.value)" ngNativeValidate>
+        <div class="pop-up-form-input-and-label-container" *ngFor="let inputField of inputsDefinition">
+
+            <div class="pop-up-form-label">
+                <label >
+                    {{ inputField.definition.label || inputField.key }}
+                </label>
+            </div>
 
             <input *ngIf=" inputField.definition.inputBehavior  == 'typing'"
                 class="pop-up-form-input {{inputField.definition.inputType}}-input"
                 [required]="inputField.definition.required" name="{{inputField.key}}"
                 type="{{inputField.definition.inputType}}" [(ngModel)]="this.formInputObject[inputField.key]"
                 [attr.list]="inputField.key">
-            
-                <select *ngIf=" inputField.definition.inputBehavior  == 'select'"
+
+            <select *ngIf=" inputField.definition.inputBehavior  == 'select'"
                 class="pop-up-form-input {{inputField.definition.inputType}}-input"
                 [required]="inputField.definition.required" name="{{inputField.key}}"
                 [(ngModel)]="this.formInputObject[inputField.key]" [attr.list]="inputField.key">
@@ -24,15 +27,13 @@
 
             </select>
 
-            <datalist 
-            *ngIf=" inputField.definition.inputBehavior  == 'typing'"
-            [id]="inputField.key" >
+            <datalist *ngIf=" inputField.definition.inputBehavior  == 'typing'" [id]="inputField.key">
                 <option *ngFor="let suggestion of inputField.options?.data"
                     value="{{inputField.options?.valueMapper(suggestion)}}">
                     {{inputField.options?.viewMapper(suggestion)}}
                 </option>
             </datalist>
         </div>
-        <button type="submit">submit</button>
+        <button class="form-submit-button btn" type="submit">submit</button>
     </form>
 </div>

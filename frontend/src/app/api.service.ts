@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, retry, throwError } from 'rxjs'; // don't forget this, or you'll get a runtime error
-import { userDto } from './dto/userDto';
+import { UserDto } from './dto/userDto';
 import Logger from './logger.service';
 
 
@@ -26,10 +26,12 @@ export class API {
       { headers: Headers, responseType: 'json' },)
 
   }
-  auth(user: userDto) {
-    return this.http.post<userDto>(this.SERVER_ADDRESS + "/public/auth", user)
+  auth(user: UserDto) {
+    console.log(user);
+
+    return this.http.post<UserDto>(this.SERVER_ADDRESS + "/public/auth", user)
       .pipe(
-        catchError(this.handleError)
+        catchError(this.handleError),
       )
   }
 
@@ -39,15 +41,6 @@ export class API {
 
 
 
-
-  private getTest(): Observable<number[]> {
-    return this.http
-      .get<number[]>("")
-      .pipe(
-        retry(2),
-        catchError(this.handleError)
-      );
-  }
 
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {

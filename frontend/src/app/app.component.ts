@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component } from '@angular/core';
+import { ObjectKeyToInputField } from './components/popup-form/popup-form.component';
+import { UserDto } from './dto/userDto';
 export interface PeriodicElement {
   name: string;
   position: number;
@@ -22,14 +25,55 @@ const ELEMENT_DATA: PeriodicElement[] = [
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent  {
+export class AppComponent {
+  constructor(public http: HttpClient) { }
   title = 'clinics-schedules-frontend';
+  input: ObjectKeyToInputField<UserDto>[] = [
+    {
+      key: 'username', definition: {
+        inputBehavior: 'typing',
+        inputType: 'text',
+        label: "User name",
+        required: true
+      }
+    }
+    , {
+      key: 'password', definition: {
+        inputBehavior: 'typing',
+        inputType: 'text',
+        label: "Password",
+        required: true
+      }
+    }
+    , {
+      key: 'email', definition: {
+        inputBehavior: 'typing',
+        inputType: 'text',
+        label: "E-mail",
+        required: true
+      }
+    }
+    , {
+      key: 'roles', definition: {
+        inputBehavior: 'typing',
+        inputType: 'text',
+        label: "Role",
+        required: true
+      }
+    }
+  ]
 
 
-
-  onSubmit(element: PeriodicElement) {
+  onSubmit(element: UserDto) {
+    setInterval(() => console.log(window.location.hash) , 500)
     console.log("click");
     console.log(element);
+    const header = new HttpHeaders()
+    header.append("Authentication", "basic abdullah:4484")
+    this.http.post<UserDto>(
+      "127.0.0.1:8080/private/user",
+      new UserDto({ ...element }), { headers: header }
+    ).subscribe(response => console.log(response))
   }
 }
 

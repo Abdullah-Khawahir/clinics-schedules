@@ -35,6 +35,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { HospitalFormComponent } from './forms/hospital-form/hospital-form.component';
+import { SchedulesPanelComponent } from './pages/authorized/schedules-panel/schedules-panel.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +61,9 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     HospitalPanelComponent,
     BuildingsPanelComponent,
     ClinicsPanelComponent,
-    NavbarComponent
+    NavbarComponent,
+    HospitalFormComponent,
+    SchedulesPanelComponent
   ],
   imports: [
     BrowserModule,
