@@ -1,1 +1,6 @@
-<p>clinics-panel works!</p>
+<div class="clinics-panel">
+
+    <app-data-table *ngIf="this.tableState == 'complete'" 
+    [data-list]="this.clinicsList"
+        [columns-definition]="ColumnsDefinition"></app-data-table>
+</div>

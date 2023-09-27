@@ -1,1 +1,8 @@
-<p>employees-panel works!</p>
+<div>
+
+    <app-data-table 
+    *ngIf="this.tableState == 'complete' "
+    [data-list]="this.employeeList"
+     [columns-definition]="this.columnDefinition">
+    </app-data-table>
+</div>

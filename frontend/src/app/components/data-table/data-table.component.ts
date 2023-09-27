@@ -10,21 +10,24 @@ const DELIMITER = "\x01";
   templateUrl: './data-table.component.html',
   styleUrls: ['./data-table.component.css']
 })
-export class DataTableComponent<T> implements AfterViewInit, OnInit {
+export class DataTableComponent implements AfterViewInit, OnInit {
 
 
-  @Input({ alias: "data-list", required: true }) dataArray!: T[];
+  @Input({ alias: "data-list", required: true }) dataArray!: any[] | null;
   @Input({ alias: "columns-definition", required: true }) ColumnsDefinition!: Column[];
 
   elementsArray = new MatTableDataSource();
   elementsFilters = new Map<string, string>()
   @ViewChild(MatSort) sort!: MatSort;
+
   ngAfterViewInit() {
     this.elementsArray.sort = this.sort;
   }
+
   ngOnInit() {
-    this.elementsArray.data = this.dataArray
-    this.elementsArray.filterPredicate = (dataInList: T | any, targetKeyAndInput: string) => {
+
+    this.elementsArray.data = this.dataArray || []
+    this.elementsArray.filterPredicate = (dataInList: any, targetKeyAndInput: string) => {
       let [keyTarget, input] = targetKeyAndInput.split(DELIMITER)
       this.elementsFilters.set(keyTarget, input)
 
@@ -51,7 +54,7 @@ export class DataTableComponent<T> implements AfterViewInit, OnInit {
   }
 
 
-  editAction(dataObject: T) {
+  editAction(dataObject: any) {
 
   }
   deleteAction() {

@@ -1,1 +1,6 @@
-<p>buildings-panel works!</p>
+<div class="building-panel">
+    <app-data-table *ngIf="this.tableState == 'complete'"
+    [data-list]="this.buildings"
+    [columns-definition]="this.columnDefinition">
+    </app-data-table>
+</div>

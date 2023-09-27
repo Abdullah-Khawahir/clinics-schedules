@@ -1,1 +1,7 @@
-<p>hospital-panel works!</p>
+<div class="hospital-panel-container">
+
+    <app-data-table *ngIf="this.tableState== 'complete' "
+    [data-list]="this.hospitalsList "
+    [columns-definition]="this.columnsDefinition"
+    ></app-data-table>
+</div>
