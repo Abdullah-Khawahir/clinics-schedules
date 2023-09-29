@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { API } from './api.service';
 export interface LoginData {
   username: string,
@@ -15,14 +15,13 @@ const EMPTY_LOGIN_DATA = {
 @Injectable({
   providedIn: 'root'
 })
-
-
-
-export class AuthenticationService {
+export class AuthenticationService implements OnDestroy {
   private loginData$: BehaviorSubject<LoginData> = new BehaviorSubject<LoginData>(EMPTY_LOGIN_DATA);
   private onLogInFunctions: (() => void)[] = []
   private onLogoutFunctions: (() => void)[] = []
   private isLogged$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
+  private unsubscribe$: Subject<void> = new Subject<void>();
+
   constructor(private api: API) {
     for (let i = 0; i < 5; i++) {
       console.warn(i + ":auto login is active");
@@ -34,7 +33,6 @@ export class AuthenticationService {
     const userInfo = this.api
       .auth({ id: 0, username: username, password: password, email: "", roles: [] });
     userInfo
-      .pipe()
       .subscribe(user => {
         if (user.password == password && user.username == username) {
           this.loginData$.next({
@@ -52,6 +50,7 @@ export class AuthenticationService {
   isLoggedIn() {
     return this.isLogged$.asObservable();
   }
+
   logout() {
     this.loginData$.next(EMPTY_LOGIN_DATA)
     this.isLogged$.next(false)
@@ -70,4 +69,8 @@ export class AuthenticationService {
     this.onLogInFunctions.push(fn)
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribe$.next()
+    this.unsubscribe$.complete()
+  }
 }

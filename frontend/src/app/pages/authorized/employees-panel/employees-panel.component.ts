@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { API } from 'src/app/api.service';
 import { Employee } from 'src/app/dto/employeeDto';
 import { Column, RequestState } from 'src/app/models/interfaces';
@@ -8,13 +9,15 @@ import { Column, RequestState } from 'src/app/models/interfaces';
   templateUrl: './employees-panel.component.html',
   styleUrls: ['./employees-panel.component.css']
 })
-export class EmployeesPanelComponent implements OnInit {
+export class EmployeesPanelComponent implements OnInit, OnDestroy {
   employeeList!: Employee[]
   columnDefinition!: Column[]
   tableState: RequestState = 'loading'
+  unsubscribe$: Subject<void> = new Subject<void>();
   constructor(public api: API) { }
   ngOnInit(): void {
     this.api.getEmployees()
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         complete: () => {
           this.tableState = 'complete'
@@ -26,7 +29,7 @@ export class EmployeesPanelComponent implements OnInit {
           this.employeeList = value
         }
       })
-      
+
     this.columnDefinition = [
       { key: "id", displayLabel: "ID" },
       { key: "englishName", displayLabel: "English Name" },
@@ -36,5 +39,11 @@ export class EmployeesPanelComponent implements OnInit {
       { key: "secondPhoneNumber", displayLabel: "Second Phone NO." },
     ]
 
+  }
+  
+  
+  ngOnDestroy(): void {
+    this.unsubscribe$.next()
+    this.unsubscribe$.complete()
   }
 }

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { API } from 'src/app/api.service';
 import { ClinicDto } from 'src/app/dto/ClinicDto';
 import { Column, RequestState } from 'src/app/models/interfaces';
@@ -8,13 +9,16 @@ import { Column, RequestState } from 'src/app/models/interfaces';
   templateUrl: './clinics-panel.component.html',
   styleUrls: ['./clinics-panel.component.css']
 })
-export class ClinicsPanelComponent implements OnInit {
+export class ClinicsPanelComponent implements OnInit, OnDestroy {
   clinicsList!: ClinicDto[]
   ColumnsDefinition!: Column[]
   tableState: RequestState = 'loading'
+  unsubscribe$: Subject<void> = new Subject<void>();
   constructor(public api: API) { }
+
   ngOnInit(): void {
     this.api.getClinics()
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         complete: () => {
           this.tableState = 'complete'
@@ -35,4 +39,9 @@ export class ClinicsPanelComponent implements OnInit {
 
     ]
   }
+  ngOnDestroy(): void {
+    this.unsubscribe$.next()
+    this.unsubscribe$.complete()
+  }
 }
+
