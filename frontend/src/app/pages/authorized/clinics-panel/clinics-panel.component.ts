@@ -17,7 +17,7 @@ export class ClinicsPanelComponent implements OnInit, OnDestroy {
   constructor(public api: API) { }
 
   ngOnInit(): void {
-    this.api.getClinics()
+    this.api.clinicDataSource.getAll()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         complete: () => {

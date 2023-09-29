@@ -16,7 +16,7 @@ export class EmployeesPanelComponent implements OnInit, OnDestroy {
   unsubscribe$: Subject<void> = new Subject<void>();
   constructor(public api: API) { }
   ngOnInit(): void {
-    this.api.getEmployees()
+    this.api.employeeDataSource.getAll()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         complete: () => {

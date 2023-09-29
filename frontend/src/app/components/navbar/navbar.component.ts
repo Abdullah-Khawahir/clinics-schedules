@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { AuthenticationService } from 'src/app/authentication.service';
+import { UserService } from 'src/app/user.service';
 interface route {
   name: string,
   path: string,
@@ -17,16 +17,19 @@ export class NavbarComponent implements OnInit, OnDestroy {
   isLoggedIn!: boolean;
   unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(public auth: AuthenticationService, private router: Router) { }
+  constructor(public user: UserService, private router: Router) { }
 
   ngOnInit(): void {
-    // this.auth.onLogin(() => this.isLoggedIn = true)
-    // this.auth.onLogOut(() => this.isLoggedIn = false)
 
-    this.auth.isLoggedIn()
+
+    this.user.isLoggedIn()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(isLoggedIn => this.isLoggedIn = isLoggedIn)
-    this.auth.onLogOut(() => {
+    this.user.onLogin(() => {
+      console.log("login");
+      this.router.navigate(["/dashboard"])
+    })
+    this.user.onLogOut(() => {
       console.log("logout");
       this.router.navigate(["/"])
     })

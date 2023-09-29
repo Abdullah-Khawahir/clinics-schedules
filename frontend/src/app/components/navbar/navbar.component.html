@@ -1,6 +1,6 @@
 <div id="nav">
 
-    <a routerLink="/" *ngIf="this.isLoggedIn" class="navbar-item" (click)="this.auth.logout()">
+    <a routerLink="/" *ngIf="this.isLoggedIn" class="navbar-item" (click)="this.user.logout()">
         logout
     </a>
     <a routerLink="/dashboard" *ngIf="this.isLoggedIn" class="navbar-item">

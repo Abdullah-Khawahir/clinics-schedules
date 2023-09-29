@@ -27,7 +27,7 @@ export class BuildingsPanelComponent implements OnInit, OnDestroy {
       { key: "hospitalId", displayLabel: "HospitalId" },
       { key: "number", displayLabel: "Clinic Number" },
     ]
-    this.api.getBuildingsList()
+    this.api.buildingDataSource.getAll()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         error: () => {

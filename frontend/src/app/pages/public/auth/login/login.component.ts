@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { tap } from 'rxjs';
 import { AuthenticationService } from 'src/app/authentication.service';
 
 @Component({
@@ -17,9 +18,12 @@ export class LoginComponent {
   };
   submit() {
     this.authentication.login(this.username, this.password)
-    this.authentication.onLogin(() => { 
-      this.router.navigate(["/dashboard"])
-    })
+    .pipe(
+      tap(() => {
+
+      })
+    )
+
   }
 
 }

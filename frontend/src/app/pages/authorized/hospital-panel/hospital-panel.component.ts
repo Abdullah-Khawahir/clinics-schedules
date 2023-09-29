@@ -23,7 +23,7 @@ export class HospitalPanelComponent implements OnInit, OnDestroy {
       { key: 'englishName', displayLabel: "English Name" },
       { key: 'arabicName', displayLabel: "Arabic Name" },
     ]
-    this.api.getHospitalsList()
+    this.api.hospitalDataSource.getAll()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(
         {
