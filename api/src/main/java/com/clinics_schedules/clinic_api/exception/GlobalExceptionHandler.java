@@ -74,4 +74,17 @@ public class GlobalExceptionHandler {
 						.build(),
 				HttpStatus.CONFLICT);
 	}
+
+	@ExceptionHandler(UsernameNotFoundException.class)
+	public ResponseEntity<ErrorDetails> usernameNotFoundHandler(
+			final UsernameNotFoundException exception,
+			final WebRequest webRequest) {
+		return new ResponseEntity<ErrorDetails>(
+				ErrorDetails.builder()
+						.message(exception.getMessage())
+						.details(null)
+						.timestamp(new Date())
+						.build(),
+				HttpStatus.NOT_FOUND);
+	}
 }
