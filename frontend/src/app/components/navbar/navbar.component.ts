@@ -25,10 +25,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.user.isLoggedIn()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(isLoggedIn => this.isLoggedIn = isLoggedIn)
-    this.user.onLogin(() => {
-      console.log("login");
-      this.router.navigate(["/dashboard"])
-    })
+    // this.user.onLogin(() => {
+    //   console.log("login");
+    //   this.router.navigate(["/dashboard"])
+    // })
     this.user.onLogOut(() => {
       console.log("logout");
       this.router.navigate(["/"])

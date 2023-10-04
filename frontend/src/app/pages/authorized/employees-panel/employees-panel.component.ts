@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { API } from 'src/app/api.service';
-import { Employee } from 'src/app/dto/employeeDto';
+import { EmployeeDto } from 'src/app/dto/EmployeeDto';
 import { Column, RequestState } from 'src/app/models/interfaces';
 
 @Component({
@@ -10,7 +10,7 @@ import { Column, RequestState } from 'src/app/models/interfaces';
   styleUrls: ['./employees-panel.component.css']
 })
 export class EmployeesPanelComponent implements OnInit, OnDestroy {
-  employeeList!: Employee[]
+  employeeList!: EmployeeDto[]
   columnDefinition!: Column[]
   tableState: RequestState = 'loading'
   unsubscribe$: Subject<void> = new Subject<void>();
@@ -40,8 +40,8 @@ export class EmployeesPanelComponent implements OnInit, OnDestroy {
     ]
 
   }
-  
-  
+
+
   ngOnDestroy(): void {
     this.unsubscribe$.next()
     this.unsubscribe$.complete()

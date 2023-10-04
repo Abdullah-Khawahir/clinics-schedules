@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, first, take, takeUntil } from 'rxjs';
 import { UserDto } from './dto/UserDto';
 import { HttpClient } from '@angular/common/http';
 export interface LoginData {
@@ -27,7 +27,7 @@ export class UserService {
     for (let i = 0; i < 5; i++) {
       console.warn(i + ":auto login is active");
     }
-    this.login("abdullah", "4484")
+    this.login("abdullah", "4484").subscribe(console.log)
   }
 
 

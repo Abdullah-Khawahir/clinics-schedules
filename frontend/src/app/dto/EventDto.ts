@@ -3,8 +3,8 @@ export class EventDto {
 
     constructor(
         public scheduleId: number,
-        public beginTime: Date,
-        public finishTime: Date,
+        public beginTime: string | number,
+        public finishTime: string | number,
     ) { }
 
 

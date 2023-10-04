@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs';
-import { AuthenticationService } from 'src/app/authentication.service';
+import { UserService } from 'src/app/user.service';
 
 @Component({
   selector: 'app-login',
@@ -14,15 +13,9 @@ export class LoginComponent {
   username!: string;
 
 
-  constructor(public authentication: AuthenticationService, public router: Router) {
-  };
+  constructor(public user: UserService, public router: Router) { }
   submit() {
-    this.authentication.login(this.username, this.password)
-    .pipe(
-      tap(() => {
-
-      })
-    )
+    this.user.login(this.username, this.password)
 
   }
 

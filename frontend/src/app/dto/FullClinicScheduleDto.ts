@@ -1,19 +1,20 @@
 import { EventDto } from "./EventDto";
 import { EmployeeDto } from "./EmployeeDto";
+import { ClinicDto } from "./ClinicDto";
 
-export class ClinicScheduleDto {
-
+export class FullClinicScheduleDto {
     constructor(
         public id: number,
-        public clinicId: number,
-        public beginDate: string | number,
-        public expireDate: string | number,
+        public clinic: ClinicDto,
+        public beginTime: Date,
+        public expireTime: Date,
         public eventStart: string,
         public eventFinish: string,
         public repeat: 'everyday' | 'never' | 'daily' | 'weekly' | "weekdays" | "weekend",
         public events: EventDto[],
         public employees: EmployeeDto[],
     ) {
-
+        this.beginTime = new Date(beginTime);
+        this.expireTime = new Date(expireTime);
     }
 }

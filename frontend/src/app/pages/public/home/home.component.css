@@ -1,0 +1,10 @@
+.clinic-schedule-events{
+    display: inline-block;
+    /* flex-direction: row; */
+    padding: 8px;
+    margin: 2px;
+    border: 1px solid;
+
+    width: calc(100vw / 7);
+}
+

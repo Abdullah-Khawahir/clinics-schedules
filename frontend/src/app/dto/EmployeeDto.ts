@@ -1,4 +1,4 @@
-export class Employee {
+export class EmployeeDto {
 
     constructor(
         public  id:number,

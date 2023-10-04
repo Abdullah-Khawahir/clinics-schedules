@@ -1,12 +1,15 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Injectable, OnDestroy } from '@angular/core';
-import { Observable, Subject, catchError, map, take, throwError } from 'rxjs'; // don't forget this, or you'll get a runtime error
+import { Injectable, OnDestroy, inject } from '@angular/core';
+import { Observable, Subject, map, scheduled, throwError } from 'rxjs'; // don't forget this, or you'll get a runtime error
 import { BuildingDto } from './dto/BuildingDto';
-import { HospitalDto } from './dto/HospitalDto';
-import { Employee } from './dto/employeeDto';
-import Logger from './logger.service';
 import { ClinicDto } from './dto/ClinicDto';
+import { EmployeeDto } from './dto/EmployeeDto';
+import { HospitalDto } from './dto/HospitalDto';
+import Logger from './logger.service';
 import { UserService } from './user.service';
+import { FullClinic } from './models/FullClinic';
+import moment from 'moment';
+import { ClinicScheduleDto } from './dto/ClinicScheduleDto';
 
 interface CRUD<T, ID> {
   getAll(): Observable<T[]>,
@@ -14,7 +17,25 @@ interface CRUD<T, ID> {
   delete(id: ID): void,
   update(id: ID, entity: T): Observable<T>,
 }
+class crudAPI<T, ID> implements CRUD<T, ID> {
+  _http: HttpClient
+  constructor(private url: string, private headers: HttpHeaders) {
+    this._http = inject(HttpClient)
+  }
 
+  getAll(): Observable<T[]> {
+    return this._http.get<T[]>(this.url, { headers: this.headers })
+  }
+  save(entity: T): Observable<T> {
+    return this._http.post<T>(this.url, entity)
+  }
+  delete(id: ID): void {
+    this._http.delete(this.url + `/${id}`)
+  }
+  update(id: ID, entity: T): Observable<T> {
+    return this._http.put<T>(this.url + `/${id}`, entity)
+  }
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -30,77 +51,60 @@ export class API implements OnDestroy {
 
 
   private readonly HOSPITAL_URI = this.url("/private/hospital")
-  hospitalDataSource: CRUD<HospitalDto, number> = {
-    getAll: () => {
-      return this.http.get<HospitalDto[]>(this.HOSPITAL_URI,
-        { headers: this.AuthHeader(), responseType: "json" })
-        .pipe(catchError(this.handleError));
-    },
-    save: (entity: HospitalDto) => {
-      return this.http.post<HospitalDto>(this.HOSPITAL_URI, entity)
-        .pipe(catchError(this.handleError))
-    },
-    delete: (id: number) => {
-      return this.http.delete(this.HOSPITAL_URI + `/${id}`)
-    },
-    update: (id: number, entity: HospitalDto) => {
-      return this.http.put<HospitalDto>(this.HOSPITAL_URI + `/${id}`, entity)
-        .pipe(catchError(this.handleError))
-    }
-  }
+  hospitalDataSource = new crudAPI<HospitalDto, number>(this.HOSPITAL_URI, this.AuthHeader())
 
   private readonly BUILDING_URI = this.url("/private/hospital")
-  buildingDataSource: CRUD<BuildingDto, number> = {
-    getAll: (): Observable<BuildingDto[]> => {
-      return this.http.get<BuildingDto[]>(this.BUILDING_URI, { headers: this.AuthHeader() })
+  buildingDataSource = new crudAPI<BuildingDto, number>(this.BUILDING_URI, this.AuthHeader());
 
-    },
-    save: (entity: BuildingDto): Observable<BuildingDto> => {
-      return this.http.post<BuildingDto>(this.BUILDING_URI, entity, { headers: this.AuthHeader() })
-    },
-    delete: (id: number): void => {
-      this.http.delete<BuildingDto>(this.BUILDING_URI + `/${id}`, { headers: this.AuthHeader() })
-    },
-    update: (id: number, entity: BuildingDto): Observable<BuildingDto> => {
-      return this.http.put<BuildingDto>(this.BUILDING_URI + `/${id}`, entity, { headers: this.AuthHeader() })
-    }
-  }
 
   private readonly CLINIC_URI = this.url('/private/clinic')
-  clinicDataSource: CRUD<ClinicDto, number> = {
-    getAll: (): Observable<ClinicDto[]> => {
-      return this.http.get<ClinicDto[]>(this.CLINIC_URI, { headers: this.AuthHeader() })
-    },
-    save: (entity: ClinicDto): Observable<ClinicDto> => {
-      return this.http.post<ClinicDto>(this.BUILDING_URI, entity, { headers: this.AuthHeader() })
-    },
-    delete: (id: number): void => {
-      this.http.delete<ClinicDto>(this.BUILDING_URI + `/${id}`, { headers: this.AuthHeader() })
-    },
-    update: (id: number, entity: ClinicDto): Observable<ClinicDto> => {
-      return this.http.put<ClinicDto>(this.BUILDING_URI + `/${id}`, entity, { headers: this.AuthHeader() })
-    }
-  }
+  clinicDataSource = new crudAPI<ClinicDto, number>(this.CLINIC_URI, this.AuthHeader());
 
   private readonly EMPLOYEE_URI = this.url('/private/clinic')
-  employeeDataSource: CRUD<Employee, number> = {
-    getAll: (): Observable<Employee[]> => {
-      return this.http.get<Employee[]>(this.EMPLOYEE_URI, { headers: this.AuthHeader() })
-    },
-    save: (entity: Employee): Observable<Employee> => {
-      return this.http.post<Employee>(this.EMPLOYEE_URI, entity, { headers: this.AuthHeader() })
-    },
-    delete: (id: number): void => {
-      this.http.delete<Employee>(this.EMPLOYEE_URI + `/${id}`)
-    },
-    update: (id: number, entity: Employee): Observable<Employee> => {
-      return this.http.put<Employee>(this.EMPLOYEE_URI + `/${id}`, entity, { headers: this.AuthHeader() })
+  employeeDataSource = new crudAPI<EmployeeDto, number>(this.EMPLOYEE_URI, this.AuthHeader());
 
-    }
+  private convertDateFromStringToMs = (str: string | number) => {
+    return new Date(str).getTime()
+  }
+  getFullClinic(id: number) {
+    return this.http.get<FullClinic>
+      (`http://localhost:8080/public/full-clinic${'/' + id}`, { headers: {} })
+      .pipe(
+        map(clinic => {
+          clinic.schedules.forEach(schedule => {
+            schedule.beginDate = this.convertDateFromStringToMs(schedule.beginDate)
+            schedule.expireDate = this.convertDateFromStringToMs(schedule.expireDate)
+
+            schedule.events.forEach(event => {
+              event.beginTime = this.convertDateFromStringToMs(event.beginTime)
+              event.finishTime = this.convertDateFromStringToMs(event.finishTime)
+            })
+          })
+          return clinic;
+        })
+      )
+
   }
 
+  getAllClinics() {
+    return this.http.get<FullClinic[]>
+      (`http://localhost:8080/public/full-clinic`, { headers: {} })
+      .pipe(
+        map(clinics => {
+          clinics.forEach(clinic => clinic.schedules.forEach(schedule => {
+            schedule.beginDate = this.convertDateFromStringToMs(schedule.beginDate)
+            schedule.expireDate = this.convertDateFromStringToMs(schedule.expireDate)
 
-  private AuthHeader() {
+            schedule.events.forEach(event => {
+              event.beginTime = this.convertDateFromStringToMs(event.beginTime)
+              event.finishTime = this.convertDateFromStringToMs(event.finishTime)
+            })
+          }))
+          return clinics;
+        })
+      )
+  }
+  AuthHeader() {
     let basicAuth = "";
     let Headers = new HttpHeaders();
 
