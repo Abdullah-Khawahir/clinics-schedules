@@ -25,11 +25,19 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(path = { "/private" })
-@CrossOrigin(origins = {"http://localhost:4200" , "*"})
+@CrossOrigin(origins = { "http://localhost:4200", "*" })
 public class ClinicController {
 
     @Autowired
     private ClinicService clinicService;
+
+    @GetMapping(path = "/clinic/{id}")
+    public ResponseEntity<ClinicDto> getClinicByID(@PathVariable Integer id) {
+        return ResponseEntity.ok(
+                clinicService.getByID(id)
+                        .map(ClinicDto::new)
+                        .orElseThrow(() -> new ResourceNotFoundException("Clinic", "id", id.toString())));
+    }
 
     @GetMapping(path = "/clinic")
     public ResponseEntity<List<ClinicDto>> getAllClinics() {

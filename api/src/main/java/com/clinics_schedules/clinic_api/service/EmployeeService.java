@@ -1,6 +1,7 @@
 package com.clinics_schedules.clinic_api.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,4 +59,8 @@ public class EmployeeService implements BasicCRUDService<Employee, EmployeeDto, 
 
     }
 
+    @Override
+    public Optional<Employee> getByID(Integer id) {
+        return this.repository.findById(id);
+    }
 }

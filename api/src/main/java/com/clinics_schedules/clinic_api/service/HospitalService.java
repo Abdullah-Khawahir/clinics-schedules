@@ -10,14 +10,16 @@ import org.springframework.stereotype.Service;
 import com.clinics_schedules.clinic_api.dto.HospitalDto;
 import com.clinics_schedules.clinic_api.entity.Hospital;
 import com.clinics_schedules.clinic_api.exception.ResourceNotFoundException;
+import com.clinics_schedules.clinic_api.interfaces.BasicCRUDService;
 import com.clinics_schedules.clinic_api.repository.HospitalRepository;
 
 @Service
-public class HospitalService {
+public class HospitalService implements BasicCRUDService<Hospital, HospitalDto, Integer> {
 
     @Autowired
     public HospitalRepository repository;
-
+    
+    @Override
     public Hospital save(final HospitalDto hospital) {
 
         return repository.save(
@@ -28,16 +30,19 @@ public class HospitalService {
                         .build());
     }
 
+    @Override
     public List<Hospital> getAll() {
         return repository.findAll();
     }
 
+    @Override
     public void deleteById(final Integer id) {
         if (!repository.existsById(id))
             throw new ResourceNotFoundException("Hospital", "hospital_id", id.toString());
         repository.deleteById(id);
     }
 
+    @Override
     public Hospital updateById(final Integer id, final HospitalDto hospital) {
         final Hospital currentHospital = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("hospital", "hospital_id", Integer.toString(id)));
@@ -58,6 +63,11 @@ public class HospitalService {
                 .findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Hospital", "hospital_name", name));
 
+    }
+
+    @Override
+    public Optional<Hospital> getByID(Integer id) {
+        return this.repository.findById(id);
     }
 
 }

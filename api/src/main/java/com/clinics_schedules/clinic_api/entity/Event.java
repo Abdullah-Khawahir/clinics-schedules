@@ -2,12 +2,15 @@ package com.clinics_schedules.clinic_api.entity;
 
 import java.util.Date;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,7 +28,7 @@ public class Event {
     @Column(name = "event_id", nullable = false)
     private Integer eventId;
 
-    @JoinColumn(name = "schedule_id", nullable = false, referencedColumnName = "schedule_id", table = "tbl_clinic_schedule")
+    @Column(name = "schedule_id", nullable = false)
     private Integer scheduleId;
 
     @Column(name = "event_begin", nullable = false)
@@ -33,6 +36,10 @@ public class Event {
 
     @Column(name = "event_finish", nullable = false)
     private Date finishTime;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "schedule_id", referencedColumnName = "schedule_id", insertable = false, updatable = false)
+    private ClinicSchedule schedule;
 
     public Event(final Integer scheduleId, final Date begin, final Date finish) {
         this.scheduleId = scheduleId;

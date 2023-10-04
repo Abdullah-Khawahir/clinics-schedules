@@ -1,7 +1,6 @@
 package com.clinics_schedules.clinic_api.controller.v1.privateControllers;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -18,16 +17,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.clinics_schedules.clinic_api.dto.HospitalDto;
+import com.clinics_schedules.clinic_api.exception.ResourceNotFoundException;
 import com.clinics_schedules.clinic_api.service.HospitalService;
 
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping({ "/private" })
-@CrossOrigin(origins = {"http://localhost:4200" , "*"})
+@CrossOrigin(origins = { "http://localhost:4200", "*" })
 public class HospitalController {
     @Autowired
     private HospitalService hospitalService;
+
+    @GetMapping(path = "/hospital/{id}")
+    public ResponseEntity<HospitalDto> getHospitalsByID(@PathVariable Integer id) {
+        var hospital = hospitalService.getByID(id)
+                .map(HospitalDto::new)
+                .orElseThrow(() -> new ResourceNotFoundException("Hospital", "id", id.toString()));
+        return ResponseEntity.ok(hospital);
+    }
 
     @GetMapping(path = "/hospital")
     public ResponseEntity<List<HospitalDto>> getHospitals() {

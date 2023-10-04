@@ -2,8 +2,10 @@ package com.clinics_schedules.clinic_api.service;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +13,8 @@ import org.springframework.stereotype.Service;
 
 import com.clinics_schedules.clinic_api.dto.ClinicScheduleDto;
 import com.clinics_schedules.clinic_api.entity.ClinicSchedule;
-import com.clinics_schedules.clinic_api.entity.ClinicSchedule.TimeRepeatUnit;
 import com.clinics_schedules.clinic_api.entity.Event;
+import com.clinics_schedules.clinic_api.enums.TimeRepeatUnit;
 import com.clinics_schedules.clinic_api.exception.ResourceNotFoundException;
 import com.clinics_schedules.clinic_api.exception.ScheduleTimeConflictException;
 import com.clinics_schedules.clinic_api.interfaces.BasicCRUDService;
@@ -30,8 +32,8 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 		final ClinicSchedule scheduleToSave = new ClinicSchedule(
 				null,
 				scheduleDto.getClinicId(),
-				scheduleDto.getBeginTime(),
-				scheduleDto.getExpireTime(),
+				new Date(scheduleDto.getBeginTime()),
+				new Date(scheduleDto.getExpireTime()),
 				scheduleDto.getEventStart(),
 				scheduleDto.getEventFinish(),
 				scheduleDto.getRepeat());
@@ -164,8 +166,8 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 
 		currentSchedule
 				.setClinicId(scheduleDto.getClinicId())
-				.setBeginDate(scheduleDto.getBeginTime())
-				.setExpireDate(scheduleDto.getExpireTime())
+				.setBeginDate(new Date(scheduleDto.getBeginTime()))
+				.setExpireDate(new Date(scheduleDto.getExpireTime()))
 				.setEventStart(scheduleDto.getEventStart())
 				.setEventFinish(scheduleDto.getEventFinish())
 				.setRepeat(scheduleDto.getRepeat());
@@ -249,5 +251,11 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 
 		repository.deleteById(id);
 	}
+
+	@Override
+	public Optional<ClinicSchedule> getByID(Integer id) {
+		return this.repository.findById(id);
+	}
+
 
 }

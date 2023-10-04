@@ -1,6 +1,7 @@
 package com.clinics_schedules.clinic_api.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,4 +66,8 @@ public class UserService implements BasicCRUDService<User, UserDto, Integer> {
 
     }
 
+    @Override
+	public Optional<User> getByID(Integer id) {
+		return this.userRepository.findById(id);
+	}
 }

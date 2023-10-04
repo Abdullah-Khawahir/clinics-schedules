@@ -18,16 +18,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.clinics_schedules.clinic_api.dto.BuildingDto;
 import com.clinics_schedules.clinic_api.entity.Building;
+import com.clinics_schedules.clinic_api.exception.ResourceNotFoundException;
 import com.clinics_schedules.clinic_api.service.BuildingService;
 
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping({ "/private" })
-@CrossOrigin(origins = {"http://localhost:4200" , "*"})
+@CrossOrigin(origins = { "http://localhost:4200", "*" })
 public class BuildingController {
     @Autowired
     private BuildingService buildingService;
+
+    @GetMapping(path = "/building/{id}")
+    public ResponseEntity<BuildingDto> getBuildingById(@PathVariable() Integer id) {
+        return ResponseEntity
+                .ok(
+                        buildingService
+                                .getByID(id)
+                                .map(BuildingDto::new)
+                                .orElseThrow(() -> new ResourceNotFoundException("Building", "id", id.toString())));
+    }
 
     @GetMapping(path = "/building")
     public ResponseEntity<List<BuildingDto>> getAllBuildings() {

@@ -1,6 +1,7 @@
 package com.clinics_schedules.clinic_api.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,5 +54,11 @@ public class BuildingService implements BasicCRUDService<Building, BuildingDto, 
             throw new ResourceNotFoundException("Building", "building_id", id.toString());
         repository.deleteById(id);
     }
+
+    @Override
+    public Optional<Building> getByID(Integer id) {
+        return this.repository.findById(id);
+    }
+
 
 }

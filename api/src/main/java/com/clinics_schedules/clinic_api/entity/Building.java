@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -45,9 +46,12 @@ public class Building {
     @Column(nullable = false, name = "hospital_id")
     private Integer hospitalId;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Clinic.class)
-    @JoinColumn(name = "building_id", referencedColumnName = "building_id")
+    @OneToMany(mappedBy = "building", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Clinic> clinics;
+
+    @ManyToOne()
+    @JoinColumn(name = "hospital_id", referencedColumnName = "hospital_id", insertable = false, updatable = false)
+    private Hospital hospital;
 
     public Building(final BuildingDto buildingDto) {
         this.id = buildingDto.getId();
