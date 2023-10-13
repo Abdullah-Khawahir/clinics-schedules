@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -41,9 +40,9 @@ public class ClinicController {
 
     @GetMapping(path = "/clinic")
     public ResponseEntity<List<ClinicDto>> getAllClinics() {
-        return new ResponseEntity<>(clinicService.getAll().stream()
+        return ResponseEntity.ok(clinicService.getAll().stream()
                 .map(ClinicDto::new)
-                .toList(), HttpStatus.ACCEPTED);
+                .toList());
     }
 
     @DeleteMapping(path = "/clinic/{id}")
@@ -57,9 +56,8 @@ public class ClinicController {
             @Valid @RequestBody(required = true) final ClinicDto clinicDto)
             throws MissingPathVariableException, DataIntegrityViolationException, ResourceNotFoundException {
 
-        return new ResponseEntity<ClinicDto>(
-                new ClinicDto(clinicService.updateById(id, clinicDto)),
-                HttpStatus.ACCEPTED);
+        return ResponseEntity.ok(
+                new ClinicDto(clinicService.updateById(id, clinicDto)));
     }
 
     @PostMapping(path = "/clinic")
@@ -67,9 +65,8 @@ public class ClinicController {
             @Valid @RequestBody(required = true) final ClinicDto clinicDto)
             throws DataIntegrityViolationException, ResourceNotFoundException {
 
-        return new ResponseEntity<ClinicDto>(
-                new ClinicDto(clinicService.save(clinicDto)),
-                HttpStatus.CREATED);
+        return ResponseEntity.ok(
+                new ClinicDto(clinicService.save(clinicDto)));
     }
 
 }

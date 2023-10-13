@@ -2,6 +2,8 @@ package com.clinics_schedules.clinic_api.entity;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,6 +41,7 @@ public class Event {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_id", referencedColumnName = "schedule_id", insertable = false, updatable = false)
+    @JsonBackReference
     private ClinicSchedule schedule;
 
     public Event(final Integer scheduleId, final Date begin, final Date finish) {

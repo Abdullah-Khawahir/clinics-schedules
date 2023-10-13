@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.clinics_schedules.clinic_api.enums.TimeRepeatUnit;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -70,6 +71,7 @@ public class ClinicSchedule {
 
     @ManyToOne
     @JoinColumn(name = "clinic_id", referencedColumnName = "clinic_id", insertable = false, updatable = false)
+    @JsonBackReference
     private Clinic clinic;
 
     public ClinicSchedule(

@@ -19,8 +19,8 @@ import lombok.experimental.Accessors;
 public class ClinicScheduleDto {
     private Integer id;
     private Integer clinicId;
-    private Long beginTime;
-    private Long expireTime;
+    private Long beginDate;
+    private Long expireDate;
     private LocalTime eventStart;
     private LocalTime eventFinish;
     private TimeRepeatUnit repeat;
@@ -31,8 +31,8 @@ public class ClinicScheduleDto {
     public ClinicScheduleDto(final ClinicSchedule schedule) {
         this.id = schedule.getId();
         this.clinicId = schedule.getClinicId();
-        this.beginTime = schedule.getBeginDate().getTime();
-        this.expireTime = schedule.getExpireDate().getTime();
+        this.beginDate = schedule.getBeginDate().getTime();
+        this.expireDate = schedule.getExpireDate().getTime();
         this.eventStart = schedule.getEventStart();
         this.eventFinish = schedule.getEventFinish();
         this.repeat = schedule.getRepeat();

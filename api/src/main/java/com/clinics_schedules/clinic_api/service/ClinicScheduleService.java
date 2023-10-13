@@ -32,8 +32,8 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 		final ClinicSchedule scheduleToSave = new ClinicSchedule(
 				null,
 				scheduleDto.getClinicId(),
-				new Date(scheduleDto.getBeginTime()),
-				new Date(scheduleDto.getExpireTime()),
+				new Date(scheduleDto.getBeginDate()),
+				new Date(scheduleDto.getExpireDate()),
 				scheduleDto.getEventStart(),
 				scheduleDto.getEventFinish(),
 				scheduleDto.getRepeat());
@@ -68,20 +68,69 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 		final Calendar datePointer = Calendar.getInstance();
 		datePointer.setTime(start.getTime());
 		do {
-			datePointer.set(Calendar.HOUR_OF_DAY, schedule.getEventStart().getHour());
-			datePointer.set(Calendar.MINUTE, schedule.getEventStart().getMinute());
-			final var eventStart = datePointer.getTime();
+			if (this.shouldAddInEvents(datePointer, schedule.getRepeat())) {
+				datePointer.set(Calendar.HOUR_OF_DAY, schedule.getEventStart().getHour());
+				datePointer.set(Calendar.MINUTE, schedule.getEventStart().getMinute());
+				final var eventStart = datePointer.getTime();
 
-			datePointer.set(Calendar.HOUR_OF_DAY, schedule.getEventFinish().getHour());
-			datePointer.set(Calendar.MINUTE, schedule.getEventFinish().getMinute());
-			final var eventEnd = datePointer.getTime();
+				datePointer.set(Calendar.HOUR_OF_DAY, schedule.getEventFinish().getHour());
+				datePointer.set(Calendar.MINUTE, schedule.getEventFinish().getMinute());
+				final var eventEnd = datePointer.getTime();
 
-			events.add(new Event(schedule.getId(), eventStart, eventEnd));
+				events.add(new Event(schedule.getId(), eventStart, eventEnd));
 
+			}
 			addNextRepeatStep(datePointer, schedule.getRepeat());
 		} while (datePointer.before(end) && schedule.getRepeat() != TimeRepeatUnit.never);
 
 		return events;
+	}
+
+	private boolean shouldAddInEvents(Calendar date, TimeRepeatUnit repeat) {
+		switch (repeat) {
+			case never:
+				return true;
+			case daily: {
+				return true;
+			}
+			case monthly: {
+				return true;
+			}
+			case weekdays: {
+				var day = date.get(Calendar.DAY_OF_WEEK);
+				if (day == Calendar.SUNDAY ||
+						day == Calendar.MONDAY ||
+						day == Calendar.TUESDAY ||
+						day == Calendar.WEDNESDAY ||
+						day == Calendar.THURSDAY) {
+					return true;
+				} else {
+					if (day == Calendar.FRIDAY) {
+						return false;
+					}
+					if (day == Calendar.SATURDAY) {
+						return false;
+					}
+				}
+
+			}
+			case weekends: {
+				var day = date.get(Calendar.DAY_OF_WEEK);
+				if (day == Calendar.FRIDAY ||
+						day == Calendar.SATURDAY) {
+					return true;
+				} else {
+					return false;
+
+				}
+			}
+			case weekly: {
+				return true;
+			}
+			default:
+				return true;
+		
+		}
 	}
 
 	private void addNextRepeatStep(Calendar date, TimeRepeatUnit repeat) {
@@ -166,8 +215,8 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 
 		currentSchedule
 				.setClinicId(scheduleDto.getClinicId())
-				.setBeginDate(new Date(scheduleDto.getBeginTime()))
-				.setExpireDate(new Date(scheduleDto.getExpireTime()))
+				.setBeginDate(new Date(scheduleDto.getBeginDate()))
+				.setExpireDate(new Date(scheduleDto.getExpireDate()))
 				.setEventStart(scheduleDto.getEventStart())
 				.setEventFinish(scheduleDto.getEventFinish())
 				.setRepeat(scheduleDto.getRepeat());
@@ -256,6 +305,5 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 	public Optional<ClinicSchedule> getByID(Integer id) {
 		return this.repository.findById(id);
 	}
-
 
 }

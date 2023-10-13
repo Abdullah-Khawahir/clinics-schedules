@@ -3,6 +3,7 @@ package com.clinics_schedules.clinic_api.entity;
 import java.util.List;
 
 import com.clinics_schedules.clinic_api.dto.BuildingDto;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -51,6 +52,7 @@ public class Building {
 
     @ManyToOne()
     @JoinColumn(name = "hospital_id", referencedColumnName = "hospital_id", insertable = false, updatable = false)
+    @JsonBackReference
     private Hospital hospital;
 
     public Building(final BuildingDto buildingDto) {
