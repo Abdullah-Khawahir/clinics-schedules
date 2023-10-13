@@ -27,19 +27,15 @@ import { RegisterComponent } from './pages/public/auth/register/register.compone
 import { HospitalSchedulesComponent } from './pages/public/hospital-schedules/hospital-schedules.component';
 
 
+import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatSortModule } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterModule } from '@angular/router';
+import { MomentModule } from 'ngx-moment';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { HospitalFormComponent } from './forms/hospital-form/hospital-form.component';
 import { SchedulesPanelComponent } from './pages/authorized/schedules-panel/schedules-panel.component';
 import { HomeComponent } from './pages/public/home/home.component';
-import { MomentModule } from 'ngx-moment';
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -66,23 +62,20 @@ import { MomentModule } from 'ngx-moment';
     NavbarComponent,
     HospitalFormComponent,
     SchedulesPanelComponent,
-    HomeComponent
+    HomeComponent,
+
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    BrowserAnimationsModule,
-    MatTableModule,
-    MatSlideToggleModule,
-    MatInputModule,
-    MatSortModule,
     FormsModule,
     RouterModule,
-    MomentModule
+    MomentModule,
+    MatSnackBarModule
 
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

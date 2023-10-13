@@ -1,7 +1,54 @@
-<main>
+<div class="container">
+
+    <div class="filters-container">
+        <input class="filter" *ngFor="let column of this.ColumnsDefinition" type="text"
+            (keyup)="this.filterList($event , column.key)" [placeholder]="column.displayLabel" />
+    </div>
+
+    <table>
+
+        <tr class="row header-row">
+
+            <th class="header-cell table-cell" *ngFor="let column of this.ColumnsDefinition"
+                (click)="this.sortBy(column)">
+                {{ column.displayLabel }}
+            </th>
+
+            <th class="action-header header-cell table-cell">action</th>
+            <!-- <th class="action-header header-cell table-cell"> </th> -->
+        </tr>
+
+
+        <tr class="row body-row" *ngFor="let data of this.getData()">
+
+            <td class="table-cell" *ngFor="let column of this.ColumnsDefinition">
+                {{column.mapper ? column.mapper(data[column.key]):data[column.key] }}
+            </td>
+
+            <td class="action-cell table-cell">
+
+                <app-edit-action class="action-btn" [target]="data" [editAction]="this.editFunction"
+                    [buttonContent]="editContent">
+                    edit</app-edit-action>
+
+
+
+                <app-remove-action class="action-btn" [target]="data" [removeAction]="this.removeFunction"
+                    [buttonContent]="removeContent"></app-remove-action>
+            </td>
+        </tr>
+
+
+    </table>
+
+</div>
+<ng-template #removeContent>remove</ng-template>
+
+<ng-template #editContent>edit</ng-template>
+<!-- <main>
     <div>
         <input mat-input 
-        *ngFor="let filerInput of ColumnsDefinition" 
+        *ngFor="let filerInput of ColumnsDefinition"
         placeholder="{{filerInput.displayLabel}}"
         type="text"
         (keyup)="filterList($event , filerInput.key)" 
@@ -20,4 +67,4 @@
         <tr mat-header-row *matHeaderRowDef="getAllKeys()"></tr>
         <tr mat-row *matRowDef="let row; columns: getAllKeys();"></tr>
     </table>
-</main>
+</main> -->

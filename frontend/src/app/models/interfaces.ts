@@ -6,5 +6,11 @@ export interface IRemoteDataError {
 export type RequestState = 'loading' | 'error' | 'complete'
 export interface Column {
     key: string
-    displayLabel: string
+    displayLabel: string,
+    mapper?: (any: any) => any
 }
+export interface SelectInputOption {
+    name: string,
+    value: string,
+}
+export type FormType = "Update" | "Create"

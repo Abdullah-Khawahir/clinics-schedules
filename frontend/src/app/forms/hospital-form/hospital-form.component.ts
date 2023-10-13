@@ -1,4 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { API } from 'src/app/api.service';
+import { HospitalDto } from 'src/app/dto/HospitalDto';
+import { FormType } from 'src/app/models/interfaces';
 @Component({
   selector: 'app-hospital-form',
   templateUrl: './hospital-form.component.html',
@@ -8,19 +11,44 @@ import { Component, Input, OnInit } from '@angular/core';
 export class HospitalFormComponent implements OnInit {
 
 
+  @Output() closeEvent = new EventEmitter<void>();
+  @Input({ required: true }) formType!: FormType
+  @Input({ required: false }) hospital!: HospitalDto
 
-
-  @Input({ required: false }) arabicName!: string;
-  @Input({ required: false }) englishName!: string;
-
-
-
-  submit(formValue: any) {
-    
-  }
+  constructor(private api: API) { }
 
   ngOnInit(): void {
-    this.arabicName = this.arabicName || ""
-    this.englishName = this.englishName || ""
+    if (this.formType == 'Create') {
+      this.hospital = { id: -1, arabicName: "", englishName: "" }
+    }
   }
+
+
+  close(): void {
+    this.closeEvent.emit()
+  }
+
+  submit(formValue: any) {
+
+    const hospital: HospitalDto = {
+      id: this.hospital.id,
+      arabicName: formValue.arabicName,
+      englishName: formValue.englishName,
+    }
+
+
+
+    if (this.formType == 'Create') {
+      this.api.hospitalDataSource.save(hospital).subscribe({ next: (newHospital) => this.afterSubmit(newHospital) })
+    }
+    if (this.formType == 'Update') {
+      this.api.hospitalDataSource.update(hospital.id, hospital).subscribe({ next: (newHospital) => this.afterSubmit(newHospital) })
+    }
+
+
+  }
+  afterSubmit(value: any) {
+    this.close()
+  }
+
 }

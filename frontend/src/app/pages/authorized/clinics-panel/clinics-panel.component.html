@@ -1,6 +1,8 @@
 <div class="clinics-panel">
 
-    <app-data-table *ngIf="this.tableState == 'complete'" 
-    [data-list]="this.clinicsList"
-        [columns-definition]="ColumnsDefinition"></app-data-table>
+    <app-data-table *ngIf="this.tableState == 'complete'" [data-list]="this.clinicsList"
+        [columns-definition]="ColumnsDefinition" [edit-action]="this.edit"
+        [remove-action]="this.remove"></app-data-table>
 </div>
+<app-clinic-form *ngIf="!this.editFormClosed" [clinic]="this.clinicToEdit" (shouldClose)="this.toggleEditForm()"
+    formType="Update"></app-clinic-form>

@@ -1,1 +1,30 @@
-<p>employee-form works!</p>
+<div class="pop-up-form-background">
+
+    <form class="pop-up-form" ngNativeValidate #form='ngForm' (ngSubmit)="this.submit(form.value)">
+        <div class="pop-up-form-input-and-label-container">
+
+            <div class="pop-up-form-label">
+                <label>
+                    Employee English Name :
+                </label>
+            </div>
+            <input class="pop-up-form-input text-input" name="englishName" type="text" required
+                [(ngModel)]="this.employee.englishName">
+        </div>
+
+
+        <div class="pop-up-form-input-and-label-container">
+            <div class="pop-up-form-label">
+                <label>
+                    Employee Arabic Name :
+                </label>
+            </div>
+            <input class="pop-up-form-input text-input" name="arabicName" type="text" required
+                [(ngModel)]="this.employee.arabicName">
+        </div>
+        <button class="form-submit-button btn" type="submit">submit</button>
+        <button class="form-submit-button btn" type="button" (click)="this.close()">close</button>
+
+    </form>
+
+</div>

@@ -8,7 +8,8 @@
                     Hospital English Name :
                 </label>
             </div>
-            <input class="pop-up-form-input text-input" type="text" required cost [(ngModel)]="this.englishName">
+            <input class="pop-up-form-input text-input" name="englishName" type="text" required
+                [(ngModel)]="this.hospital.englishName">
         </div>
 
 
@@ -19,10 +20,11 @@
                 </label>
             </div>
             <input class="pop-up-form-input text-input" name="arabicName" type="text" required
-                [(ngModel)]="this.arabicName">
+                [(ngModel)]="this.hospital.arabicName">
         </div>
-
         <button class="form-submit-button btn" type="submit">submit</button>
+        <button class="form-submit-button btn" type="button" (click)="this.close()">close</button>
+
     </form>
 
 </div>

@@ -1,1 +1,68 @@
-<p>clinic-form works!</p>
+<div class="pop-up-form-background">
+
+    <form class="pop-up-form" ngNativeValidate #form='ngForm' (ngSubmit)="this.submit(form.value)">
+        <div class="pop-up-form-input-and-label-container">
+
+            <div class="pop-up-form-label">
+                <label>
+                    Clinic English Name :
+                </label>
+            </div>
+            <input class="pop-up-form-input text-input" name="englishName" type="text" required
+                [(ngModel)]="this.clinic.englishName">
+        </div>
+
+
+        <div class="pop-up-form-input-and-label-container">
+            <div class="pop-up-form-label">
+                <label>
+                    Clinic Arabic Name :
+                </label>
+            </div>
+            <input class="pop-up-form-input text-input" name="arabicName" type="text" required
+                [(ngModel)]="this.clinic.arabicName">
+        </div>
+
+        <div class="pop-up-form-input-and-label-container">
+            <div class="pop-up-form-label">
+                <label>
+                    Clinic Number :
+                </label>
+            </div>
+            <input class="pop-up-form-input number-input" name="number" type="number" required
+                [(ngModel)]="this.clinic.number">
+        </div>
+
+        <div class="pop-up-form-input-and-label-container">
+            <div class="pop-up-form-label">
+                <label>
+                    Ext :
+                </label>
+            </div>
+            <input class="pop-up-form-input text-input" name="ext" type="text" required [(ngModel)]="this.clinic.ext">
+        </div>
+
+        <div class="pop-up-form-input-and-label-container">
+            <div class="pop-up-form-label">
+                <label>
+                    building
+                </label>
+            </div>
+            <select id="building-select" name="buildingID" class="pop-up-form-input text-input" required
+                [(ngModel)]="this.clinic.buildingId">
+
+                <option value="">Select a building</option>
+
+                <option *ngFor="let building of this.allBuildingsAsOptions" value="{{building.value}}">
+                    {{building.name}}</option>
+
+            </select>
+
+        </div>
+
+        <button class=" form-submit-button btn" type="submit">submit</button>
+        <button class="form-submit-button btn" type="button" (click)="this.close()">close</button>
+
+    </form>
+
+</div>

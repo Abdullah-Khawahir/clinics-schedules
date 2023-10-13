@@ -7,28 +7,41 @@ import { Column, RequestState } from 'src/app/models/interfaces';
 @Component({
   selector: 'app-employees-panel',
   templateUrl: './employees-panel.component.html',
-  styleUrls: ['./employees-panel.component.css']
+  styleUrls: ['./employees-panel.component.css'],
 })
 export class EmployeesPanelComponent implements OnInit, OnDestroy {
+
+
+  editFormClosed = true
+  employeeToEdit!: EmployeeDto;
+
   employeeList!: EmployeeDto[]
   columnDefinition!: Column[]
   tableState: RequestState = 'loading'
   unsubscribe$: Subject<void> = new Subject<void>();
-  constructor(public api: API) { }
-  ngOnInit(): void {
-    this.api.employeeDataSource.getAll()
+
+  remove = (employee: EmployeeDto) => {
+    this.api.employeeDataSource.delete(employee.id)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        complete: () => {
-          this.tableState = 'complete'
-        },
-        error: (err) => {
-          this.tableState = 'error'
-        },
-        next: (value) => {
-          this.employeeList = value
+        next: () => {
+          this.tableState = 'loading'
+          this.fetchAllEmployees()
         }
       })
+  }
+
+  edit = (employee: EmployeeDto) => {
+    this.employeeToEdit = employee
+    this.toggleEditForm()
+  }
+  constructor(public api: API) { }
+
+  toggleEditForm() {
+    this.editFormClosed = !this.editFormClosed
+  }
+  ngOnInit(): void {
+    this.fetchAllEmployees();
 
     this.columnDefinition = [
       { key: "id", displayLabel: "ID" },
@@ -42,8 +55,28 @@ export class EmployeesPanelComponent implements OnInit, OnDestroy {
   }
 
 
+  private fetchAllEmployees() {
+
+    this.api.employeeDataSource.getAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        complete: () => {
+          this.tableState = 'complete';
+        },
+        error: (err) => {
+          this.tableState = 'error';
+        },
+        next: (value) => {
+          this.employeeList = value;
+        }
+      });
+  }
+
   ngOnDestroy(): void {
     this.unsubscribe$.next()
     this.unsubscribe$.complete()
   }
+
+
+
 }

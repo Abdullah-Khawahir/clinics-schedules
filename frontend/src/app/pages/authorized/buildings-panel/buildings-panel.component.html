@@ -1,6 +1,14 @@
 <div class="building-panel">
     <app-data-table *ngIf="this.tableState == 'complete'"
     [data-list]="this.buildings"
-    [columns-definition]="this.columnDefinition">
+    [columns-definition]="this.columnDefinition"
+    [edit-action]="this.edit"
+    [remove-action]="this.remove">
     </app-data-table>
 </div>
+<app-building-form
+    *ngIf="!this.editFormClosed"
+    formType="Update"
+    [building]="this.buildingToEdit"
+    (shouldClose)="this.toggleClose()"
+></app-building-form>

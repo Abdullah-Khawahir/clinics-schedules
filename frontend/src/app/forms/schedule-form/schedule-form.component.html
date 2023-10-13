@@ -1,1 +1,101 @@
-<p>schedule-form works!</p>
+<div *ngIf="this.clinicRequestState ==  'complete' && this.employeeRequestState ==  'complete'"
+    class="pop-up-form-background">
+
+    <form #form id="schedule-form" class="pop-up-form" ngNativeValidate>
+
+        <div class="pop-up-form-input-and-label-container">
+            <div class="pop-up-form-label">
+                <label>
+                    clinic :
+                </label>
+            </div>
+            <select class="pop-up-form-input text-input" name="clinicId" [(ngModel)]="this.schedule.clinicId">
+                <option value="-1">please select a clinic</option>
+                <option *ngFor="let option of this.clinicsAsOptions" value="{{option.value}}">
+                    {{option.name}}
+                </option>
+            </select>
+        </div>
+
+
+        <div class="pop-up-form-input-and-label-container">
+            <div class="pop-up-form-label">
+                <label>
+                    Begin Date :
+                </label>
+            </div>
+            <input class="pop-up-form-input text-input" type="date" name="beginDate"
+                [(ngModel)]="this.schedule.beginDate" required>
+        </div>
+
+
+        <div class="pop-up-form-input-and-label-container">
+            <div class="pop-up-form-label">
+                <label>
+                    Expire Date :
+                </label>
+            </div>
+            <input class="pop-up-form-input text-input" type="date" name="expireDate"
+                [(ngModel)]="this.schedule.expireDate" required>
+        </div>
+
+
+
+        <div class="pop-up-form-input-and-label-container">
+            <div class="pop-up-form-label">
+                <label>
+                    daily event start :
+                </label>
+            </div>
+            <input class="pop-up-form-input text-input" type="time" name="eventStart"
+                [(ngModel)]="this.schedule.eventStart" required>
+        </div>
+
+        <div class="pop-up-form-input-and-label-container">
+            <div class="pop-up-form-label">
+                <label>
+                    daily event finish :
+                </label>
+            </div>
+            <input class="pop-up-form-input text-input" type="time" name="eventFinish"
+                [(ngModel)]="this.schedule.eventFinish" required>
+        </div>
+
+        <div class="pop-up-form-input-and-label-container">
+            <div class="pop-up-form-label">
+                <label>
+                    repeat :
+                </label>
+            </div>
+            <select class="pop-up-form-input text-input" id="select-repeat" name="repeat"
+                [(ngModel)]="this.schedule.repeat" required>
+                <option value="">please select a repeat unit</option>
+                <option value="never">never</option>
+                <option value="daily">daily</option>
+                <option value="weekdays">weekdays</option>
+                <option value="weekends">weekends</option>
+                <option value="weekly">weekly</option>
+            </select>
+        </div>
+
+        <div *ngFor="let employee of employeeInput ; index as i" class="pop-up-form-input-and-label-container">
+            <div class="pop-up-form-label">
+                <label *ngIf="i ==0">
+                    Employees :
+                </label>
+            </div>
+            <select class="pop-up-form-input text-input selectedEmployee" name="selectedEmployee-{{i}}"
+                (change)="this.addEmployeeInputIfNeeded($event)" required>
+                <option value="-1">please select an Employee</option>
+                <option *ngFor="let option of this.employeesAsOptions" value="{{option.value}}">
+                    {{option.name}}
+                </option>
+            </select>
+
+        </div>
+
+        <button class="form-submit-button btn" (click)="this.submit(form)">submit</button>
+        <button class="form-submit-button btn" (click)="this.close()">close</button>
+    </form>
+
+</div>

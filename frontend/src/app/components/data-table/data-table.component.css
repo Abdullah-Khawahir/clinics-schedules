@@ -1,0 +1,81 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 95vw;
+    margin: auto;
+}
+
+.filters-container {
+
+    display: flex;
+    /* flex-shrink: auto; */
+    width: 100%;
+    margin: auto;
+}
+
+.filter {
+    max-width: 20%;
+    min-width: 10%;
+}
+
+table {
+    /* outline: 1px solid magenta; */
+
+    margin: auto;
+    width: 100%;
+    table-layout: fixed;
+    gap: 5px;
+    border: 1px solid;
+    margin: 5px 0 0 0;
+}
+
+.header-row {
+    /* outline: 1px solid red; */
+
+}
+
+.header-cell {
+    max-width: 20%;
+    min-width: 10%;
+}
+
+.action-header {}
+
+.row {
+    /* outline: 1px dotted green; */
+
+    text-align: center;
+    /* gap: 5px; */
+}
+
+.body-row {
+    /* outline: 1px solid blue; */
+
+
+}
+
+.table-cell {
+    /* outline: 1px solid black; */
+
+    width: max-content;
+
+
+}
+
+
+.action-btn {}
+
+.action-cell {}
+
+/* 
+
+
+
+.table-cell {
+    outline: 1px solid black;
+
+
+
+    margin: 5px;
+    padding: 5px;
+} */

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { API } from 'src/app/api.service';
 import { BuildingDto } from 'src/app/dto/BuildingDto';
 import { Column, RequestState } from 'src/app/models/interfaces';
@@ -10,6 +10,13 @@ import { Column, RequestState } from 'src/app/models/interfaces';
   styleUrls: ['./buildings-panel.component.css']
 })
 export class BuildingsPanelComponent implements OnInit, OnDestroy {
+  editFormClosed = true;
+  buildingToEdit!: BuildingDto;
+
+
+  toggleClose() {
+    this.editFormClosed = !this.editFormClosed
+  }
 
 
 
@@ -17,6 +24,15 @@ export class BuildingsPanelComponent implements OnInit, OnDestroy {
   tableState: RequestState = 'loading'
   columnDefinition!: Column[];
   unsubscribe$: Subject<void> = new Subject<void>();
+
+
+  remove = (building: BuildingDto) => {
+    this.api.buildingDataSource.delete(building.id)
+  }
+  edit = (building: BuildingDto) => {
+    this.buildingToEdit = building
+    this.toggleClose()
+  }
   constructor(public api: API) { }
 
   ngOnInit(): void {
@@ -48,4 +64,6 @@ export class BuildingsPanelComponent implements OnInit, OnDestroy {
     this.unsubscribe$.next()
     this.unsubscribe$.complete()
   }
+
+
 }

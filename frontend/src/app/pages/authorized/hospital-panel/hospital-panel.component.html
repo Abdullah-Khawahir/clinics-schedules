@@ -1,7 +1,7 @@
 <div class="hospital-panel-container">
-
-    <app-data-table *ngIf="this.tableState== 'complete' "
-    [data-list]="this.hospitalsList "
-    [columns-definition]="this.columnsDefinition"
-    ></app-data-table>
+    <app-data-table *ngIf="this.tableState== 'complete' " [data-list]="this.hospitalsList "
+        [columns-definition]="this.columnsDefinition" [edit-action]="this.edit"
+        [remove-action]="this.remove"></app-data-table>
 </div>
+<app-hospital-form *ngIf="!this.editFormClosed" (closeEvent)="this.toggleEditForm()" [hospital]="this.hospitalToEdit"
+    [formType]="'Update'"></app-hospital-form>

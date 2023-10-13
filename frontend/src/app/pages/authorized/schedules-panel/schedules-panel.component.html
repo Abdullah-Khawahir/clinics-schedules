@@ -1,1 +1,13 @@
-<p>schedules-panel works!</p>
+<app-data-table *ngIf="this.tableState== 'complete' " 
+[data-list]="this.schedules"
+ [columns-definition]="this.columns"
+ [edit-action]="this.edit"
+ [remove-action]="this.remove">
+
+</app-data-table>
+<app-schedule-form
+*ngIf="!this.editFormClosed"
+(shouldClose)="this.toggleEditForm()"
+[schedule]="this.scheduleToEdit"
+formType="Update"
+></app-schedule-form>

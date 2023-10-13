@@ -3,26 +3,58 @@
         <li>
             <div class="dashboard-item">
                 <a routerLink="/dashboard/hospitals-panel">Hospitals Panel </a>
+                <button type="button" (click)="toggleAddHospitalForm()">add hospital</button>
+                <div *ngIf="this.openHospitalForm == true">
+                    <app-hospital-form (closeEvent)="this.toggleAddHospitalForm()"
+                        [formType]="'Create'"></app-hospital-form>
+                </div>
             </div>
         </li>
+
         <li>
             <div class="dashboard-item">
                 <a routerLink="/dashboard/buildings-panel">Buildings Panel </a>
+                <button type="button" (click)="this.toggleAddBuildingForm()">add Building</button>
+
+                <div *ngIf="this.openBuildingForm == true">
+                    <app-building-form (shouldClose)="this.toggleAddBuildingForm()"
+                        formType="Create"></app-building-form>
+                </div>
             </div>
         </li>
+
         <li>
             <div class="dashboard-item">
                 <a routerLink="/dashboard/clinics-panel">Clinics Panel </a>
+
+                <button type="button" (click)="this.toggleAddClinicForm()">add Clinic</button>
+
+                <div *ngIf="this.openClinicForm == true">
+                    <app-clinic-form (shouldClose)="this.toggleAddClinicForm()" [formType]="'Create'"></app-clinic-form>
+                </div>
             </div>
         </li>
+
         <li>
             <div class="dashboard-item">
                 <a routerLink="/dashboard/schedules-panel">Schedules Panel </a>
+                <button type="button" (click)="this.toggleAddScheduleForm()">add Schedule</button>
+                <div *ngIf="this.openScheduleForm == true">
+                    <app-schedule-form [formType]="'Create'"
+                        (shouldClose)="this.toggleAddScheduleForm()"></app-schedule-form>
+                </div>
             </div>
         </li>
+
         <li>
             <div class="dashboard-item">
                 <a routerLink="/dashboard/employees-panel">Employees Panel </a>
+
+                <button type="button" (click)="this.toggleAddEmployeeForm()">add Employee</button>
+                <div *ngIf="this.openEmployeeForm == true">
+                    <app-employee-form formType="Create"
+                        (shouldClose)="this.toggleAddEmployeeForm()"></app-employee-form>
+                </div>
             </div>
         </li>
     </ul>

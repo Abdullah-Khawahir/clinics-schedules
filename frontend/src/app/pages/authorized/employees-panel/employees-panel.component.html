@@ -3,6 +3,15 @@
     <app-data-table 
     *ngIf="this.tableState == 'complete' "
     [data-list]="this.employeeList"
-     [columns-definition]="this.columnDefinition">
+     [columns-definition]="this.columnDefinition"
+     [edit-action]="this.edit"
+     [remove-action]="this.remove">
     </app-data-table>
 </div>
+
+<app-employee-form 
+*ngIf="!this.editFormClosed"
+(shouldClose)="this.toggleEditForm()"
+[employee]="this.employeeToEdit"
+formType="Update">
+</app-employee-form>

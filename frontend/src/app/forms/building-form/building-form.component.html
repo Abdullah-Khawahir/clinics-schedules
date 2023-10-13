@@ -1,1 +1,57 @@
-<p>building-form works!</p>
+<div class="pop-up-form-background">
+
+    <form class="pop-up-form" ngNativeValidate #form='ngForm' (ngSubmit)="this.submit(form.value)">
+        <div class="pop-up-form-input-and-label-container">
+
+            <div class="pop-up-form-label">
+                <label>
+                    Building English Name :
+                </label>
+            </div>
+            <input class="pop-up-form-input text-input" name="englishName" type="text" required
+                [(ngModel)]="this.building.englishName">
+        </div>
+
+
+        <div class="pop-up-form-input-and-label-container">
+            <div class="pop-up-form-label">
+                <label>
+                    Building Arabic Name :
+                </label>
+            </div>
+            <input class="pop-up-form-input text-input" name="arabicName" type="text" required
+                [(ngModel)]="this.building.arabicName">
+        </div>
+
+        <div class="pop-up-form-input-and-label-container">
+            <div class="pop-up-form-label">
+                <label>
+                    Building Number :
+                </label>
+            </div>
+            <input class="pop-up-form-input number-input" name="buildingNumber" type="number" required
+                [(ngModel)]="this.building.number">
+        </div>
+
+        <div class="pop-up-form-input-and-label-container">
+            <div class="pop-up-form-label">
+                <label>
+                    Hospital :
+                </label>
+            </div>
+            <select class="pop-up-form-input number-input" name="hospitalId" [(ngModel)]="this.building.hospitalId"
+                required>
+                <option value="" disabled selected>Select your option</option>
+                <option *ngFor="let hospital of this.hospitalOptions" value="{{hospital.value}}">
+                    {{hospital.name}}
+                </option>
+            </select>
+        </div>
+
+
+        <button class="form-submit-button btn" type="submit">submit</button>
+        <button class="form-submit-button btn" type="button" (click)="this.close()">close</button>
+
+    </form>
+
+</div>

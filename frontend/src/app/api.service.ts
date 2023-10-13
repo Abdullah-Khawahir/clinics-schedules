@@ -1,14 +1,13 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable, OnDestroy, inject } from '@angular/core';
-import { Observable, Subject, map, scheduled, throwError } from 'rxjs'; // don't forget this, or you'll get a runtime error
+import { Observable, Subject, map, throwError } from 'rxjs'; // don't forget this, or you'll get a runtime error
 import { BuildingDto } from './dto/BuildingDto';
 import { ClinicDto } from './dto/ClinicDto';
 import { EmployeeDto } from './dto/EmployeeDto';
 import { HospitalDto } from './dto/HospitalDto';
 import Logger from './logger.service';
-import { UserService } from './user.service';
 import { FullClinic } from './models/FullClinic';
-import moment from 'moment';
+import { UserService } from './user.service';
 import { ClinicScheduleDto } from './dto/ClinicScheduleDto';
 
 interface CRUD<T, ID> {
@@ -18,24 +17,24 @@ interface CRUD<T, ID> {
   update(id: ID, entity: T): Observable<T>,
 }
 class crudAPI<T, ID> implements CRUD<T, ID> {
-  _http: HttpClient
-  constructor(private url: string, private headers: HttpHeaders) {
-    this._http = inject(HttpClient)
-  }
-
+  _http: HttpClient = inject(HttpClient)
+  constructor(private url: string, private headers: HttpHeaders) { }
   getAll(): Observable<T[]> {
-    return this._http.get<T[]>(this.url, { headers: this.headers })
+    return this._http.get<T[]>(this.url, {
+      headers: this.headers, responseType: "json",
+    })
   }
   save(entity: T): Observable<T> {
-    return this._http.post<T>(this.url, entity)
+    return this._http.post<T>(this.url, entity, { headers: this.headers, responseType: "json", })
   }
-  delete(id: ID): void {
-    this._http.delete(this.url + `/${id}`)
+  delete(id: ID) {
+    return this._http.delete(this.url + `/${id}`, { headers: this.headers, responseType: "json", })
   }
   update(id: ID, entity: T): Observable<T> {
-    return this._http.put<T>(this.url + `/${id}`, entity)
+    return this._http.put<T>(this.url + `/${id}`, entity, { headers: this.headers, responseType: "json", })
   }
 }
+
 @Injectable({
   providedIn: 'root'
 })
@@ -51,17 +50,38 @@ export class API implements OnDestroy {
 
 
   private readonly HOSPITAL_URI = this.url("/private/hospital")
-  hospitalDataSource = new crudAPI<HospitalDto, number>(this.HOSPITAL_URI, this.AuthHeader())
+  readonly hospitalDataSource = new crudAPI<HospitalDto, number>(this.HOSPITAL_URI, this.AuthHeader())
 
-  private readonly BUILDING_URI = this.url("/private/hospital")
-  buildingDataSource = new crudAPI<BuildingDto, number>(this.BUILDING_URI, this.AuthHeader());
+  private readonly BUILDING_URI = this.url("/private/building")
+  readonly buildingDataSource = new crudAPI<BuildingDto, number>(this.BUILDING_URI, this.AuthHeader());
 
 
   private readonly CLINIC_URI = this.url('/private/clinic')
-  clinicDataSource = new crudAPI<ClinicDto, number>(this.CLINIC_URI, this.AuthHeader());
+  readonly clinicDataSource = new crudAPI<ClinicDto, number>(this.CLINIC_URI, this.AuthHeader());
 
-  private readonly EMPLOYEE_URI = this.url('/private/clinic')
-  employeeDataSource = new crudAPI<EmployeeDto, number>(this.EMPLOYEE_URI, this.AuthHeader());
+  private readonly EMPLOYEE_URI = this.url('/private/employee')
+  readonly employeeDataSource = new crudAPI<EmployeeDto, number>(this.EMPLOYEE_URI, this.AuthHeader());
+
+  private readonly CLINIC_SCHEDULE_URI = this.url('/private/clinic-schedule')
+  readonly clinicScheduleDataSource = new crudAPI<ClinicScheduleDto, number>(this.CLINIC_SCHEDULE_URI, this.AuthHeader());
+
+  private readonly USER_URI = this.url('/private/user')
+  readonly userDataSource = new crudAPI<ClinicScheduleDto, number>(this.CLINIC_SCHEDULE_URI, this.AuthHeader());
+
+
+  addEmployeesToScheduleByIds(scheduleId: number, employeesIds: number[]) {
+    return this.http.post(this.url(`/private/schedule-employee-list/${scheduleId}`), employeesIds, { headers: this.AuthHeader(), })
+  }
+
+  deleteEmployeeListByScheduleId(scheduleId: number) {
+    return this.http.delete(this.url(`/private/schedule-employee-list/${scheduleId}`), { headers: this.AuthHeader(), })
+
+  }
+  deleteEmployeeFromListByScheduleIdAndEmployeeId(scheduleId: number, employeeId: number) {
+    return this.http.delete(this.url(`/private/schedule-employee-list/${scheduleId}/${employeeId}`), { headers: this.AuthHeader(), })
+  }
+
+
 
   private convertDateFromStringToMs = (str: string | number) => {
     return new Date(str).getTime()
@@ -105,15 +125,10 @@ export class API implements OnDestroy {
       )
   }
   AuthHeader() {
-    let basicAuth = "";
     let Headers = new HttpHeaders();
 
-    this.user.getCurrentUser()
-      .pipe(
-        map(loginData => `${loginData.username}:${loginData.password}`))
-      .subscribe(value => {
-        basicAuth = value
-      }).unsubscribe()
+    let user = this.user.getCurrentUser().getValue();
+    let basicAuth = `${user.username}:${user.password}`
     Headers = Headers.append('Authorization', 'Basic ' + btoa(basicAuth));
 
     return Headers;

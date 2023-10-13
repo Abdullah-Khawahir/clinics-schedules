@@ -16,12 +16,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   isLoggedIn!: boolean;
   unsubscribe$: Subject<void> = new Subject<void>();
-
   constructor(public user: UserService, private router: Router) { }
 
   ngOnInit(): void {
-
-
     this.user.isLoggedIn()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(isLoggedIn => this.isLoggedIn = isLoggedIn)
@@ -38,6 +35,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribe$.next()
     this.unsubscribe$.complete()
+
   }
 
 }

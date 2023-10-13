@@ -10,6 +10,22 @@ import { Column, RequestState } from 'src/app/models/interfaces';
   styleUrls: ['./clinics-panel.component.css']
 })
 export class ClinicsPanelComponent implements OnInit, OnDestroy {
+
+  editFormClosed = true;
+  clinicToEdit!: ClinicDto;
+
+
+  remove = (clinic: ClinicDto) => {
+    this.api.clinicDataSource.delete(clinic.id)
+      .subscribe({ next: () => this.fetchAllClinics() });
+  }
+
+  edit = (clinic: ClinicDto) => {
+    this.clinicToEdit = clinic
+    this.toggleEditForm()
+  }
+
+
   clinicsList!: ClinicDto[]
   ColumnsDefinition!: Column[]
   tableState: RequestState = 'loading'
@@ -17,31 +33,42 @@ export class ClinicsPanelComponent implements OnInit, OnDestroy {
   constructor(public api: API) { }
 
   ngOnInit(): void {
-    this.api.clinicDataSource.getAll()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe({
-        complete: () => {
-          this.tableState = 'complete'
-        },
-        error: (err) => {
-          this.tableState = 'error'
-        },
-        next: (value) => {
-          this.clinicsList = value
-        }
-      })
+    this.fetchAllClinics();
     this.ColumnsDefinition = [
       { key: "id", displayLabel: "ID" },
       { key: "englishName", displayLabel: "English Name" },
       { key: "arabicName", displayLabel: "Arabic Name" },
       { key: "number", displayLabel: "clinic number" },
       { key: "buildingId", displayLabel: "Building ID" },
+      { key: "ext", displayLabel: "Ext." },
 
     ]
   }
+  private fetchAllClinics() {
+    this.tableState = 'loading'
+    this.api.clinicDataSource.getAll()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        complete: () => {
+          this.tableState = 'complete';
+        },
+        error: (err) => {
+          this.tableState = 'error';
+        },
+        next: (value) => {
+          this.clinicsList = value;
+        }
+      });
+  }
+
+  toggleEditForm() {
+    this.editFormClosed = !this.editFormClosed;
+  }
+
   ngOnDestroy(): void {
     this.unsubscribe$.next()
     this.unsubscribe$.complete()
   }
+
 }
 

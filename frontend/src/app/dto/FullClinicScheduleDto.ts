@@ -10,7 +10,7 @@ export class FullClinicScheduleDto {
         public expireTime: Date,
         public eventStart: string,
         public eventFinish: string,
-        public repeat: 'everyday' | 'never' | 'daily' | 'weekly' | "weekdays" | "weekend",
+        public repeat: 'never' | 'daily' | 'weekly' | "weekdays" | "weekend",
         public events: EventDto[],
         public employees: EmployeeDto[],
     ) {

@@ -1,0 +1,77 @@
+.clinic-filter-input {
+    text-align: center;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    width: 80%;
+    border: 1px solid rgba(0, 0, 0, 0.30);
+    border-radius: 17px;
+    display: block;
+}
+
+.schedule-container {
+    outline: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin: 10px;
+    padding: 5px;
+    user-select: none;
+
+}
+
+.clinic-info {
+    display: flex;
+    flex-direction: row;
+    /* outline: 1px solid green; */
+
+}
+
+.clinic-info-item {
+    text-align: center;
+    background-color: aqua;
+    width: 33.33%;
+}
+
+.clinic-schedule-event-container {
+    display: flex;
+    overflow-x: scroll;
+    min-height: 40vh;
+    /* outline: 1px solid purple; */
+
+    gap: 1%;
+
+
+}
+
+.clinic-schedule-event {
+    /* outline: 1px solid palevioletred; */
+    flex-basis: calc(100% /7.2);
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.clinic-schedule-event:nth-child(7n) {
+    background-color: aqua;
+}
+
+.event-day-info {
+    /* outline: 1px solid black; */
+    text-align: center;
+
+}
+
+
+.events-container {
+    /* outline: 1px solid fuchsia; */
+    display: flex;
+    flex-direction: column;
+
+
+    margin: 10px;
+    padding: 5px;
+}
+
+.schedule-event-time {
+    overflow-x: scroll;
+}

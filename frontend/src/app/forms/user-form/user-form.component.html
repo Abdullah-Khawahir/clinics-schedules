@@ -1,1 +1,51 @@
-<p>user-form works!</p>
+<div class="pop-up-form-background">
+
+    <form class="pop-up-form" ngNativeValidate #form='ngForm' (ngSubmit)="this.submit(form.value)">
+
+        <div class="pop-up-form-input-and-label-container">
+            <div class="pop-up-form-label">
+                <label>
+                    Username :
+                </label>
+            </div>
+            <input class="pop-up-form-input text-input" type="text" required placeholder="username"
+                [ngModel]="this.username" name="username" autocomplete="off">
+        </div>
+
+
+        <div class="pop-up-form-input-and-label-container">
+            <div class="pop-up-form-label">
+                <label>
+                    Password :
+                </label>
+            </div>
+            <input class="pop-up-form-input text-input" type="password" required placeholder="password"
+                [ngModel]="this.password" name="password" autocomplete="off">
+        </div>
+
+        <div class="pop-up-form-input-and-label-container">
+            <div class="pop-up-form-label">
+                <label>
+                    Email :
+                </label>
+            </div>
+            <input class="pop-up-form-input text-input" type="email" required placeholder="email" [ngModel]="this.email"
+                name="email" autocomplete="off">
+        </div>
+
+        <div class="pop-up-form-input-and-label-container">
+            <div class="pop-up-form-label">
+                <label>
+                    Roles :
+                </label>
+            </div>
+            <input class="pop-up-form-input text-input" type="text" required placeholder="Ex. ADMIN , USER"
+                [ngModel]="this.roles" name="roles" autocomplete="off">
+        </div>
+
+
+
+        <button class="form-submit-button btn" (click)="form.ngSubmit">submit</button>
+    </form>
+
+</div>

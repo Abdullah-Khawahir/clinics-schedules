@@ -1,6 +1,7 @@
 import { EventDto } from "./EventDto";
 import { EmployeeDto } from "./EmployeeDto";
 
+export type RepeatUnit = 'never' | 'daily' | 'weekly' | "weekdays" | "weekend";
 export class ClinicScheduleDto {
 
     constructor(
@@ -10,7 +11,7 @@ export class ClinicScheduleDto {
         public expireDate: string | number,
         public eventStart: string,
         public eventFinish: string,
-        public repeat: 'everyday' | 'never' | 'daily' | 'weekly' | "weekdays" | "weekend",
+        public repeat: RepeatUnit,
         public events: EventDto[],
         public employees: EmployeeDto[],
     ) {

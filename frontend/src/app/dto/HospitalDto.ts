@@ -1,6 +1,6 @@
 export class HospitalDto {
     constructor(
-        public id: number,
+        public id: number ,
         public englishName: string,
         public arabicName: string) { }
 }
