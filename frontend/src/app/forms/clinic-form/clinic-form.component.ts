@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Observable, Subject, catchError, ignoreElements, map, of, takeUntil } from 'rxjs';
 import { API } from 'src/app/api.service';
 import { ClinicDto } from 'src/app/dto/ClinicDto';
 import { FormType, SelectInputOption } from 'src/app/models/interfaces';
@@ -9,28 +9,47 @@ import { FormType, SelectInputOption } from 'src/app/models/interfaces';
   templateUrl: './clinic-form.component.html',
   styleUrls: ['./clinic-form.component.css', "./../../styles/popup-form.css"]
 })
-export class ClinicFormComponent implements OnInit, OnDestroy {
+export class ClinicFormComponent implements OnInit {
 
   @Output() shouldClose = new EventEmitter<boolean>(false)
 
   @Input({ required: false }) clinic!: ClinicDto;
   @Input({ required: true }) formType!: FormType;
 
-  allBuildingsAsOptions!: SelectInputOption[];
-  unsubscribe$ = new Subject<void>();
+
+  allBuildingsAsOptions$ = this.getBuildingsAsOptions()
+  allBuildingsAsOptionsError$ = this.allBuildingsAsOptions$
+    .pipe(ignoreElements(),
+      catchError(err => of(new Error("cant fetch data"))))
 
   constructor(private api: API) { }
 
   ngOnInit(): void {
-    console.log(this.clinic);
+    if (!this.clinic) {
+      this.clinic = {
+        id: -1,
+        arabicName: "",
+        englishName: "",
+        buildingId: "" as unknown as number,
+        ext: "",
+        number: "" as unknown as number
+      }
 
-    this.api.buildingDataSource
+    }
+
+
+  }
+  getBuildingsAsOptions(): Observable<SelectInputOption[]> {
+    return this.api.buildingDataSource
       .getAll()
       .pipe(
-        takeUntil(this.unsubscribe$),
-        map(buildings => buildings.map(building => { return { name: `${building.id}: ${building.englishName} ${building.number}`, value: building.id.toString() } })))
-      .subscribe((value) => this.allBuildingsAsOptions = value)
-
+        map(buildings => buildings.map(building => {
+          return {
+            name: `${building.id}: ${building.englishName} ${building.number}`,
+            value: building.id.toString()
+          }
+        }
+        )))
   }
   submit(formValue: any) {
     const buildingIdElement = (document.getElementById('building-select') as HTMLSelectElement)
@@ -65,9 +84,6 @@ export class ClinicFormComponent implements OnInit, OnDestroy {
     this.shouldClose.emit(true)
   }
 
-  ngOnDestroy(): void {
-    this.unsubscribe$.next()
-    this.unsubscribe$.complete()
-  }
+
 
 }

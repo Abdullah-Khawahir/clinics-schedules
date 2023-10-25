@@ -11,19 +11,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping({"/public"})
-@CrossOrigin(origins = {"http://localhost:4200" , "*"})
+@RequestMapping({ "/public" })
+@CrossOrigin(origins = { "http://localhost:4200", "*" })
 public class Authentication {
-  @Autowired private UserSecurityService userService;
+  @Autowired
+  private UserSecurityService userService;
 
   @PostMapping(path = "/auth")
   public ResponseEntity<UserDto> authenticateUser(@RequestBody UserDto entity)
       throws Exception {
     var user = userService.loadUserByUsername(entity.getUsername()).getUser();
 
-    if (user.getPassword().equals(entity.getPassword()))
-      return ResponseEntity.ok(new UserDto(user));
-    else
-      throw new Exception("password or username is incorrect");
+    return ResponseEntity.ok(new UserDto(user));
   }
 }

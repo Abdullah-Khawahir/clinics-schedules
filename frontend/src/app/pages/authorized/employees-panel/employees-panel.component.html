@@ -1,17 +1,31 @@
-<div>
+<ng-container
+    *ngIf="{employeesList:this.employeeList$|async ,employeesListError:this.employeeListError$|async  } as vm">
 
-    <app-data-table 
-    *ngIf="this.tableState == 'complete' "
-    [data-list]="this.employeeList"
-     [columns-definition]="this.columnDefinition"
-     [edit-action]="this.edit"
-     [remove-action]="this.remove">
-    </app-data-table>
-</div>
+    <ng-container *ngIf="vm.employeesList || vm.employeesListError else loading">
+        <ng-container *ngIf="vm.employeesList && !vm.employeesListError then content "></ng-container>
+        <ng-container *ngIf="!vm.employeesList && vm.employeesListError then err "></ng-container>
 
-<app-employee-form 
-*ngIf="!this.editFormClosed"
-(shouldClose)="this.toggleEditForm()"
-[employee]="this.employeeToEdit"
-formType="Update">
-</app-employee-form>
+    </ng-container>
+
+    <ng-template #loading>
+        <h1>loading ...</h1>
+    </ng-template>
+
+
+    <ng-template #err>
+        <h1>{{vm.employeesListError?.message}}</h1>
+    </ng-template>
+
+    <ng-template #content>
+
+        <app-data-table [data-list]="vm.employeesList || []" [columns-definition]="this.columnDefinition"
+            [edit-action]="this.edit" [remove-action]="this.remove">
+        </app-data-table>
+
+
+        <app-employee-form *ngIf="!this.editFormClosed" (shouldClose)="this.toggleEditForm()"
+            [employee]="this.employeeToEdit" formType="Update">
+        </app-employee-form>
+
+    </ng-template>
+</ng-container>

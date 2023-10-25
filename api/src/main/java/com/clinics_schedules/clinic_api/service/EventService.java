@@ -1,11 +1,8 @@
 package com.clinics_schedules.clinic_api.service;
 
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,18 +25,18 @@ public class EventService {
     }
 
     public void deleteByScheduleId(Integer id) {
-        repository.deleteByScheduleId(id);
+        repository.deleteEventsByScheduleId(id);
     }
 
-    @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.HOURS)
-    protected void cleanPassedEvents() {
+    // @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
+    // protected void cleanPassedEvents() {
+    //     var toBeDeleted = this.repository.findFinishedEvents();
+    //     System.out.println(String.format("passed events count: %d" , toBeDeleted.size()));
         
-        System.out.println(
-                String.format("q :%d r :%d",
-                        repository.findAll()
-                                .stream()
-                                .filter(e -> e.getFinishTime().getTime() < new Date().getTime())
-                                .count(),
-                        repository.findFinishedEvents().size()));
-    }
+    //     this.repository.deletePassedEvents();
+        
+    //     var afterDelete = this.repository.findFinishedEvents();
+    //     System.out.println(String.format("passed events count afterDelete: %d" , afterDelete.size()));
+   
+    // }
 }

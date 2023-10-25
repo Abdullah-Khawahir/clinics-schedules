@@ -13,12 +13,14 @@ import org.springframework.stereotype.Service;
 
 import com.clinics_schedules.clinic_api.dto.ClinicScheduleDto;
 import com.clinics_schedules.clinic_api.entity.ClinicSchedule;
+import com.clinics_schedules.clinic_api.entity.Employee;
 import com.clinics_schedules.clinic_api.entity.Event;
 import com.clinics_schedules.clinic_api.enums.TimeRepeatUnit;
 import com.clinics_schedules.clinic_api.exception.ResourceNotFoundException;
 import com.clinics_schedules.clinic_api.exception.ScheduleTimeConflictException;
 import com.clinics_schedules.clinic_api.interfaces.BasicCRUDService;
 import com.clinics_schedules.clinic_api.repository.ClinicScheduleRepository;
+import com.clinics_schedules.clinic_api.repository.EmployeeRepository;
 
 @Service
 public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, ClinicScheduleDto, Integer> {
@@ -26,6 +28,8 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 	private ClinicScheduleRepository repository;
 	@Autowired
 	private EventService eventService;
+	@Autowired
+	private EmployeeRepository employeeRepository;
 
 	@Override
 	public ClinicSchedule save(final ClinicScheduleDto scheduleDto) {
@@ -42,17 +46,70 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 		if (!conflicts.isEmpty()) {
 			Set<Integer> conflictedScheduleId = new HashSet<>();
 			conflicts.forEach(event -> conflictedScheduleId.add(event.getScheduleId()));
-
 			var conflictSchedules = repository.findAllById(conflictedScheduleId);
 			throw new ScheduleTimeConflictException(scheduleToSave, conflictSchedules);
 		}
+		final var employeesIds = scheduleDto.getEmployees().stream().map(Employee::getId).toList();
+		scheduleToSave.setEmployees(employeeRepository.findAllById(employeesIds));
 		final var savedSchedule = repository.save(scheduleToSave);
-
+		
 		final var events = getEvents(savedSchedule);
-
+		
 		eventService.saveEvents(events);
 
 		return savedSchedule;
+	}
+
+	@Override
+	public List<ClinicSchedule> getAll() {
+		return repository.findAll();
+	}
+
+	@Override
+	public ClinicSchedule updateById(final Integer id, final ClinicScheduleDto scheduleDto) {
+		final var currentSchedule = repository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Clinic_Schedule", "id", id.toString()));
+
+		currentSchedule
+				.setClinicId(scheduleDto.getClinicId())
+				.setBeginDate(new Date(scheduleDto.getBeginDate()))
+				.setExpireDate(new Date(scheduleDto.getExpireDate()))
+				.setEventStart(scheduleDto.getEventStart())
+				.setEventFinish(scheduleDto.getEventFinish())
+				.setRepeat(scheduleDto.getRepeat());
+				
+
+		var conflicts = getConflictList(currentSchedule);
+		if (!conflicts.isEmpty()) {
+			Set<Integer> conflictedScheduleId = new HashSet<>();
+			conflicts.forEach(event -> conflictedScheduleId.add(event.getScheduleId()));
+
+			var conflictSchedules = repository.findAllById(conflictedScheduleId);
+			throw new ScheduleTimeConflictException(currentSchedule, conflictSchedules);
+		}
+
+		deleteOldEvents(currentSchedule);
+		final var employeesIds = scheduleDto.getEmployees().stream().map(Employee::getId).toList();
+		currentSchedule.setEmployees(employeeRepository.findAllById(employeesIds));
+		
+		final var updatedSchedule = repository.save(currentSchedule);
+		final var events = this.getEvents(updatedSchedule);
+
+		eventService.saveEvents(events);
+		return updatedSchedule;
+	}
+
+	@Override
+	public void deleteById(final Integer id) {
+		if (!repository.existsById(id))
+			throw new ResourceNotFoundException("Clinic_Schedule", "id", id.toString());
+
+		repository.deleteById(id);
+	}
+
+	@Override
+	public Optional<ClinicSchedule> getByID(Integer id) {
+		return this.repository.findById(id);
 	}
 
 	private List<Event> getEvents(final ClinicSchedule schedule) {
@@ -129,7 +186,7 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 			}
 			default:
 				return true;
-		
+
 		}
 	}
 
@@ -203,41 +260,6 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 		}
 	}
 
-	@Override
-	public List<ClinicSchedule> getAll() {
-		return repository.findAll();
-	}
-
-	@Override
-	public ClinicSchedule updateById(final Integer id, final ClinicScheduleDto scheduleDto) {
-		final var currentSchedule = repository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Clinic_Schedule", "id", id.toString()));
-
-		currentSchedule
-				.setClinicId(scheduleDto.getClinicId())
-				.setBeginDate(new Date(scheduleDto.getBeginDate()))
-				.setExpireDate(new Date(scheduleDto.getExpireDate()))
-				.setEventStart(scheduleDto.getEventStart())
-				.setEventFinish(scheduleDto.getEventFinish())
-				.setRepeat(scheduleDto.getRepeat());
-
-		var conflicts = getConflictList(currentSchedule);
-		if (!conflicts.isEmpty()) {
-			Set<Integer> conflictedScheduleId = new HashSet<>();
-			conflicts.forEach(event -> conflictedScheduleId.add(event.getScheduleId()));
-
-			var conflictSchedules = repository.findAllById(conflictedScheduleId);
-			throw new ScheduleTimeConflictException(currentSchedule, conflictSchedules);
-		}
-
-		deleteOldEvents(currentSchedule);
-		final var updatedSchedule = repository.save(currentSchedule);
-		final var events = this.getEvents(updatedSchedule);
-
-		eventService.saveEvents(events);
-		return updatedSchedule;
-	}
-
 	private List<Event> getConflictList(final ClinicSchedule currentSchedule) {
 		var conflict = new ArrayList<Event>();
 		var schedules = this.getAll()
@@ -291,19 +313,6 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 			eventService.deleteByScheduleId(currentSchedule.getId());
 		} catch (ResourceNotFoundException rnfe) {
 		}
-	}
-
-	@Override
-	public void deleteById(final Integer id) {
-		if (!repository.existsById(id))
-			throw new ResourceNotFoundException("Clinic_Schedule", "id", id.toString());
-
-		repository.deleteById(id);
-	}
-
-	@Override
-	public Optional<ClinicSchedule> getByID(Integer id) {
-		return this.repository.findById(id);
 	}
 
 }

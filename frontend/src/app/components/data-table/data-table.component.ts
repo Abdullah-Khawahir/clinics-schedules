@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Column } from 'src/app/models/interfaces';
 
 const NUM_REGEX = /^\d+$/
@@ -21,28 +22,28 @@ export class DataTableComponent<T> implements OnInit {
   ColumnsDefinition!: Column[];
 
   @Input({ alias: "edit-action", required: true })
-  editFunction!: ((target: T) => void)
+  editAction!: ((target: T) => void) 
 
   @Input({ alias: "remove-action", required: true })
-  removeFunction!: ((target: T) => void)
+  removeAction!: ((target: T) => void) 
 
   columnsFilters = new Map<string, string>()
   viewList!: T[];
   filter: string = "";
 
-  @Input({ alias: "sort-key", required: false }) sortingColumn: SortColumn | undefined;
+  @Input({ alias: "sort-key", required: false }) sortingColumn!: SortColumn;
 
 
   ngOnInit() {
     this.viewList = this.dataArray
+
+    if (!this.sortingColumn) {
+      this.sortingColumn = { key: this.ColumnsDefinition[0].key, direction: 'ASC' }
+    }
   }
 
 
   sortBy(column: Column) {
-    if (!this.sortingColumn) {
-      this.sortingColumn = { key: column.key, direction: 'ASC' }
-    }
-
     if (this.sortingColumn.key == column.key) {
       this.switchSortDirection(this.sortingColumn.direction);
     } else {
@@ -53,10 +54,7 @@ export class DataTableComponent<T> implements OnInit {
 
   }
 
-
   switchSortDirection(direction: SortDirection) {
-    if (!this.sortingColumn) return;
-
     if (direction == 'ASC') {
       this.sortingColumn.direction = 'DES'
     } else {
@@ -72,15 +70,17 @@ export class DataTableComponent<T> implements OnInit {
     const column = this.sortingColumn;
     if (column?.key == undefined) return 0;
 
-    const v1 = a[column?.key]
-    const v2 = b[column?.key]
+    const v1 = a[column?.key].toString().trim()
+    const v2 = b[column?.key].toString().trim()
 
     if (NUM_REGEX.test(v1) && NUM_REGEX.test(v2)) {
+
       switch (this.sortingColumn?.direction) {
         case "ASC": return v1 - v2
         case "DES": return v1 + v2
       }
     } else {
+
       switch (this.sortingColumn?.direction) {
         case "ASC": return (v1.toString() as string).localeCompare(v2)
         case "DES": return (v2.toString() as string).localeCompare(v1)

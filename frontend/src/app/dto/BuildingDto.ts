@@ -7,4 +7,5 @@ export class BuildingDto {
         public number: number,
         public hospitalId: number,
     ) { }
+
 }

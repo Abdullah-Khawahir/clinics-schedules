@@ -1,6 +1,7 @@
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import moment from 'moment';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, TimeoutError, catchError, ignoreElements, of, retry, takeUntil, tap, timeout } from 'rxjs';
 import { API } from 'src/app/api.service';
 import { ClinicDto } from 'src/app/dto/ClinicDto';
 import { EmployeeDto } from 'src/app/dto/EmployeeDto';
@@ -25,7 +26,21 @@ interface DayOfEvents {
 
 })
 export class HospitalSchedulesComponent implements OnInit, OnDestroy {
-  clinics!: FullClinic[]
+  clinics$ = this.api.getAllClinics().pipe(timeout(3000), retry(1))
+  clinicsError$ = this.clinics$
+    .pipe(
+      ignoreElements(),
+      catchError((err) => {
+        if (err instanceof HttpErrorResponse)
+          return of(new Error("failed to connect with server"))
+        if (err instanceof TimeoutError)
+          return of(new Error(`the server took too long`))
+        if (err instanceof ErrorEvent)
+          return of(new Error(err.message))
+        else
+          return of(new Error(`failed to connect with server`))
+
+      }))
   allClinics!: Set<ClinicDto>
   clinicFilter: string = "";
   requestState!: RequestState;
@@ -42,25 +57,25 @@ export class HospitalSchedulesComponent implements OnInit, OnDestroy {
 
   private fetchClinics() {
     this.requestState = 'loading'
-    this.api
-    .getAllClinics()
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe({
-      next: (value) => {
-        this.setClinics(value.filter(clinic => clinic.schedules.length));
-        this.requestState = 'complete';
-      },
-      complete: () => {
-        this.requestState = 'complete';
-      }
-    });
+    // this.api
+    // .getAllClinics()
+    // .pipe(takeUntil(this.unsubscribe$))
+    // .subscribe({
+    //   next: (value) => {
+    //     this.setClinics(value.filter(clinic => clinic.schedules.length));
+    //     this.requestState = 'complete';
+    //   },
+    //   complete: () => {
+    //     this.requestState = 'complete';
+    //   }
+    // });
   }
 
 
 
-  setClinics(clinics: FullClinic[]) {
-    this.clinics = clinics;
-  }
+  // setClinics(clinics: FullClinic[]) {
+  //   this.clinics = clinics;
+  // }
 
   getAllEvents(clinic: FullClinic) {
     if (clinic.schedules.length == 0) return;

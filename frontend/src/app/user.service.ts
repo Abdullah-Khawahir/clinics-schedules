@@ -26,9 +26,7 @@ export class UserService {
   private isLogged$ = new BehaviorSubject<boolean>(true)
 
   constructor(private http: HttpClient) {
-    for (let i = 0; i < 5; i++) {
-      console.warn(i + ":auto login is active");
-    }
+    console.warn("auto login is active");
     this.login("abdullah", "4484")
   }
 
@@ -67,6 +65,7 @@ export class UserService {
   getCurrentUser() {
     return this.currentUser$
   }
+  
   onLogin(fn: (() => void)) {
     this.onLogInFunctions.push(fn)
   }

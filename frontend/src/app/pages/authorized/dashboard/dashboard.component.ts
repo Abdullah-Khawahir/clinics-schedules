@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { NotifierService } from 'src/app/notifier.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,7 +13,7 @@ export class DashboardComponent {
   openClinicForm = false;
   openScheduleForm = false;
   openEmployeeForm = false;
-  
+  openUserForm = false;
   toggleAddHospitalForm() {
     this.openHospitalForm = !this.openHospitalForm
   }
@@ -35,4 +36,7 @@ export class DashboardComponent {
     this.openEmployeeForm = !this.openEmployeeForm
   }
 
+  toggleAddUserForm() {
+    this.openUserForm = !this.openUserForm
+  }
 }

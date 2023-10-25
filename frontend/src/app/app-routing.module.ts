@@ -7,6 +7,7 @@ import { DashboardComponent } from './pages/authorized/dashboard/dashboard.compo
 import { EmployeesPanelComponent } from './pages/authorized/employees-panel/employees-panel.component';
 import { HospitalPanelComponent } from './pages/authorized/hospital-panel/hospital-panel.component';
 import { SchedulesPanelComponent } from './pages/authorized/schedules-panel/schedules-panel.component';
+import { UsersPanelComponent } from './pages/authorized/users-panel/users-panel.component';
 import { LoginComponent } from './pages/public/auth/login/login.component';
 import { HomeComponent } from './pages/public/home/home.component';
 import { HospitalSchedulesComponent } from './pages/public/hospital-schedules/hospital-schedules.component';
@@ -16,6 +17,7 @@ const authenticatedRoutes: Routes = [
     path: "dashboard",
     title: "Dashboard",
     component: DashboardComponent,
+    
   },
   {
     path: "dashboard/hospitals-panel",
@@ -42,6 +44,11 @@ const authenticatedRoutes: Routes = [
     path: "dashboard/employees-panel",
     title: "Employees Panel",
     component: EmployeesPanelComponent,
+
+  }, {
+    path: "dashboard/users-panel",
+    title: "Users Panel",
+    component: UsersPanelComponent,
 
   },
 ].map((route: Route) => {

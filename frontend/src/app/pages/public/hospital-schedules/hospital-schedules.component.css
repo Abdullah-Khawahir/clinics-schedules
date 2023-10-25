@@ -39,13 +39,14 @@
     min-height: 40vh;
     /* outline: 1px solid purple; */
 
-    gap: 1%;
+    gap: 0.5%;
 
 
 }
 
 .clinic-schedule-event {
     /* outline: 1px solid palevioletred; */
+    border: 1px solid black;
     flex-basis: calc(100% /7.2);
     flex-grow: 0;
     flex-shrink: 0;
@@ -66,12 +67,15 @@
     /* outline: 1px solid fuchsia; */
     display: flex;
     flex-direction: column;
+    gap: 5px;
 
-
-    margin: 10px;
+    margin: 7px;
     padding: 5px;
 }
-
+.event-time-and-employees{
+    outline: 1px solid steelblue;
+    
+}
 .schedule-event-time {
-    overflow-x: scroll;
+    /* overflow-x: scroll; */
 }

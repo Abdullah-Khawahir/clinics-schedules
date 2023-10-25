@@ -66,13 +66,13 @@ public class ClinicSchedule {
             @JoinColumn(name = "employee_id") })
     private List<Employee> employees;
 
-    @OneToMany( mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "__ownerSchedule", cascade = CascadeType.ALL)
     private List<Event> events;
 
     @ManyToOne
     @JoinColumn(name = "clinic_id", referencedColumnName = "clinic_id", insertable = false, updatable = false)
     @JsonBackReference
-    private Clinic clinic;
+    private Clinic __ownerClinic;
 
     public ClinicSchedule(
             final Integer id,

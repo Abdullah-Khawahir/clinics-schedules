@@ -1,7 +1,27 @@
-<div class="hospital-panel-container">
-    <app-data-table *ngIf="this.tableState== 'complete' " [data-list]="this.hospitalsList "
-        [columns-definition]="this.columnsDefinition" [edit-action]="this.edit"
-        [remove-action]="this.remove"></app-data-table>
-</div>
-<app-hospital-form *ngIf="!this.editFormClosed" (closeEvent)="this.toggleEditForm()" [hospital]="this.hospitalToEdit"
-    [formType]="'Update'"></app-hospital-form>
+<ng-container
+    *ngIf="{listOfHospitals:this.hospitalsList$ |async  ,listOfHospitalsError:this.hospitalsListError$ |async} as vm">
+
+    <ng-container *ngIf="vm.listOfHospitals || vm.listOfHospitalsError; else loading">
+        <ng-container *ngIf="vm.listOfHospitals && !vm.listOfHospitalsError; then content"></ng-container>
+        <ng-container *ngIf="vm.listOfHospitals && vm.listOfHospitalsError; then error"></ng-container>
+    </ng-container>
+
+
+    <ng-template #loading>
+        <h1>loading ...</h1>
+    </ng-template>
+
+    <ng-template #error>
+        <h1>{{vm.listOfHospitalsError.message}}</h1>
+    </ng-template>
+
+    <ng-template #content>
+        <div class="hospital-panel-container">
+            <app-data-table [data-list]="vm.listOfHospitals!" [columns-definition]="this.columnsDefinition"
+                [edit-action]="this.edit" [remove-action]="this.remove"></app-data-table>
+        </div>
+        <app-hospital-form *ngIf="!this.editFormClosed" (closeEvent)="this.toggleEditForm()"
+            [hospital]="this.hospitalToEdit" [formType]="'Update'"></app-hospital-form>
+    </ng-template>
+
+</ng-container>

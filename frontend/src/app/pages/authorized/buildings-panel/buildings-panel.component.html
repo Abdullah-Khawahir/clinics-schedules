@@ -1,14 +1,35 @@
-<div class="building-panel">
-    <app-data-table *ngIf="this.tableState == 'complete'"
-    [data-list]="this.buildings"
-    [columns-definition]="this.columnDefinition"
-    [edit-action]="this.edit"
-    [remove-action]="this.remove">
-    </app-data-table>
-</div>
-<app-building-form
-    *ngIf="!this.editFormClosed"
-    formType="Update"
-    [building]="this.buildingToEdit"
-    (shouldClose)="this.toggleClose()"
-></app-building-form>
+<ng-container *ngIf=" {
+    buildings:this.buildings$ |async ,
+    buildingsError:this.buildingsError$ |async } as vm">
+
+    <ng-container *ngIf="vm.buildings || vm.buildingsError else loading">
+        <ng-container *ngIf="vm.buildings && !vm.buildingsError then content">
+        </ng-container>
+
+        <ng-container *ngIf="!vm.buildings && vm.buildingsError then error">
+        </ng-container>
+
+    </ng-container>
+
+    <ng-template #loading>
+        <h1>loading ...</h1>
+    </ng-template>
+    
+    <ng-template #error>
+        <h1>{{vm.buildingsError?.message}}</h1>
+    </ng-template>
+
+    <ng-template #content>
+
+
+        <div class="building-panel">
+            <app-data-table [data-list]="vm.buildings || []"
+                [columns-definition]="this.columnDefinition" [edit-action]="this.edit" [remove-action]="this.remove">
+            </app-data-table>
+        </div>
+
+        <app-building-form *ngIf="!this.editFormClosed" formType="Update" [building]="this.buildingToEdit"
+            (shouldClose)="this.toggleClose()"></app-building-form>
+
+    </ng-template>
+</ng-container>

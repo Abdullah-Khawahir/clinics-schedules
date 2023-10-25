@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, catchError, ignoreElements, of, retry, takeUntil, takeWhile, tap } from 'rxjs';
 import { API } from 'src/app/api.service';
 import { HospitalDto } from 'src/app/dto/HospitalDto';
 import { Column, RequestState } from 'src/app/models/interfaces';
@@ -9,14 +9,21 @@ import { Column, RequestState } from 'src/app/models/interfaces';
   templateUrl: './hospital-panel.component.html',
   styleUrls: ['./hospital-panel.component.css']
 })
-export class HospitalPanelComponent implements OnInit, OnDestroy {
+export class HospitalPanelComponent implements OnInit {
 
   editFormClosed = true
   hospitalToEdit!: HospitalDto;
   columnsDefinition!: Column[];
-  hospitalsList!: HospitalDto[]
-  tableState: RequestState = 'loading';
-  unsubscribe$: Subject<void> = new Subject<void>();
+
+  hospitalsList$ = this.api.hospitalDataSource
+    .getAll()
+    .pipe(retry(1))
+  hospitalsListError$ = this.hospitalsList$
+    .pipe(
+      ignoreElements(),
+      catchError(err => of(err))
+    )
+
 
   edit = (hospital: HospitalDto) => {
     this.hospitalToEdit = hospital
@@ -24,9 +31,9 @@ export class HospitalPanelComponent implements OnInit, OnDestroy {
   }
 
   remove = (hospital: HospitalDto) => {
-    if (hospital.id)
-      this.api.hospitalDataSource.delete(hospital.id)
-        .subscribe({ next: () => this.fetchAllHospitals() })
+    if (window.confirm(`are you sure you want to delete ${hospital.englishName} hospital`))
+      this.api.hospitalDataSource
+        .delete(hospital.id).subscribe()
   }
   constructor(public api: API) { }
 
@@ -36,37 +43,36 @@ export class HospitalPanelComponent implements OnInit, OnDestroy {
       { key: 'englishName', displayLabel: "English Name" },
       { key: 'arabicName', displayLabel: "Arabic Name" },
     ]
-    this.fetchAllHospitals();
+    // this.fetchAllHospitals();
   }
 
-  private fetchAllHospitals() {
-    this.tableState = 'loading'
-    this.api.hospitalDataSource.getAll()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(
-        {
-          complete: () => {
-            this.tableState = 'complete';
-          },
-          error: (err) => {
-            this.tableState = 'error';
-          },
-          next: (value) => {
-            this.hospitalsList = value;
-          },
-        }
-      );
-  }
+  // private fetchAllHospitals() {
+  //   this.tableState = 'loading'
+  //   this.api.hospitalDataSource.getAll()
+  //     .pipe(takeUntil(this.unsubscribe$))
+  //     .subscribe(
+  //       {
+  //         complete: () => {
+  //           this.tableState = 'complete';
+  //         },
+  //         error: (err) => {
+  //           this.tableState = 'error';
+  //         },
+  //         next: (value) => {
+  //           this.hospitalsList = value;
+  //         },
+  //       }
+  //     );
+  // }
 
-  ngOnDestroy(): void {
-    this.unsubscribe$.next()
-    this.unsubscribe$.complete()
-  }
+  // ngOnDestroy(): void {
+  //   this.unsubscribe$.next()
+  //   this.unsubscribe$.complete()
+  // }
 
   toggleEditForm() {
     this.editFormClosed = !this.editFormClosed;
-    console.log(this.hospitalToEdit);
-    
+
   }
 
 

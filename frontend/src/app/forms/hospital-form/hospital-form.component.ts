@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { API } from 'src/app/api.service';
 import { HospitalDto } from 'src/app/dto/HospitalDto';
 import { FormType } from 'src/app/models/interfaces';
@@ -8,14 +9,16 @@ import { FormType } from 'src/app/models/interfaces';
   styleUrls: ['./hospital-form.component.css',
     './../../styles/popup-form.css']
 })
-export class HospitalFormComponent implements OnInit {
+export class HospitalFormComponent implements OnInit, OnDestroy {
 
 
   @Output() closeEvent = new EventEmitter<void>();
   @Input({ required: true }) formType!: FormType
   @Input({ required: false }) hospital!: HospitalDto
 
+  unsubscribe$ = new Subject<void>();
   constructor(private api: API) { }
+
 
   ngOnInit(): void {
     if (this.formType == 'Create') {
@@ -39,10 +42,14 @@ export class HospitalFormComponent implements OnInit {
 
 
     if (this.formType == 'Create') {
-      this.api.hospitalDataSource.save(hospital).subscribe({ next: (newHospital) => this.afterSubmit(newHospital) })
+      this.api.hospitalDataSource.save(hospital)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe({ next: (newHospital) => this.afterSubmit(newHospital) })
     }
     if (this.formType == 'Update') {
-      this.api.hospitalDataSource.update(hospital.id, hospital).subscribe({ next: (newHospital) => this.afterSubmit(newHospital) })
+      this.api.hospitalDataSource.update(hospital.id, hospital)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe({ next: (newHospital) => this.afterSubmit(newHospital) })
     }
 
 
@@ -51,4 +58,9 @@ export class HospitalFormComponent implements OnInit {
     this.close()
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribe$.next()
+    this.unsubscribe$.complete()
+
+  }
 }

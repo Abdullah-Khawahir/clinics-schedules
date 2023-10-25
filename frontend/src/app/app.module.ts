@@ -35,7 +35,9 @@ import { MomentModule } from 'ngx-moment';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { HospitalFormComponent } from './forms/hospital-form/hospital-form.component';
 import { SchedulesPanelComponent } from './pages/authorized/schedules-panel/schedules-panel.component';
+import { UsersPanelComponent } from './pages/authorized/users-panel/users-panel.component';
 import { HomeComponent } from './pages/public/home/home.component';
+import { NotificationViewComponent } from './components/notification-view/notification-view.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -63,6 +65,8 @@ import { HomeComponent } from './pages/public/home/home.component';
     HospitalFormComponent,
     SchedulesPanelComponent,
     HomeComponent,
+    UsersPanelComponent,
+    NotificationViewComponent,
 
   ],
   imports: [
@@ -71,9 +75,7 @@ import { HomeComponent } from './pages/public/home/home.component';
     HttpClientModule,
     FormsModule,
     RouterModule,
-    MomentModule,
-    MatSnackBarModule
-
+    MomentModule
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]

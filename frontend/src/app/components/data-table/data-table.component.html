@@ -3,6 +3,8 @@
     <div class="filters-container">
         <input class="filter" *ngFor="let column of this.ColumnsDefinition" type="text"
             (keyup)="this.filterList($event , column.key)" [placeholder]="column.displayLabel" />
+        
+            <div class="filter filter-hidden"></div>
     </div>
 
     <table>
@@ -15,7 +17,6 @@
             </th>
 
             <th class="action-header header-cell table-cell">action</th>
-            <!-- <th class="action-header header-cell table-cell"> </th> -->
         </tr>
 
 
@@ -27,13 +28,13 @@
 
             <td class="action-cell table-cell">
 
-                <app-edit-action class="action-btn" [target]="data" [editAction]="this.editFunction"
+                <app-edit-action class="action-btn" [target]="data" [editAction]="this.editAction"
                     [buttonContent]="editContent">
                     edit</app-edit-action>
 
 
 
-                <app-remove-action class="action-btn" [target]="data" [removeAction]="this.removeFunction"
+                <app-remove-action class="action-btn-cell" [target]="data" [removeAction]="this.removeAction"
                     [buttonContent]="removeContent"></app-remove-action>
             </td>
         </tr>
@@ -45,26 +46,3 @@
 <ng-template #removeContent>remove</ng-template>
 
 <ng-template #editContent>edit</ng-template>
-<!-- <main>
-    <div>
-        <input mat-input 
-        *ngFor="let filerInput of ColumnsDefinition"
-        placeholder="{{filerInput.displayLabel}}"
-        type="text"
-        (keyup)="filterList($event , filerInput.key)" 
-        />
-    </div>
-    <table mat-table matSort
-    [dataSource]="elementsArray">
-
-        <ng-container *ngFor="let column of ColumnsDefinition;">
-            <ng-container matColumnDef={{column.key}}>
-                <th mat-header-cell mat-sort-header *matHeaderCellDef="">{{column.displayLabel}}</th>
-                <td mat-cell *matCellDef="let rowCell ">{{rowCell[column.key]}}</td>
-            </ng-container>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="getAllKeys()"></tr>
-        <tr mat-row *matRowDef="let row; columns: getAllKeys();"></tr>
-    </table>
-</main> -->

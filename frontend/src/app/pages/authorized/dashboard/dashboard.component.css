@@ -1,0 +1,67 @@
+* * {
+    padding: 3px;
+    margin: 1px;
+
+}
+
+.dashboard {
+    /* outline: 1px solid black; */
+    width: 95vw;
+
+    margin: 15px auto auto auto;
+
+}
+
+.dashboard-panel-list {
+    list-style-type: none;
+    /* outline: 1px solid blue; */
+    margin: auto;
+
+}
+
+.dashboard-item {
+    /* outline: 1px solid red; */
+    display: flex;
+    flex-direction: row;
+    flex-basis: 33%;
+    gap: 5px;
+}
+
+/************************************/
+.dashboard-item-name {
+    /* outline: 1px solid green; */
+    width: 50%;
+    text-align: center;
+    text-decoration: none;
+    border: 1px solid rgba(0, 0, 0, 0.525);
+}
+
+.dashboard-item-name:hover {
+    background-color: aqua;
+    transition: 200ms;
+
+}
+
+.dashboard-item-name:visited {
+    all: unset
+}
+
+.dashboard-item-button {
+    width: 10%;
+    text-align: center;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    background-color: lightgray;
+    line-height: 200%;
+    vertical-align: middle;
+    font-size: smaller;
+
+}
+
+.dashboard-item-button:hover {
+    transition: 200ms;
+    background-color: rgba(211, 211, 211, 0.65);
+
+}

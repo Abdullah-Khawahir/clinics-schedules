@@ -39,10 +39,10 @@ public class Event {
     @Column(name = "event_finish", nullable = false)
     private Date finishTime;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "schedule_id", referencedColumnName = "schedule_id", insertable = false, updatable = false)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY  )
+    @JoinColumn(name = "schedule_id", referencedColumnName = "schedule_id",  insertable = false, updatable = false)
     @JsonBackReference
-    private ClinicSchedule schedule;
+    private ClinicSchedule __ownerSchedule; // the name schedule confuse JPA when deleting
 
     public Event(final Integer scheduleId, final Date begin, final Date finish) {
         this.scheduleId = scheduleId;

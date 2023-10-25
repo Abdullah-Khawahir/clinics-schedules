@@ -1,13 +1,30 @@
-<app-data-table *ngIf="this.tableState== 'complete' " 
-[data-list]="this.schedules"
- [columns-definition]="this.columns"
- [edit-action]="this.edit"
- [remove-action]="this.remove">
+<ng-container *ngIf="{
+    schedules:this.schedules$ |async ,
+     schedulesError:this.schedulesError$ |async}
+      as vm">
 
-</app-data-table>
-<app-schedule-form
-*ngIf="!this.editFormClosed"
-(shouldClose)="this.toggleEditForm()"
-[schedule]="this.scheduleToEdit"
-formType="Update"
-></app-schedule-form>
+    <ng-container *ngIf="vm.schedules ||vm.schedulesError else loading">
+        <ng-container *ngIf="vm.schedules &&!vm.schedulesError then content"></ng-container>
+        <ng-container *ngIf="!vm.schedules &&vm.schedulesError then err"></ng-container>
+
+    </ng-container>
+
+
+
+    <ng-template #loading>
+        <h1>loading ...</h1>
+    </ng-template>
+
+    <ng-template #err>
+        <h1>{{vm.schedulesError.message}}</h1>
+    </ng-template>
+
+    <ng-template #content>
+        <app-data-table [data-list]="vm.schedules || []" [columns-definition]="this.columns" [edit-action]="this.edit"
+            [remove-action]="this.remove">
+        </app-data-table>
+
+        <app-schedule-form *ngIf="!this.editFormClosed" (shouldClose)="this.toggleEditForm()"
+            [schedule]="this.scheduleToEdit" formType="Update"></app-schedule-form>
+    </ng-template>
+</ng-container>

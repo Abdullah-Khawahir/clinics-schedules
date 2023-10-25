@@ -72,7 +72,7 @@ public class ClinicScheduleController {
     }
 
     @PostMapping(path = "/clinic-schedule")
-    public ClinicScheduleDto postMethodName(@RequestBody final ClinicScheduleDto scheduleDto) {
+    public ClinicScheduleDto saveSchedule(@RequestBody final ClinicScheduleDto scheduleDto) {
 
         return new ClinicScheduleDto(scheduleService.save(scheduleDto));
     }

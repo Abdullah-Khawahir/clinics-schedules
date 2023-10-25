@@ -1,57 +1,91 @@
-<div class="pop-up-form-background">
+<ng-container
+    *ngIf="{hospitalOptions:this.hospitalOptions$| async ,hospitalOptionsError:this.hospitalOptionsError$| async   } as vm">
 
-    <form class="pop-up-form" ngNativeValidate #form='ngForm' (ngSubmit)="this.submit(form.value)">
-        <div class="pop-up-form-input-and-label-container">
 
-            <div class="pop-up-form-label">
-                <label>
-                    Building English Name :
-                </label>
+    <ng-container *ngIf="vm.hospitalOptions || vm.hospitalOptionsError else loading">
+        <ng-container *ngIf="!vm.hospitalOptions && vm.hospitalOptionsError then error"> </ng-container>
+        <ng-container *ngIf="vm.hospitalOptions && !vm.hospitalOptionsError then content"> </ng-container>
+
+    </ng-container>
+
+
+    <ng-template #loading>
+        <div class="pop-up-form-background">
+            <div class="pop-up-form">
+                loading ...
+                <button class=" btn" type="button" (click)="this.close()">close</button>
+
             </div>
-            <input class="pop-up-form-input text-input" name="englishName" type="text" required
-                [(ngModel)]="this.building.englishName">
         </div>
+    </ng-template>
 
-
-        <div class="pop-up-form-input-and-label-container">
-            <div class="pop-up-form-label">
-                <label>
-                    Building Arabic Name :
-                </label>
+    <ng-template #error>
+        <div class="pop-up-form-background">
+            <div class="pop-up-form">
+                {{vm.hospitalOptionsError?.message}}
+                <button class=" btn" type="button" (click)="this.close()">close</button>
             </div>
-            <input class="pop-up-form-input text-input" name="arabicName" type="text" required
-                [(ngModel)]="this.building.arabicName">
         </div>
+    </ng-template>
 
-        <div class="pop-up-form-input-and-label-container">
-            <div class="pop-up-form-label">
-                <label>
-                    Building Number :
-                </label>
-            </div>
-            <input class="pop-up-form-input number-input" name="buildingNumber" type="number" required
-                [(ngModel)]="this.building.number">
+
+    <ng-template #content>
+        <div class="pop-up-form-background">
+
+            <form class="pop-up-form" ngNativeValidate #form='ngForm' (ngSubmit)="this.submit(form.value)">
+                <div class="pop-up-form-input-and-label-container">
+
+                    <div class="pop-up-form-label">
+                        <label>
+                            Building English Name :
+                        </label>
+                    </div>
+                    <input class="pop-up-form-input text-input" name="englishName" type="text" required
+                        [(ngModel)]="this.building.englishName">
+                </div>
+
+
+                <div class="pop-up-form-input-and-label-container">
+                    <div class="pop-up-form-label">
+                        <label>
+                            Building Arabic Name :
+                        </label>
+                    </div>
+                    <input class="pop-up-form-input text-input" name="arabicName" type="text" required
+                        [(ngModel)]="this.building.arabicName">
+                </div>
+
+                <div class="pop-up-form-input-and-label-container">
+                    <div class="pop-up-form-label">
+                        <label>
+                            Building Number :
+                        </label>
+                    </div>
+                    <input class="pop-up-form-input number-input" name="buildingNumber" type="number" required
+                        [(ngModel)]="this.building.number">
+                </div>
+
+                <div class="pop-up-form-input-and-label-container">
+                    <div class="pop-up-form-label">
+                        <label>
+                            Hospital :
+                        </label>
+                    </div>
+                    <select class="pop-up-form-input number-input" name="hospitalId"
+                        [(ngModel)]="this.building.hospitalId" required>
+                        <option value="-1" selected>select a hospital</option>
+                        <option *ngFor="let hospital of vm.hospitalOptions" value="{{hospital.value}}">
+                            {{hospital.name}}
+                        </option>
+                    </select>
+                </div>
+
+
+                <button class="form-submit-button btn" type="submit">submit</button>
+                <button class="form-submit-button btn" type="button" (click)="this.close()">close</button>
+
+            </form>
+
         </div>
-
-        <div class="pop-up-form-input-and-label-container">
-            <div class="pop-up-form-label">
-                <label>
-                    Hospital :
-                </label>
-            </div>
-            <select class="pop-up-form-input number-input" name="hospitalId" [(ngModel)]="this.building.hospitalId"
-                required>
-                <option value="" disabled selected>Select your option</option>
-                <option *ngFor="let hospital of this.hospitalOptions" value="{{hospital.value}}">
-                    {{hospital.name}}
-                </option>
-            </select>
-        </div>
-
-
-        <button class="form-submit-button btn" type="submit">submit</button>
-        <button class="form-submit-button btn" type="button" (click)="this.close()">close</button>
-
-    </form>
-
-</div>
+    </ng-template>
+</ng-container>

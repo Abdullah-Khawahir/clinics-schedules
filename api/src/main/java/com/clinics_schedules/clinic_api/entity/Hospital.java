@@ -39,7 +39,7 @@ public class Hospital {
     @Column(nullable = false, name = "hospital_english_name")
     private String englishName;
 
-    @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "__ownerHospital", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Building> buildings;
 
     public Hospital(final HospitalDto hospitalDto) {

@@ -1,0 +1,41 @@
+<ng-container *ngIf="{usersList:this.allUsers$ |async ,usersListError:this.allUsersError$ |async  } as vm">
+
+    <ng-container *ngIf="vm.usersList || vm.usersListError else loading">
+        <ng-container *ngIf="vm.usersList && !vm.usersListError then content"></ng-container>
+
+
+        <ng-container *ngIf="!vm.usersList && vm.usersListError then error"></ng-container>
+    </ng-container>
+
+
+
+    <ng-template #loading>
+        <h1>loading ...</h1>
+    </ng-template>
+
+
+    <ng-template #error>
+        <h1>Error</h1>
+    </ng-template>
+
+    <ng-template #content>
+
+        <div>
+        <app-data-table
+        [columns-definition]="this.columns"
+        [data-list]="vm.usersList!"
+        [edit-action]="this.edit"
+        [remove-action]="this.remove">
+        </app-data-table>
+       </div>
+
+
+       <app-user-form *ngIf="this.openEmployeeForm"
+       [user]="this.toEditUser" 
+       [formType]="'Update'"
+       (shouldClose)="this.toggleEmployeeForm()">
+       </app-user-form>
+
+    </ng-template>
+
+</ng-container>

@@ -1,8 +1,31 @@
-<div class="clinics-panel">
+<ng-container *ngIf="{clinics:this.clinicsList$ | async   , clinicsError:this.clinicsListError$ | async } as vm">
 
-    <app-data-table *ngIf="this.tableState == 'complete'" [data-list]="this.clinicsList"
-        [columns-definition]="ColumnsDefinition" [edit-action]="this.edit"
-        [remove-action]="this.remove"></app-data-table>
-</div>
-<app-clinic-form *ngIf="!this.editFormClosed" [clinic]="this.clinicToEdit" (shouldClose)="this.toggleEditForm()"
-    formType="Update"></app-clinic-form>
+    <ng-container *ngIf="vm.clinics || vm.clinicsError else loading">
+
+        <ng-container *ngIf="vm.clinics && !vm.clinicsError then content"></ng-container>
+
+        <ng-container *ngIf="!vm.clinics && vm.clinicsError then error"></ng-container>
+    </ng-container>
+
+
+    <ng-template #loading>
+        <h1>loading ...</h1>
+    </ng-template>
+
+    <ng-template #error>
+        <h1>error</h1>
+    </ng-template>
+
+    <ng-template #content>
+        <div class="clinics-panel">
+            <app-data-table [data-list]="vm.clinics || []" [columns-definition]="ColumnsDefinition"
+                [edit-action]="this.edit" [remove-action]="this.remove"></app-data-table>
+        </div>
+
+    </ng-template>
+
+    <app-clinic-form *ngIf="!this.editFormClosed" [clinic]="this.clinicToEdit" (shouldClose)="this.toggleEditForm()"
+        formType="Update">
+    </app-clinic-form>
+
+</ng-container>

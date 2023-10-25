@@ -1,33 +1,50 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { API } from 'src/app/api.service';
-import { UserDto } from 'src/app/dto/UserDto';
+import { Role, UserDto } from 'src/app/dto/UserDto';
+import { FormType } from 'src/app/models/interfaces';
 
 @Component({
   selector: 'app-user-form',
   templateUrl: './user-form.component.html',
   styleUrls: ['./user-form.component.css', "./../../styles/popup-form.css"]
 })
-export class UserFormComponent {
+export class UserFormComponent implements OnInit {
   @Output() shouldClose = new EventEmitter<boolean>(false);
 
-
-  @Input({ required: false }) username: string = "";
-  @Input({ required: false }) email: string = "";
-  @Input({ required: false }) password: string = "";
-  @Input({ required: false }) roles: string = "";
-
+  @Input({ required: false }) user!: UserDto;
+  @Input({ required: true }) formType!: FormType;
+  rolesString!: string;
   constructor(public api: API) { }
+
+  ngOnInit(): void {
+    if (this.user == undefined) {
+      this.user = {
+        id: -1,
+        username: "",
+        password: "",
+        email: "",
+        roles: []
+      };
+      this.rolesString = ''
+    } else {
+      this.rolesString = this.user.roles.join(' , ')
+    }
+
+
+  }
 
   submit(formValue: any) {
     let user: UserDto = {
-      id: -1,
+      id: this.formType == 'Create' ? -1 : this.user.id,
       username: formValue.username,
       password: formValue.password,
       email: formValue.email,
-      roles: (formValue.roles as string).toUpperCase().split(",")
+      roles: (formValue.roles as string).toUpperCase().split(",").map(role => role.trim()) as Role[]
     };
 
-    // this.api.
+    console.log(user);
+
+
   }
 
 

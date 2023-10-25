@@ -1,5 +1,6 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, catchError, ignoreElements, of, take, takeUntil } from 'rxjs';
 import { API } from 'src/app/api.service';
 import { BuildingDto } from 'src/app/dto/BuildingDto';
 import { Column, RequestState } from 'src/app/models/interfaces';
@@ -20,14 +21,21 @@ export class BuildingsPanelComponent implements OnInit, OnDestroy {
 
 
 
-  buildings!: BuildingDto[]
-  tableState: RequestState = 'loading'
+  buildings$ = this.api.buildingDataSource.getAll()
+  buildingsError$ = this.buildings$.pipe(
+    ignoreElements(),
+    catchError(err => of(new Error('cant connect to server')))
+  )
+
   columnDefinition!: Column[];
   unsubscribe$: Subject<void> = new Subject<void>();
 
 
   remove = (building: BuildingDto) => {
-    this.api.buildingDataSource.delete(building.id)
+    if (window.confirm(`are you sure you want to delete building : ${building.englishName} ${building.number} `))
+      this.api.buildingDataSource.delete(building.id)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe({ next: console.log })
   }
   edit = (building: BuildingDto) => {
     this.buildingToEdit = building
@@ -43,19 +51,6 @@ export class BuildingsPanelComponent implements OnInit, OnDestroy {
       { key: "hospitalId", displayLabel: "HospitalId" },
       { key: "number", displayLabel: "Clinic Number" },
     ]
-    this.api.buildingDataSource.getAll()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe({
-        error: () => {
-          this.tableState = 'error'
-        },
-        next: (value) => {
-          this.buildings = value
-        }
-        , complete: () => {
-          this.tableState = 'complete'
-        }
-      })
 
   }
 

@@ -1,36 +1,56 @@
-<ng-container *ngIf="this.requestState == 'complete'">
-    <input class="clinic-filter-input" type="text" [(ngModel)]="this.clinicFilter"
-        placeholder="Search Term Ex. Abdullah or 10:00 pm">
+<ng-container *ngIf="{clinics:this.clinics$ |async , clinicsError:this.clinicsError$ |async} as view">
 
-    <ng-template *ngFor="let clinic of this.clinics" [ngIf]="this.doesClinicPassFilter(clinic)">
+    <ng-container *ngIf="view.clinics ||view.clinicsError ; else loading">
+        <ng-container *ngIf="view.clinicsError && !view.clinics then err"></ng-container>
+        <ng-container *ngIf="!view.clinicsError && view.clinics then schedules"></ng-container>
+    </ng-container>
 
-        <div class="schedule-container" *ngIf="clinic.schedules.length != 0">
-            <div class="clinic-info">
-                <div class="clinic-info-item"> Name: {{clinic.englishName}}</div>
-                <div class="clinic-info-item"> Number: {{clinic.number}} </div>
-                <div class="clinic-info-item"> {{clinic.ext ? "Ext:" :"" }}{{clinic.ext}}</div>
-            </div>
 
-            <div class="clinic-schedule-event-container draggable">
+    <ng-template #loading>
+        <h1 > loading ...</h1>
+    </ng-template>
 
-                <div class="clinic-schedule-event draggable" *ngFor="let dayAndEvents of this.getAllEvents(clinic)">
 
-                    <div class="event-day-info schedule-event-date draggable">
-                        {{dayAndEvents.day | date:"EEEE , MMM dd "}}
-                    </div>
+    <ng-template #err>
+        <h1> {{view.clinicsError?.message}}</h1>
+    </ng-template>
 
-                    <div class="events-container">
+    <ng-template #schedules>
 
-                        <div class="event-info event-time-and-employees draggable"
-                            *ngFor="let event of dayAndEvents.events ">
-                            <div class=" schedule-event-time draggable ">
-                                {{event.eventStart | date:'hh:mmaaa'}} - {{event.eventFinish | date:"hh:mmaaa"}}
-                            </div>
+        <input class="clinic-filter-input" type="text" [(ngModel)]="this.clinicFilter"
+            placeholder="Search Term Ex. Abdullah or 10:00 pm">
 
-                            <div class="schedule-event-employees draggable">
-                                <div class="event-employee" *ngFor="let employee of event.employees">
-                                    {{employee.englishName}}
+        <ng-template *ngFor="let clinic of view.clinics" [ngIf]="this.doesClinicPassFilter(clinic)">
+
+            <div class="schedule-container" *ngIf="clinic.schedules.length != 0">
+                <div class="clinic-info">
+                    <div class="clinic-info-item"> Name: {{clinic.englishName}}</div>
+                    <div class="clinic-info-item"> Number: {{clinic.number}} </div>
+                    <div class="clinic-info-item"> {{clinic.ext ? "Ext:" :"" }}{{clinic.ext}}</div>
+                </div>
+
+                <div class="clinic-schedule-event-container ">
+
+                    <div class="clinic-schedule-event " *ngFor="let dayAndEvents of this.getAllEvents(clinic)">
+
+                        <div class="event-day-info schedule-event-date ">
+                            {{dayAndEvents.day | date:"EEEE , MMM dd "}}
+                        </div>
+
+                        <div class="events-container">
+
+                            <div class="event-time-and-employees "
+                                *ngFor="let event of dayAndEvents.events ">
+                                <div class=" schedule-event-time  ">
+                                    {{event.eventStart | date:'hh:mmaaa'}} - {{event.eventFinish | date:"hh:mmaaa"}}
                                 </div>
+
+                                <div class="schedule-event-employees ">
+                                    <div class="event-employee" *ngFor="let employee of event.employees">
+                                        {{employee.englishName}}
+                                    </div>
+                                </div>
+
                             </div>
 
                         </div>
@@ -40,7 +60,7 @@
                 </div>
 
             </div>
+        </ng-template>
 
-        </div>
     </ng-template>
 </ng-container>

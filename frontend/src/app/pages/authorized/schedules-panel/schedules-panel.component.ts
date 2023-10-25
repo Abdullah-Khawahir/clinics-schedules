@@ -1,12 +1,11 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import moment from 'moment';
-import { Subject, catchError, map, takeUntil, tap, throwError } from 'rxjs';
+import { catchError, ignoreElements, of, tap } from 'rxjs';
 import { API } from 'src/app/api.service';
 import { ClinicScheduleDto } from 'src/app/dto/ClinicScheduleDto';
 import { EmployeeDto } from 'src/app/dto/EmployeeDto';
-import { Column, RequestState } from 'src/app/models/interfaces';
+import { Column } from 'src/app/models/interfaces';
 
 @Component({
   selector: 'app-schedules-panel',
@@ -14,11 +13,15 @@ import { Column, RequestState } from 'src/app/models/interfaces';
   styleUrls: ['./schedules-panel.component.css']
 })
 export class SchedulesPanelComponent implements OnInit {
-  schedules !: ClinicScheduleDto[];
-  columns!: Column[];
-  tableState: RequestState = 'loading';
+  schedules$ = this.api.clinicScheduleDataSource
+    .getAll()
 
-  unsubscribe$ = new Subject<void>();
+  schedulesError$ = this.schedules$
+    .pipe(
+      ignoreElements(),
+      catchError((err) => of(err)))
+  columns!: Column[];
+
 
   editFormClosed = true;
   scheduleToEdit!: ClinicScheduleDto;
@@ -26,11 +29,7 @@ export class SchedulesPanelComponent implements OnInit {
   remove = (schedule: ClinicScheduleDto) => {
     this.api.clinicScheduleDataSource
       .delete(schedule.id)
-      .pipe(
-        catchError((err) => this.handleError(err)),
-        tap({ error: console.error })
-      )
-      .subscribe({ next: ()=>this.fetchAllSchedules() })
+      .subscribe({ next: () => this.fetchAllSchedules() })
   }
   edit = (target: ClinicScheduleDto) => {
 
@@ -39,10 +38,6 @@ export class SchedulesPanelComponent implements OnInit {
   }
 
 
-  handleError(err: HttpErrorResponse): any {
-    (() => this.snackBar.open(`ERR: ${err.message}`, 'dismes'))()
-    return throwError(() => `http err ${err.message}`)
-  }
 
   constructor(public api: API, public snackBar: MatSnackBar) { }
 
@@ -61,22 +56,20 @@ export class SchedulesPanelComponent implements OnInit {
       { key: 'employees', displayLabel: "Employees", mapper: (value: EmployeeDto[]) => value.map(employee => employee.englishName).join(" ") },
     ]
 
-    this.fetchAllSchedules();
   }
 
   private fetchAllSchedules() {
-    this.tableState = 'loading'
-    this.api.clinicScheduleDataSource
-      .getAll()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe({
-        next: (value) => {
-          this.schedules = value;
-          this.tableState = 'complete';
-        }, error: (err) => {
-          this.tableState = 'error';
-        }
-      });
+    // this.api.clinicScheduleDataSource
+    //   .getAll()
+    //   .pipe(takeUntil(this.unsubscribe$))
+    //   .subscribe({
+    //     next: (value) => {
+    //       this.schedules = value;
+    //       this.tableState = 'complete';
+    //     }, error: (err) => {
+    //       this.tableState = 'error';
+    //     }
+    //   });
   }
 
 

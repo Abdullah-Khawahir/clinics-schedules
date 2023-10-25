@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Observable, Subject, map, takeUntil } from 'rxjs';
+import moment from 'moment';
+import { Observable, Subject, catchError, ignoreElements, map, of, takeUntil, tap } from 'rxjs';
 import { API } from 'src/app/api.service';
 import { ClinicScheduleDto, RepeatUnit } from 'src/app/dto/ClinicScheduleDto';
-import { FormType, RequestState, SelectInputOption } from 'src/app/models/interfaces';
+import { EmployeeDto } from 'src/app/dto/EmployeeDto';
+import { FormType, SelectInputOption } from 'src/app/models/interfaces';
 
 @Component({
   selector: 'app-schedule-form',
@@ -10,22 +12,27 @@ import { FormType, RequestState, SelectInputOption } from 'src/app/models/interf
   styleUrls: ['./schedule-form.component.css', "./../../styles/popup-form.css"]
 })
 export class ScheduleFormComponent implements OnInit, OnDestroy {
-onSelect() {
-throw new Error('Method not implemented.');
-}
+
   @Output() shouldClose = new EventEmitter<boolean>();
   @Input({ required: false }) schedule!: ClinicScheduleDto;
   @Input({ required: true }) formType!: FormType;
 
 
+  employeesId!: Array<string>;
 
-  employeeInput: Array<any> = new Array(this.schedule?.employees.length || 1)
+  clinicsAsOptions$ = this.getClinicsAsOptions()
+  clinicsAsOptionsError$ = this.clinicsAsOptions$
+    .pipe(
+      ignoreElements(),
+      catchError(err => of(new Error('cant fetch data')))
+    )
 
-  clinicsAsOptions!: SelectInputOption[]
-  clinicRequestState: RequestState = 'loading'
-
-  employeesAsOptions!: SelectInputOption[]
-  employeeRequestState: RequestState = 'loading'
+  employeesAsOptions$ = this.getEmployeesAsOptions()
+  employeesAsOptionsError$ = this.employeesAsOptions$
+    .pipe(
+      ignoreElements(),
+      catchError(err => of(new Error('cant fetch data')))
+    )
 
   unsubscribe$ = new Subject<void>();
   constructor(private api: API) { }
@@ -40,10 +47,10 @@ throw new Error('Method not implemented.');
   ngOnInit(): void {
     if (this.schedule == undefined) {
       this.schedule = {
-        id: -1,
-        beginDate: -1,
-        expireDate: -1,
-        clinicId: -1,
+        id: '' as unknown as number,
+        beginDate: moment().startOf('day').format('YYYY-MM-DD'),
+        expireDate: "",
+        clinicId: '' as unknown as number,
         eventFinish: "",
         eventStart: "",
         employees: [],
@@ -51,29 +58,18 @@ throw new Error('Method not implemented.');
         repeat: "" as RepeatUnit
       }
     }
+    if (this.formType == 'Create') {
+      this.employeesId = [""]
+    } else {
+      this.employeesId = this.schedule?.employees.map(e => e.id.toString())
+      this.schedule.beginDate = moment(this.schedule.beginDate).startOf('day').format('YYYY-MM-DD')
+      this.schedule.expireDate = moment(this.schedule.expireDate).endOf('day').format('YYYY-MM-DD')
 
-    this.getClinicsAsOptions()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe({
-        next: (value) => {
-          this.clinicRequestState = 'complete'
-          this.clinicsAsOptions = value
-        }
-      })
-
-    this.getEmployeesAsOptions()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe({
-        next: (value) => {
-          this.employeeRequestState = 'complete'
-          this.employeesAsOptions = value
-        }
-      })
+    }
   }
 
 
   getClinicsAsOptions(): Observable<SelectInputOption[]> {
-    this.clinicRequestState = 'loading'
     return this.api.clinicDataSource
       .getAll()
       .pipe(map(clinics => clinics.map(
@@ -83,18 +79,18 @@ throw new Error('Method not implemented.');
 
   }
   getEmployeesAsOptions(): Observable<SelectInputOption[]> {
-    this.employeeRequestState = 'loading'
     return this.api.employeeDataSource
       .getAll()
-      .pipe(map(employees => employees.map(
-        employee => {
-          return { name: `${employee.englishName}`, value: employee.id.toString() }
-        })))
+      .pipe(map(employees => employees
+        .map(
+          employee => {
+            return { name: `${employee.id}:${employee.englishName}`, value: employee.id.toString() }
+          })))
   }
 
 
   submit(formValue: HTMLFormElement) {
-    let clinicId = (formValue.elements.namedItem('selectedClinic') as HTMLInputElement).value
+    let clinicId = (formValue.elements.namedItem('clinicId') as HTMLInputElement).value
     let beginDate = (formValue.elements.namedItem('beginDate') as HTMLInputElement).value
     let expireDate = (formValue.elements.namedItem('expireDate') as HTMLInputElement).value
     let repeat = (document.getElementById('select-repeat') as HTMLInputElement).value as RepeatUnit
@@ -106,51 +102,62 @@ throw new Error('Method not implemented.');
     for (let i = 0; i < employeesInput.length; i++) {
       const element = employeesInput[i];
       if (element.value != 'None') {
-
         employees.push(+element.value)
       }
 
     }
 
     let schedule = new ClinicScheduleDto(
-      -1,
+      this.formType == 'Create' ? -1 : this.schedule.id,
       Number.parseInt(clinicId),
-      new Date(beginDate).getTime(),
-      new Date(expireDate).getTime(),
+      moment(new Date(beginDate).getTime()).startOf('day').toDate().getTime(),
+      moment(new Date(expireDate).getTime()).endOf('day').toDate().getTime(),
       eventStart,
       eventFinish,
       repeat,
       [],
-      []
+      this.employeesId.map(employeeId => new EmployeeDto(Number.parseInt(employeeId), "", "", "", "", ""))
     )
-    this.api.clinicScheduleDataSource.save(schedule)
-      .subscribe({
-        error: (err) => {
-        }, next: (schedule) => {
-          this.api.addEmployeesToScheduleByIds(schedule.id, employees)
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.close())
-        }
-      })
+    if (this.formType == 'Create') {
+      this.api.clinicScheduleDataSource.save(schedule)
+        .subscribe({
+          error: (err) => {
+          }, next: (schedule) => { }
+        })
 
+    }
+    if (this.formType == 'Update') {
+      this.api.clinicScheduleDataSource
+        .update(schedule.id, schedule)
+        .subscribe({
+          error: (err) => {
+          }, next: (schedule) => { }
+        })
+    }
+  }
 
+  expandEmployeeIdByOne() {
+    this.employeesId.push("")
+  }
 
+  setEmployee(value: string, index: number) {
+    this.employeesId[index] = value
+  }
 
+  removeEmployee(index: number) {
+    this.employeesId = this.employeesId.filter((v, i, a) => i != index)
   }
 
 
-  addEmployeeInputIfNeeded(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
-    if (value != "None") {
-      this.employeeInput = [...this.employeeInput, ""]
-    } else if (value == "None" && this.employeeInput.length != 1) {
-      this.employeeInput.pop()
-      this.employeeInput = [...this.employeeInput]
-    }
+  trackByIndex(index: number, item: any) { return index; }
+
+  isEmployeeChosen = (employee: SelectInputOption) => {
+    return this.employeesId.includes(employee.value)
   }
 
   close() {
     this.shouldClose.emit(true)
   }
+
 
 }

@@ -32,7 +32,7 @@ public class ScheduleEmployeeListController {
     }
 
     @PostMapping(path = "/schedule-employee-list/{scheduleId}")
-    public ResponseEntity<List<ScheduleEmployeeList>> saveList(
+    public ResponseEntity<List<ScheduleEmployeeList>> setEmployeeList(
             @PathVariable(name = "scheduleId") Integer scheduleId,
             @RequestBody List<Integer> employeeIds) {
 

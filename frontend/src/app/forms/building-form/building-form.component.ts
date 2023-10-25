@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, catchError, ignoreElements, map, of } from 'rxjs';
 import { API } from 'src/app/api.service';
 import { BuildingDto } from 'src/app/dto/BuildingDto';
 import { FormType, SelectInputOption } from 'src/app/models/interfaces';
@@ -16,15 +16,23 @@ export class BuildingFormComponent implements OnInit {
   @Input({ required: false }) building!: BuildingDto;
   @Input({ required: true }) formType!: FormType;
 
-  hospitalOptions!: SelectInputOption[];
-
+  hospitalOptions$ = this.getHospitalsAsOptions();
+  hospitalOptionsError$ = this.hospitalOptions$.pipe(
+    ignoreElements(),
+    catchError(err => of(new Error("cant fetch data")))
+  )
   constructor(private api: API) { }
 
   ngOnInit(): void {
-    this.getHospitalsAsOptions()
-      .subscribe(options => this.hospitalOptions = options)
+    if (!this.building)
+      this.building = {
+        id: -1,
+        arabicName: "",
+        englishName: "",
+        hospitalId: -1,
+        number: "" as unknown as number //  to keep it from appearing in the view number field  
+      }
   }
-
   submit(formValue: any) {
     const building: BuildingDto = {
       id: this.building.id || -1,
@@ -46,7 +54,7 @@ export class BuildingFormComponent implements OnInit {
           },
         })
     }
-    if (this.formType = "Update") {
+    if (this.formType == "Update") {
       this.api.buildingDataSource.update(building.id, building)
         .subscribe({
           next: () => {

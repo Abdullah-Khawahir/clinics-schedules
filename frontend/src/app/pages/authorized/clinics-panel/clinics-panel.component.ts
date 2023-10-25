@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, catchError, ignoreElements, of, takeUntil } from 'rxjs';
 import { API } from 'src/app/api.service';
 import { ClinicDto } from 'src/app/dto/ClinicDto';
 import { Column, RequestState } from 'src/app/models/interfaces';
@@ -16,8 +16,11 @@ export class ClinicsPanelComponent implements OnInit, OnDestroy {
 
 
   remove = (clinic: ClinicDto) => {
-    this.api.clinicDataSource.delete(clinic.id)
-      .subscribe({ next: () => this.fetchAllClinics() });
+    if (window.confirm(`are you sure you want to delete : ${clinic.englishName} ${clinic.number} `))
+      this.api.clinicDataSource.delete(clinic.id)
+        .subscribe(
+        // { next: () => this.fetchAllClinics() }
+      );
   }
 
   edit = (clinic: ClinicDto) => {
@@ -26,14 +29,19 @@ export class ClinicsPanelComponent implements OnInit, OnDestroy {
   }
 
 
-  clinicsList!: ClinicDto[]
+  clinicsList$ = this.api.clinicDataSource.getAll()
+  clinicsListError$ = this.clinicsList$.pipe(
+    ignoreElements(),
+    catchError(err => of(new Error('cant connect to server')))
+  );
+
   ColumnsDefinition!: Column[]
   tableState: RequestState = 'loading'
   unsubscribe$: Subject<void> = new Subject<void>();
   constructor(public api: API) { }
 
   ngOnInit(): void {
-    this.fetchAllClinics();
+    // this.fetchAllClinics();
     this.ColumnsDefinition = [
       { key: "id", displayLabel: "ID" },
       { key: "englishName", displayLabel: "English Name" },
@@ -44,22 +52,22 @@ export class ClinicsPanelComponent implements OnInit, OnDestroy {
 
     ]
   }
-  private fetchAllClinics() {
-    this.tableState = 'loading'
-    this.api.clinicDataSource.getAll()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe({
-        complete: () => {
-          this.tableState = 'complete';
-        },
-        error: (err) => {
-          this.tableState = 'error';
-        },
-        next: (value) => {
-          this.clinicsList = value;
-        }
-      });
-  }
+  // private fetchAllClinics() {
+  //   this.tableState = 'loading'
+  //   this.api.clinicDataSource.getAll()
+  //     .pipe(takeUntil(this.unsubscribe$))
+  //     .subscribe({
+  //       complete: () => {
+  //         this.tableState = 'complete';
+  //       },
+  //       error: (err) => {
+  //         this.tableState = 'error';
+  //       },
+  //       next: (value) => {
+  //         this.clinicsList = value;
+  //       }
+  //     });
+  // }
 
   toggleEditForm() {
     this.editFormClosed = !this.editFormClosed;

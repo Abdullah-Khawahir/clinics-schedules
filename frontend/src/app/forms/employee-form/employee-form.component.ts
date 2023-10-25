@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { API } from 'src/app/api.service';
 import { EmployeeDto } from 'src/app/dto/EmployeeDto';
 import { FormType } from 'src/app/models/interfaces';
@@ -9,17 +8,24 @@ import { FormType } from 'src/app/models/interfaces';
   templateUrl: './employee-form.component.html',
   styleUrls: ['./employee-form.component.css', './../../styles/popup-form.css']
 })
-export class EmployeeFormComponent implements OnInit, OnDestroy {
+export class EmployeeFormComponent implements OnInit {
   @Output() shouldClose = new EventEmitter()
-  unsubscribe$ = new Subject<void>()
 
   @Input({ required: false }) employee!: EmployeeDto;
   @Input({ required: true }) formType!: FormType;
 
   constructor(private api: API) { }
-
   ngOnInit() {
-
+    if (this.employee == undefined) {
+      this.employee = {
+        id: -1,
+        arabicName: "",
+        englishName: "",
+        email: "",
+        phoneNumber: "",
+        secondPhoneNumber: "",
+      }
+    }
   }
 
   submit(formValue: any) {
@@ -31,8 +37,11 @@ export class EmployeeFormComponent implements OnInit, OnDestroy {
       phoneNumber: formValue.phoneNumber || "",
       secondPhoneNumber: formValue.secondPhoneNumber || "",
     }
+    console.log(employee);
+
     if (this.formType == 'Create') {
-      this.api.employeeDataSource.save(employee)
+      this.api.employeeDataSource
+        .save(employee)
         .subscribe(
           {
             next: (value) => {
@@ -62,9 +71,5 @@ export class EmployeeFormComponent implements OnInit, OnDestroy {
   close() {
     this.shouldClose.emit(true)
   }
-  ngOnDestroy() {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete()
 
-  }
 }
