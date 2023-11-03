@@ -22,6 +22,7 @@ CREATE TABLE tbl_Clinic(
     building_id INT NOT NULL REFERENCES tbl_Building(building_id),
     clinic_ext VARCHAR(255) NULL,
     clinic_number INT NULL,
+    clinic_note text NULL,
     CONSTRAINT CLINIC_MUST_BE_UNIQUE_IN_EVERY_BUILDING UNIQUE(
         building_id,
         clinic_english_name,
@@ -32,11 +33,14 @@ CREATE TABLE tbl_Clinic(
 DROP TABLE IF EXISTS tbl_Clinical_Employee cascade;
 CREATE Table tbl_Clinical_Employee(
     employee_id SERIAL PRIMARY KEY,
-    employee_arabic_name VARCHAR(255) NOT NULL CONSTRAINT EMPLOYEE_ARABIC_NAME_ALREADY_EXISTS UNIQUE,
-    employee_english_name VARCHAR(255) NOT NULL CONSTRAINT EMPLOYEE_ENGLISH_NAM_ALREADY_EXISTS UNIQUE,
-    employee_email VARCHAR(255) NULL,
-    employee_phone_number VARCHAR(255) NULL,
-    employee_second_phone_number VARCHAR(255) NULL
+    employee_arabic_name VARCHAR(255) NOT NULL,
+    employee_english_name VARCHAR(255) NOT NULL,
+    employee_specialty VARCHAR(255) NULL,
+    CONSTRAINT EMPLOYEE_ARABIC_NAME_ALREADY_EXISTS UNIQUE(
+        employee_id,
+        employee_arabic_name,
+        employee_english_name
+    )
 );
 DROP TABLE IF EXISTS tbl_Clinic_Schedule cascade;
 CREATE TABLE tbl_Clinic_Schedule(

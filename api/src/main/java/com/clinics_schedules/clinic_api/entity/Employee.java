@@ -24,16 +24,19 @@ public class Employee {
     @Column(nullable = false, name = "employee_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @Column(nullable = false, name = "employee_english_name")
     private String englishName;
+
     @Column(nullable = false, name = "employee_arabic_name")
     private String arabicName;
 
-    @Column(name = "employee_email")
-    private String email;
-    @Column(name = "employee_phone_number")
-    private String phoneNumber;
-    @Column(name = "employee_second_phone_number")
-    private String secondPhoneNumber;
+    @Column(name = "employee_specialty")
+    private String specialty;
+
+    // @Column(name = "employee_phone_number")
+    // private String phoneNumber;
+    // @Column(name = "employee_second_phone_number")
+    // private String secondPhoneNumber;
 
 }

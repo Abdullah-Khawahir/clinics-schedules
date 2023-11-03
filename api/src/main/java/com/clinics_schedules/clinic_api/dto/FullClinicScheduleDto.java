@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class FullClinicSchedule {
+public class FullClinicScheduleDto {
 
     private Integer id;
 
@@ -34,5 +34,7 @@ public class FullClinicSchedule {
     private TimeRepeatUnit repeat;
 
     private List<Employee> employees;
+
+    private String note;
 
 }

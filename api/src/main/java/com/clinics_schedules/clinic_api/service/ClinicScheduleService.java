@@ -103,7 +103,6 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 	public void deleteById(final Integer id) {
 		if (!repository.existsById(id))
 			throw new ResourceNotFoundException("Clinic_Schedule", "id", id.toString());
-
 		repository.deleteById(id);
 	}
 

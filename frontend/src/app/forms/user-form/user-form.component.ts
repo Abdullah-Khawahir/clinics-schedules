@@ -1,7 +1,10 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { tap } from 'rxjs';
 import { API } from 'src/app/api.service';
 import { Role, UserDto } from 'src/app/dto/UserDto';
 import { FormType } from 'src/app/models/interfaces';
+import { NotifierService } from 'src/app/notifier.service';
 
 @Component({
   selector: 'app-user-form',
@@ -14,7 +17,7 @@ export class UserFormComponent implements OnInit {
   @Input({ required: false }) user!: UserDto;
   @Input({ required: true }) formType!: FormType;
   rolesString!: string;
-  constructor(public api: API) { }
+  constructor(public api: API, public notifier: NotifierService) { }
 
   ngOnInit(): void {
     if (this.user == undefined) {
@@ -42,9 +45,13 @@ export class UserFormComponent implements OnInit {
       roles: (formValue.roles as string).toUpperCase().split(",").map(role => role.trim()) as Role[]
     };
 
-    console.log(user);
-
-
+    if (this.formType == 'Create')
+      this.api.userDataSource.save(user)
+        .subscribe({ ...this.notifier.submitResponse() })
+        
+    if (this.formType == 'Update')
+      this.api.userDataSource.update(user.id, user)
+        .subscribe({ ...this.notifier.submitResponse() })
   }
 
 

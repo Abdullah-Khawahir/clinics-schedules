@@ -1,5 +1,6 @@
-import { NgModule } from '@angular/core';
+import { NgModule, inject } from '@angular/core';
 import { Route, RouterModule, Routes } from '@angular/router';
+import { map } from 'rxjs';
 import { authenticationGuard } from './authentication.guard';
 import { BuildingsPanelComponent } from './pages/authorized/buildings-panel/buildings-panel.component';
 import { ClinicsPanelComponent } from './pages/authorized/clinics-panel/clinics-panel.component';
@@ -9,15 +10,15 @@ import { HospitalPanelComponent } from './pages/authorized/hospital-panel/hospit
 import { SchedulesPanelComponent } from './pages/authorized/schedules-panel/schedules-panel.component';
 import { UsersPanelComponent } from './pages/authorized/users-panel/users-panel.component';
 import { LoginComponent } from './pages/public/auth/login/login.component';
-import { HomeComponent } from './pages/public/home/home.component';
 import { HospitalSchedulesComponent } from './pages/public/hospital-schedules/hospital-schedules.component';
+import { UserService } from './user.service';
 
 const authenticatedRoutes: Routes = [
   {
     path: "dashboard",
     title: "Dashboard",
     component: DashboardComponent,
-    
+
   },
   {
     path: "dashboard/hospitals-panel",
@@ -52,25 +53,28 @@ const authenticatedRoutes: Routes = [
 
   },
 ].map((route: Route) => {
-  return { ...route, canActivate: [authenticationGuard] }
+  return { ...route, canActivate: [route.canActivate, authenticationGuard].flat().filter(gard => gard != undefined) }
 })
 
 const publicRoutes: Routes = [
   {
-    path: "",
-    title: "home",
-    component: HomeComponent,
-  },
-  {
     path: "login",
     title: "login",
-    component: LoginComponent
+    component: LoginComponent,
+    canActivate: [() => inject(UserService).isLoggedIn().pipe(map(value => !value))]
   },
   {
-    path: "hospital-schedules",
+    path: "",
+    pathMatch: 'full',
     title: "schedules",
     component: HospitalSchedulesComponent
   },
+
+  {
+    path: "**",
+    redirectTo: "",
+  
+  }
 ]
 export const routes: Routes = [
   ...authenticatedRoutes,

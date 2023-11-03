@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -29,15 +29,17 @@ import { HospitalSchedulesComponent } from './pages/public/hospital-schedules/ho
 
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterModule } from '@angular/router';
 import { MomentModule } from 'ngx-moment';
+import { ErrorComponent } from './components/error/error.component';
+import { LoadingComponent } from './components/loading/loading.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { NotificationViewComponent } from './components/notification-view/notification-view.component';
 import { HospitalFormComponent } from './forms/hospital-form/hospital-form.component';
 import { SchedulesPanelComponent } from './pages/authorized/schedules-panel/schedules-panel.component';
 import { UsersPanelComponent } from './pages/authorized/users-panel/users-panel.component';
 import { HomeComponent } from './pages/public/home/home.component';
-import { NotificationViewComponent } from './components/notification-view/notification-view.component';
+import { HttpErrorInterceptor } from './http-error.interceptor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -67,6 +69,8 @@ import { NotificationViewComponent } from './components/notification-view/notifi
     HomeComponent,
     UsersPanelComponent,
     NotificationViewComponent,
+    LoadingComponent,
+    ErrorComponent
 
   ],
   imports: [
@@ -77,7 +81,7 @@ import { NotificationViewComponent } from './components/notification-view/notifi
     RouterModule,
     MomentModule
   ],
-  providers: [DatePipe],
+  providers: [DatePipe, { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

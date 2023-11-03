@@ -1,8 +1,11 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { UserService } from './user.service';
 export type Notice = {
-  type: 'ERR' | 'INFO' | 'CONFIRM'
-  message: string
+  type: 'ERROR' | 'INFO' | 'CONFIRM'
+  message: string,
+  details?: string[],
   action?: (() => void)
 }
 @Injectable({
@@ -12,8 +15,25 @@ export class NotifierService implements OnDestroy {
 
   notificationsList: Notice[] = []
   notification$ = new BehaviorSubject<Notice[]>(this.notificationsList);
-  constructor() { }
+  constructor(private user: UserService) { }
   // notify()
+
+  submitResponse = (ResponseData?: { nextLog?: string, completeLog?: string }) => {
+    return {
+      error: (err: any) => {
+        this.error(err)
+      }, next: (value: any) => {
+        if (ResponseData?.nextLog)
+          this.info(ResponseData.nextLog)
+      }, complete: () => {
+        if (ResponseData?.completeLog)
+          this.info(ResponseData.completeLog)
+        else
+          this.info('Transaction Completed')
+
+      }
+    }
+  }
 
   notify(notification: Notice) {
     this.notificationsList.push(notification)
@@ -26,18 +46,21 @@ export class NotifierService implements OnDestroy {
     })
     this.notification$.next(this.notificationsList)
   }
-  error(text: string) {
+
+  error(error: Error) {
+    const errorDerails = this.getErrorMessage(error);
     this.notificationsList.push({
-      type: 'ERR',
-      message: text
+      type: 'ERROR',
+      message: errorDerails.message,
+      details: errorDerails.details
     })
     this.notification$.next(this.notificationsList)
   }
   confirm(text: string, action: (() => void)) {
     this.notificationsList.push({
-      type:'CONFIRM',
-      message:text,
-      action:action
+      type: 'CONFIRM',
+      message: text,
+      action: action
     })
     this.notification$.next(this.notificationsList)
   }
@@ -47,15 +70,44 @@ export class NotifierService implements OnDestroy {
   getNotifier() {
     return this.notification$.asObservable()
   }
+
+
   ngOnDestroy(): void {
     this.notification$.complete()
   }
 
-  dismissLastWithAction() {
-    let last = this.notificationsList.pop()
-    if (last?.action) {
-      last.action()
-    }
 
+  dismissLastWithAction() {
+    let confirmationPassword = (document.getElementById('confirm-password') as HTMLInputElement).value
+    if (this.user.getCurrentUser().value.password == confirmationPassword) {
+      let last = this.notificationsList.pop()
+      if (last?.action) {
+        last.action()
+      }
+    }
+  }
+
+  private getErrorMessage(error: Error): { message: string, details?: string[] } {
+    let message = "";
+    let details = [""];
+
+
+    if (error instanceof HttpErrorResponse) {
+      message = error.error.message
+      if (error.error.details) {
+        details = error.error.details
+      }
+      else {
+        message = error.error.message
+        if (error.error.details) {
+          details = error.error.details
+        }
+      }
+    }
+    else if (error instanceof ErrorEvent) {
+      message = error.message
+    } else message = error.message
+
+    return { message, details: [... new Set(details)] }
   }
 }

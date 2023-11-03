@@ -24,7 +24,7 @@
     <ng-template #loading>
         <div class="pop-up-form-background">
             <div class="pop-up-form">
-                loading ...
+                <app-loading></app-loading>
                 <button class="btn" (click)="this.close()">close</button>
             </div>
         </div>
@@ -120,6 +120,14 @@
                         <option value="weekly">weekly</option>
                     </select>
                 </div>
+                <div class="pop-up-form-input-and-label-container" >
+                    <div class="pop-up-form-label">
+                        <label>
+                            note :
+                        </label>
+                    </div>
+                    <textarea disabled class="pop-up-form-input text-input" name="note" [(ngModel)]="this.schedule.note"></textarea>
+                </div >
 
                 <ng-container *ngIf="this.employeesId.length ==0">
                     <div class="pop-up-form-input-and-label-container">

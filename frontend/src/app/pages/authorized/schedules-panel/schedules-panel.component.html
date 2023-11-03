@@ -12,7 +12,7 @@
 
 
     <ng-template #loading>
-        <h1>loading ...</h1>
+        <app-loading></app-loading>
     </ng-template>
 
     <ng-template #err>
@@ -20,11 +20,13 @@
     </ng-template>
 
     <ng-template #content>
-        <app-data-table [data-list]="vm.schedules || []" [columns-definition]="this.columns" [edit-action]="this.edit"
-            [remove-action]="this.remove">
-        </app-data-table>
+        <div class="panel">
+            <app-data-table [data-list]="vm.schedules || []" [columns-definition]="this.columns"
+                [edit-action]="this.edit" [remove-action]="this.remove">
+            </app-data-table>
 
-        <app-schedule-form *ngIf="!this.editFormClosed" (shouldClose)="this.toggleEditForm()"
-            [schedule]="this.scheduleToEdit" formType="Update"></app-schedule-form>
+            <app-schedule-form *ngIf="!this.editFormClosed" (shouldClose)="this.toggleEditForm()"
+                [schedule]="this.scheduleToEdit" formType="Update"></app-schedule-form>
+        </div>
     </ng-template>
 </ng-container>

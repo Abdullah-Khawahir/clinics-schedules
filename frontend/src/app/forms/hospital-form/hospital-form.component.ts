@@ -3,6 +3,7 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { API } from 'src/app/api.service';
 import { HospitalDto } from 'src/app/dto/HospitalDto';
 import { FormType } from 'src/app/models/interfaces';
+import { NotifierService } from 'src/app/notifier.service';
 @Component({
   selector: 'app-hospital-form',
   templateUrl: './hospital-form.component.html',
@@ -17,7 +18,7 @@ export class HospitalFormComponent implements OnInit, OnDestroy {
   @Input({ required: false }) hospital!: HospitalDto
 
   unsubscribe$ = new Subject<void>();
-  constructor(private api: API) { }
+  constructor(private api: API, public notifier: NotifierService) { }
 
 
   ngOnInit(): void {
@@ -44,12 +45,12 @@ export class HospitalFormComponent implements OnInit, OnDestroy {
     if (this.formType == 'Create') {
       this.api.hospitalDataSource.save(hospital)
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe({ next: (newHospital) => this.afterSubmit(newHospital) })
+        .subscribe({ ...this.notifier.submitResponse() })
     }
     if (this.formType == 'Update') {
       this.api.hospitalDataSource.update(hospital.id, hospital)
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe({ next: (newHospital) => this.afterSubmit(newHospital) })
+        .subscribe({ ...this.notifier.submitResponse() })
     }
 
 

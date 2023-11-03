@@ -6,5 +6,6 @@ export class ClinicDto {
         public number: number,
         public buildingId: number,
         public ext: string,
+        public note:string
     ) { }
 }

@@ -10,7 +10,7 @@
 
 
     <ng-template #loading>
-        <h1>loading ...</h1>
+        <app-loading></app-loading>
     </ng-template>
 
 
@@ -20,7 +20,7 @@
 
     <ng-template #content>
 
-        <div>
+        <div class="panel">
         <app-data-table
         [columns-definition]="this.columns"
         [data-list]="vm.usersList!"

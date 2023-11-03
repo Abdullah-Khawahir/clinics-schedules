@@ -14,6 +14,7 @@ export class ClinicScheduleDto {
         public repeat: RepeatUnit,
         public events: EventDto[],
         public employees: EmployeeDto[],
+        public note: string,
     ) {
 
     }

@@ -29,11 +29,7 @@ export class EmployeesPanelComponent implements OnInit, OnDestroy {
     this.notifier.confirm(`are you sure you want to delete ${employee.englishName}`,
       () => this.api.employeeDataSource.delete(employee.id)
         .pipe(takeUntil(this.unsubscribe$))
-        .pipe(tap({
-          error: (err: HttpErrorResponse) => this.notifier.error(err.error.message),
-          next: (v) => this.notifier.info(` ${employee.englishName} is Deleted`)
-        }))
-        .subscribe()
+        .subscribe({... this.notifier.submitResponse()})
     )
   }
 
@@ -53,9 +49,7 @@ export class EmployeesPanelComponent implements OnInit, OnDestroy {
       { key: "id", displayLabel: "ID" },
       { key: "englishName", displayLabel: "English Name" },
       { key: "arabicName", displayLabel: "Arabic Name" },
-      { key: "email", displayLabel: "E-mail" },
-      { key: "phoneNumber", displayLabel: "Phone NO." },
-      { key: "secondPhoneNumber", displayLabel: "Second Phone NO." },
+      { key: "specialty", displayLabel: "Specialty" },
     ]
 
   }

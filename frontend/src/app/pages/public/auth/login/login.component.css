@@ -1,0 +1,21 @@
+.login-page-contain {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    margin: auto;
+}
+
+.login-inputs-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 10px;
+    align-items: center;
+}
+
+.login-item {
+    width: 33.33%;
+    margin: auto;
+}

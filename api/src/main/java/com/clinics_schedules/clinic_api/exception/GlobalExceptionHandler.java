@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
 				ErrorDetails
 						.builder()
 						.message(exception.getMessage())
-						.details(webRequest.getDescription(false))
+						.details(null)
 						.timestamp(new Date())
 						.build(),
 				HttpStatus.NOT_FOUND);
@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
 				ErrorDetails
 						.builder()
 						.message(exception.getMostSpecificCause().getMessage())
-						.details(webRequest.getDescription(false))
+						.details(null)
 						.timestamp(new Date())
 						.build(),
 				HttpStatus.NOT_ACCEPTABLE);
@@ -87,5 +87,17 @@ public class GlobalExceptionHandler {
 						.timestamp(new Date())
 						.build(),
 				HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(ResourceDependencyException.class)
+	public ResponseEntity<ErrorDetails> dependencyException(final ResourceDependencyException exception,
+			final WebRequest webRequest) {
+		return new ResponseEntity<ErrorDetails>(
+				ErrorDetails.builder()
+						.message(exception.getMessage())
+						.details(exception.dependentFields)
+						.timestamp(new Date())
+						.build(),
+				HttpStatus.CONFLICT);
 	}
 }

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { API } from 'src/app/api.service';
 import { EmployeeDto } from 'src/app/dto/EmployeeDto';
 import { FormType } from 'src/app/models/interfaces';
+import { NotifierService } from 'src/app/notifier.service';
 
 @Component({
   selector: 'app-employee-form',
@@ -14,16 +15,14 @@ export class EmployeeFormComponent implements OnInit {
   @Input({ required: false }) employee!: EmployeeDto;
   @Input({ required: true }) formType!: FormType;
 
-  constructor(private api: API) { }
+  constructor(private api: API, public notifier: NotifierService) { }
   ngOnInit() {
     if (this.employee == undefined) {
       this.employee = {
         id: -1,
         arabicName: "",
         englishName: "",
-        email: "",
-        phoneNumber: "",
-        secondPhoneNumber: "",
+        specialty: "",
       }
     }
   }
@@ -33,9 +32,7 @@ export class EmployeeFormComponent implements OnInit {
       id: this.formType == 'Create' ? -1 : this.employee.id,
       arabicName: formValue.arabicName,
       englishName: formValue.englishName,
-      email: formValue.email || "",
-      phoneNumber: formValue.phoneNumber || "",
-      secondPhoneNumber: formValue.secondPhoneNumber || "",
+      specialty: formValue.specialty
     }
     console.log(employee);
 
@@ -43,27 +40,13 @@ export class EmployeeFormComponent implements OnInit {
       this.api.employeeDataSource
         .save(employee)
         .subscribe(
-          {
-            next: (value) => {
-              this.close()
-            },
-            error: (err) => {
-              console.log(err);
-            }
-          }
+          { ...this.notifier.submitResponse() }
         )
     }
     if (this.formType == 'Update') {
       this.api.employeeDataSource.update(this.employee.id, employee)
         .subscribe(
-          {
-            next: (value) => {
-              this.close()
-            },
-            error: (err) => {
-              console.log(err);
-            }
-          }
+          { ...this.notifier.submitResponse() }
         )
     }
 

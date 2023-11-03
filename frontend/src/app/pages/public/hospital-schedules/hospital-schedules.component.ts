@@ -1,81 +1,70 @@
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import moment from 'moment';
-import { Subject, TimeoutError, catchError, ignoreElements, of, retry, takeUntil, tap, timeout } from 'rxjs';
+import { BehaviorSubject, Subject, catchError, ignoreElements, map, of, retry, share, shareReplay, startWith, switchMap, takeUntil, takeWhile } from 'rxjs';
 import { API } from 'src/app/api.service';
-import { ClinicDto } from 'src/app/dto/ClinicDto';
 import { EmployeeDto } from 'src/app/dto/EmployeeDto';
 import { FullClinic } from 'src/app/models/FullClinic';
-import { RequestState } from 'src/app/models/interfaces';
-import { UserService } from 'src/app/user.service';
 interface eventInfo {
-
   eventFinish: string | Date,
   eventStart: string | Date,
   employees: EmployeeDto[],
-  // isPassed:boolean
+  note: string
 }
 interface DayOfEvents {
   day: Date,
   events: eventInfo[]
 }
+const HOSPITAL_ID_KEY = 'last-hospitalID';
 @Component({
   selector: 'app-hospital-schedules',
   templateUrl: './hospital-schedules.component.html',
   styleUrls: ['./hospital-schedules.component.css'],
 
 })
-export class HospitalSchedulesComponent implements OnInit, OnDestroy {
-  clinics$ = this.api.getAllClinics().pipe(timeout(3000), retry(1))
-  clinicsError$ = this.clinics$
-    .pipe(
-      ignoreElements(),
-      catchError((err) => {
-        if (err instanceof HttpErrorResponse)
-          return of(new Error("failed to connect with server"))
-        if (err instanceof TimeoutError)
-          return of(new Error(`the server took too long`))
-        if (err instanceof ErrorEvent)
-          return of(new Error(err.message))
-        else
-          return of(new Error(`failed to connect with server`))
+export class HospitalSchedulesComponent implements OnDestroy {
+  event$ = new BehaviorSubject(true);
 
-      }))
-  allClinics!: Set<ClinicDto>
+  AllHospitals$ = this.api.getAllHospitals()
+    .pipe(map(hospitalDtoList =>
+      [
+        { hospitalName: "All", id: undefined },
+        ...hospitalDtoList
+          .map(hospital => { return { hospitalName: hospital.englishName, id: hospital.id as number } })
+      ]
+    ))
+
+  AllHospitalsErr$ = this.AllHospitals$
+    .pipe(ignoreElements(), catchError(err => of(err)))
+
+
+  hospitalId = localStorage.getItem(HOSPITAL_ID_KEY) || undefined
+
+  clinics$ = this.event$.pipe(
+    switchMap(() => this.api.getAllClinics(this.hospitalId)
+      .pipe(startWith(null)))
+
+  )
+
+  clinicsError$ = this.clinics$.pipe(
+    ignoreElements(),
+    catchError((err) => of(err))
+  )
   clinicFilter: string = "";
-  requestState!: RequestState;
   unsubscribe$ = new Subject<void>();
-  constructor(
-    private api: API,
-    private userService: UserService,) { }
+  constructor(private api: API) { }
 
+  setHospitalID(id: number | undefined) {
+    if (id != undefined) {
+      localStorage.setItem('last-hospitalID', id.toString())
+      this.hospitalId = id.toString()
+    } else {
+      localStorage.removeItem('last-hospitalID')
+      this.hospitalId = undefined
+    }
+    this.event$.next(true)
 
-
-  ngOnInit(): void {
-    this.fetchClinics();
   }
 
-  private fetchClinics() {
-    this.requestState = 'loading'
-    // this.api
-    // .getAllClinics()
-    // .pipe(takeUntil(this.unsubscribe$))
-    // .subscribe({
-    //   next: (value) => {
-    //     this.setClinics(value.filter(clinic => clinic.schedules.length));
-    //     this.requestState = 'complete';
-    //   },
-    //   complete: () => {
-    //     this.requestState = 'complete';
-    //   }
-    // });
-  }
-
-
-
-  // setClinics(clinics: FullClinic[]) {
-  //   this.clinics = clinics;
-  // }
 
   getAllEvents(clinic: FullClinic) {
     if (clinic.schedules.length == 0) return;
@@ -90,28 +79,27 @@ export class HospitalSchedulesComponent implements OnInit, OnDestroy {
       }
     }
 
-    clinic.schedules
-      .forEach(schedule => {
-        if (this.isWithInFourWeeks(schedule.beginDate, schedule.expireDate)) {
-          FourWeeksEvents.forEach(dailyEvent => {
-            schedule.events
-              .forEach(scheduleEvent => {
+    clinic.schedules.forEach(schedule => {
+      if (this.isWithInFourWeeks(schedule.beginDate, schedule.expireDate)) {
+        FourWeeksEvents.forEach(dailyEvent => {
 
-                if (moment(scheduleEvent.finishTime).isSame(dailyEvent.day, 'day')) {
-
-
-                  dailyEvent.events.push({
-                    eventFinish: new Date(scheduleEvent.finishTime),
-                    eventStart: new Date(scheduleEvent.beginTime),
-                    employees: schedule.employees
-                  })
-                }
-
+          schedule.events.forEach(scheduleEvent => {
+            if (moment(scheduleEvent.finishTime).isSame(dailyEvent.day, 'day')) {
+              dailyEvent.events.push({
+                eventFinish: new Date(scheduleEvent.finishTime),
+                eventStart: new Date(scheduleEvent.beginTime),
+                employees: schedule.employees,
+                note: schedule.note
               })
-          })
+              // console.log(schedule.note);
 
-        }
-      })
+            }
+
+          })
+        })
+
+      }
+    })
 
     return FourWeeksEvents
   }
@@ -127,6 +115,7 @@ export class HospitalSchedulesComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribe$.next()
     this.unsubscribe$.complete()
+    this.event$.complete()
   }
 
   doesClinicPassFilter(clinic: FullClinic): boolean {

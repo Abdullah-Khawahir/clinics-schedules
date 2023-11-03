@@ -13,6 +13,7 @@ export class FullClinicScheduleDto {
         public repeat: 'never' | 'daily' | 'weekly' | "weekdays" | "weekend",
         public events: EventDto[],
         public employees: EmployeeDto[],
+        public note:string
     ) {
         this.beginTime = new Date(beginTime);
         this.expireTime = new Date(expireTime);

@@ -1,7 +1,9 @@
-<div>
-    <input type="text" name="" id="" [(ngModel)]="username">
-    <input type="text" name="" id="" [(ngModel)]="password">
-    <div>{{message}}</div>
+<div class="login-page-contain">
+    <div class="login-inputs-container">
+        <div class="login-item">{{message}}</div>
+        <input class="login-item input-text" type="text" name="" id="" [(ngModel)]="username">
+        <input class="login-item input-text" type="password" name="" id="" [(ngModel)]="password">
 
-    <button (click)="submit()">login</button>
+        <button class="login-item btn" (click)="submit()">login</button>
+    </div>
 </div>

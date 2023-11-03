@@ -10,6 +10,7 @@ export class FullClinic {
         public buildingId: number,
         public ext: string,
         public schedules: ClinicScheduleDto[],
+        public note: string,
     ) {
     }
 }

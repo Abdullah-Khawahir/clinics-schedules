@@ -11,27 +11,27 @@ import { ErrorDetails } from './models/ErrorDetails';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
-
+  request_count = 0;
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
 
 
     return next
       .handle(request)
-      .pipe(catchError((error: HttpErrorResponse) => {
-        let errorMsg = '';
-        if(error.error instanceof ErrorDetails){
-          errorMsg = `Error : ${error.error.message} \n${error.error.details}`
-        }
-        if (error.error instanceof ErrorEvent) {
-          errorMsg = `Error: ${error.error.message}`;
-        } else {
-          errorMsg = `Error Code: ${error.status},  Message: ${error.message}`;
-        }
+      // .pipe(catchError((error: HttpErrorResponse) => {
+      //   let errorMsg = '';
+      //   if (error.error instanceof ErrorDetails) {
+      //     errorMsg = `Error : ${error.error.message} \n${error.error.details}`
+      //   }
+      //   if (error.error instanceof ErrorEvent) {
+      //     errorMsg = `Error: ${error.error.message}`;
+      //   } else {
+      //     errorMsg = `Error Code: ${error.status},  Message: ${error.message}`;
+      //   }
 
-        return throwError(() => new Error(errorMsg));
+      //   return throwError(() => new Error(errorMsg));
 
-      }))
+      // }))
 
   }
 }

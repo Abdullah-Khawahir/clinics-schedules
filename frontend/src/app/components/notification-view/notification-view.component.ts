@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { NotifierService } from 'src/app/notifier.service';
 
 @Component({
@@ -7,11 +7,12 @@ import { NotifierService } from 'src/app/notifier.service';
   styleUrls: ['./notification-view.component.css']
 })
 export class NotificationViewComponent {
-
   notificationSource = this.notifierService
     .getNotifier();
   constructor(public notifierService: NotifierService) { }
 
-  
+
+
+
 
 }

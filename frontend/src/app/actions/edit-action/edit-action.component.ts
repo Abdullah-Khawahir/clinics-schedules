@@ -11,6 +11,6 @@ export class EditActionComponent<T> {
   @Input({ alias: 'buttonContent', required: true }) content!: TemplateRef<any>
 
   onClick() {
-    this.editAction(this.target)
+    this.editAction({ ... this.target })
   }
 }

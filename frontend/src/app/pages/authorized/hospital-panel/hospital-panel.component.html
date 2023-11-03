@@ -8,7 +8,7 @@
 
 
     <ng-template #loading>
-        <h1>loading ...</h1>
+        <app-loading></app-loading>
     </ng-template>
 
     <ng-template #error>
@@ -16,7 +16,7 @@
     </ng-template>
 
     <ng-template #content>
-        <div class="hospital-panel-container">
+        <div class="hospital-panel panel">
             <app-data-table [data-list]="vm.listOfHospitals!" [columns-definition]="this.columnsDefinition"
                 [edit-action]="this.edit" [remove-action]="this.remove"></app-data-table>
         </div>

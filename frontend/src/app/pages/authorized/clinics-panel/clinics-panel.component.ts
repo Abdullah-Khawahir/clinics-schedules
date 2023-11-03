@@ -3,6 +3,7 @@ import { Subject, catchError, ignoreElements, of, takeUntil } from 'rxjs';
 import { API } from 'src/app/api.service';
 import { ClinicDto } from 'src/app/dto/ClinicDto';
 import { Column, RequestState } from 'src/app/models/interfaces';
+import { NotifierService } from 'src/app/notifier.service';
 
 @Component({
   selector: 'app-clinics-panel',
@@ -16,11 +17,8 @@ export class ClinicsPanelComponent implements OnInit, OnDestroy {
 
 
   remove = (clinic: ClinicDto) => {
-    if (window.confirm(`are you sure you want to delete : ${clinic.englishName} ${clinic.number} `))
-      this.api.clinicDataSource.delete(clinic.id)
-        .subscribe(
-        // { next: () => this.fetchAllClinics() }
-      );
+    this.notifier.confirm(`are you sure you want to delete : ${clinic.englishName} ${clinic.number} `,
+      () => this.api.clinicDataSource.delete(clinic.id).subscribe({ ... this.notifier.submitResponse() }))
   }
 
   edit = (clinic: ClinicDto) => {
@@ -36,9 +34,8 @@ export class ClinicsPanelComponent implements OnInit, OnDestroy {
   );
 
   ColumnsDefinition!: Column[]
-  tableState: RequestState = 'loading'
   unsubscribe$: Subject<void> = new Subject<void>();
-  constructor(public api: API) { }
+  constructor(public api: API, public notifier: NotifierService) { }
 
   ngOnInit(): void {
     // this.fetchAllClinics();
@@ -52,22 +49,6 @@ export class ClinicsPanelComponent implements OnInit, OnDestroy {
 
     ]
   }
-  // private fetchAllClinics() {
-  //   this.tableState = 'loading'
-  //   this.api.clinicDataSource.getAll()
-  //     .pipe(takeUntil(this.unsubscribe$))
-  //     .subscribe({
-  //       complete: () => {
-  //         this.tableState = 'complete';
-  //       },
-  //       error: (err) => {
-  //         this.tableState = 'error';
-  //       },
-  //       next: (value) => {
-  //         this.clinicsList = value;
-  //       }
-  //     });
-  // }
 
   toggleEditForm() {
     this.editFormClosed = !this.editFormClosed;

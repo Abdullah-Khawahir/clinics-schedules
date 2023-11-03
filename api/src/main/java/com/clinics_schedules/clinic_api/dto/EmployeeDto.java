@@ -14,17 +14,17 @@ public class EmployeeDto {
     private String englishName;
     private String arabicName;
 
-    private String email;
-    private String phoneNumber;
-    private String secondPhoneNumber;
+    private String specialty;
+    // private String phoneNumber;
+    // private String secondPhoneNumber;
 
     public EmployeeDto(Employee employee) {
         this.id = employee.getId();
         this.englishName = employee.getEnglishName();
         this.arabicName = employee.getArabicName();
-        this.email = employee.getEmail();
-        this.phoneNumber = employee.getPhoneNumber();
-        this.secondPhoneNumber = employee.getSecondPhoneNumber();
+        this.specialty = employee.getSpecialty();
+        // this.phoneNumber = employee.getPhoneNumber();
+        // this.secondPhoneNumber = employee.getSecondPhoneNumber();
     }
 
 }

@@ -1,22 +1,33 @@
 <ng-container *ngIf="{notice:notificationSource | async} as vm">
     <div *ngIf="vm.notice && vm.notice.length !=0" class="notification-view-bg">
+
         <div class="notification-view-fg">
 
             <h2 class="notification-type">
-                {{vm.notice.at(-1)?.type}}
+                {{vm.notice.at(-1)?.type }}
             </h2>
-
-            <p class="notification-conent">
-                {{vm.notice.at(-1)?.message}}
+            <p class="notification-message">
+                <strong> {{vm.notice.at(-1)?.message}}</strong>
             </p>
+            <ng-container *ngIf="vm.notice.at(-1)?.details as details">
+                <p *ngFor="let message of details" class="notification-message">
+                    {{message}}
+                </p>
+            </ng-container>
 
-            <button *ngIf="vm.notice.at(-1)?.type != 'CONFIRM'"
-                (click)="this.notifierService.dismissLast()">dismiss</button>
+            <input *ngIf="vm.notice?.at(-1)?.type  == 'CONFIRM'" type="text" id="confirm-password" autocomplete="off"
+                placeholder="Enter Your Password">
 
-            <button *ngIf="vm.notice.at(-1)?.type == 'CONFIRM'"
-            (click)="this.notifierService.dismissLastWithAction()">CONFIRM</button>
-            <button *ngIf="vm.notice.at(-1)?.type == 'CONFIRM'" 
-                (click)="this.notifierService.dismissLast()">CANCEL</button>
+            <div>
+
+                <button class="btn" *ngIf="vm.notice?.at(-1)?.type != 'CONFIRM'"
+                    (click)="this.notifierService.dismissLast()">dismiss</button>
+
+                <button class="btn" *ngIf="vm.notice?.at(-1)?.type == 'CONFIRM'"
+                    (click)="this.notifierService.dismissLastWithAction()">CONFIRM</button>
+                <button class="btn" *ngIf="vm.notice?.at(-1)?.type == 'CONFIRM'"
+                    (click)="this.notifierService.dismissLast()">CANCEL</button>
+            </div>
         </div>
     </div>
 </ng-container>

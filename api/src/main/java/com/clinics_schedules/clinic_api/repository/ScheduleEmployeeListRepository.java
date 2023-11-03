@@ -10,6 +10,8 @@ public interface ScheduleEmployeeListRepository extends JpaRepository<ScheduleEm
 
     List<ScheduleEmployeeList> findByScheduleId(Integer scheduleId);
 
+    List<ScheduleEmployeeList> findByEmployeeId(Integer employeeId);
+
     void deleteByScheduleId(Integer scheduleId);
 
     boolean existsByScheduleId(Integer scheduleId);

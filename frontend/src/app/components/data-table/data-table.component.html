@@ -3,8 +3,8 @@
     <div class="filters-container">
         <input class="filter" *ngFor="let column of this.ColumnsDefinition" type="text"
             (keyup)="this.filterList($event , column.key)" [placeholder]="column.displayLabel" />
-        
-            <div class="filter filter-hidden"></div>
+
+        <div class="filter filter-hidden"></div>
     </div>
 
     <table>
@@ -13,7 +13,8 @@
 
             <th class="header-cell table-cell" *ngFor="let column of this.ColumnsDefinition"
                 (click)="this.sortBy(column)">
-                {{ column.displayLabel }}
+                {{ column.displayLabel }} {{sortingColumn.key == column.key? sortingColumn.direction == 'ASC' ? "↓":"↑"
+                :"↕"}}
             </th>
 
             <th class="action-header header-cell table-cell">action</th>
@@ -23,7 +24,7 @@
         <tr class="row body-row" *ngFor="let data of this.getData()">
 
             <td class="table-cell" *ngFor="let column of this.ColumnsDefinition">
-                {{column.mapper ? column.mapper(data[column.key]):data[column.key] }}
+                {{column.mapper ? column.mapper(data[column.key]) : data[column.key] }}
             </td>
 
             <td class="action-cell table-cell">

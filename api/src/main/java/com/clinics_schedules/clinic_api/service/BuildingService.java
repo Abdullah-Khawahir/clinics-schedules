@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.clinics_schedules.clinic_api.dto.BuildingDto;
 import com.clinics_schedules.clinic_api.entity.Building;
+import com.clinics_schedules.clinic_api.exception.ResourceDependencyException;
 import com.clinics_schedules.clinic_api.exception.ResourceNotFoundException;
 import com.clinics_schedules.clinic_api.interfaces.BasicCRUDService;
 import com.clinics_schedules.clinic_api.repository.BuildingRepository;
@@ -52,13 +53,17 @@ public class BuildingService implements BasicCRUDService<Building, BuildingDto, 
     public void deleteById(final Integer id) throws ResourceNotFoundException {
         if (!repository.existsById(id))
             throw new ResourceNotFoundException("Building", "building_id", id.toString());
-        repository.deleteById(id);
+        var target = repository.findById(id);
+        if (target.map(t -> t.getClinics().isEmpty()).get()) {
+            repository.deleteById(id);
+        } else {
+            throw new ResourceDependencyException("Building", target.get().getClinics());
+        }
     }
 
     @Override
     public Optional<Building> getByID(Integer id) {
         return this.repository.findById(id);
     }
-
 
 }

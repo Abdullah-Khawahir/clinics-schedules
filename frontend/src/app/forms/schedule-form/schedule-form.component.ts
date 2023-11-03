@@ -5,6 +5,7 @@ import { API } from 'src/app/api.service';
 import { ClinicScheduleDto, RepeatUnit } from 'src/app/dto/ClinicScheduleDto';
 import { EmployeeDto } from 'src/app/dto/EmployeeDto';
 import { FormType, SelectInputOption } from 'src/app/models/interfaces';
+import { NotifierService } from 'src/app/notifier.service';
 
 @Component({
   selector: 'app-schedule-form',
@@ -35,7 +36,7 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
     )
 
   unsubscribe$ = new Subject<void>();
-  constructor(private api: API) { }
+  constructor(private api: API, public notifier: NotifierService) { }
 
   ngOnDestroy(): void {
     this.unsubscribe$.next()
@@ -55,7 +56,8 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
         eventStart: "",
         employees: [],
         events: [],
-        repeat: "" as RepeatUnit
+        repeat: "" as RepeatUnit,
+        note: ""
       }
     }
     if (this.formType == 'Create') {
@@ -116,23 +118,18 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
       eventFinish,
       repeat,
       [],
-      this.employeesId.map(employeeId => new EmployeeDto(Number.parseInt(employeeId), "", "", "", "", ""))
+      this.employeesId.map(employeeId => new EmployeeDto(Number.parseInt(employeeId), "", "", "")),
+      (formValue.elements.namedItem('note') as HTMLInputElement).value ?? ""
     )
     if (this.formType == 'Create') {
       this.api.clinicScheduleDataSource.save(schedule)
-        .subscribe({
-          error: (err) => {
-          }, next: (schedule) => { }
-        })
+        .subscribe({ ...this.notifier.submitResponse() })
 
     }
     if (this.formType == 'Update') {
       this.api.clinicScheduleDataSource
         .update(schedule.id, schedule)
-        .subscribe({
-          error: (err) => {
-          }, next: (schedule) => { }
-        })
+        .subscribe({ ...this.notifier.submitResponse() })
     }
   }
 

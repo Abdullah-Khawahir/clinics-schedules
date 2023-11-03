@@ -4,6 +4,7 @@ import com.clinics_schedules.clinic_api.Const;
 import com.clinics_schedules.clinic_api.entity.Clinic;
 import com.clinics_schedules.clinic_api.interfaces.Dto;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -36,6 +37,8 @@ public class ClinicDto implements Dto {
 
     private String ext;
 
+    private String note; 
+
     public ClinicDto(final Clinic clinic) {
         this.id = clinic.getId();
         this.arabicName = clinic.getArabicName();
@@ -43,6 +46,7 @@ public class ClinicDto implements Dto {
         this.number = clinic.getNumber();
         this.buildingId = clinic.getBuildingId();
         this.ext = clinic.getExt();
+        this.note = clinic.getNote();
     }
 
 }

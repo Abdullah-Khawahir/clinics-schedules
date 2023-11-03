@@ -8,7 +8,7 @@
     </ng-container>
 
     <ng-template #loading>
-        <h1>loading ...</h1>
+        <app-loading></app-loading>
     </ng-template>
 
 
@@ -17,15 +17,15 @@
     </ng-template>
 
     <ng-template #content>
+        <div class="panel">
+            <app-data-table [data-list]="vm.employeesList || []" [columns-definition]="this.columnDefinition"
+                [edit-action]="this.edit" [remove-action]="this.remove">
+            </app-data-table>
 
-        <app-data-table [data-list]="vm.employeesList || []" [columns-definition]="this.columnDefinition"
-            [edit-action]="this.edit" [remove-action]="this.remove">
-        </app-data-table>
 
-
-        <app-employee-form *ngIf="!this.editFormClosed" (shouldClose)="this.toggleEditForm()"
-            [employee]="this.employeeToEdit" formType="Update">
-        </app-employee-form>
-
+            <app-employee-form *ngIf="!this.editFormClosed" (shouldClose)="this.toggleEditForm()"
+                [employee]="this.employeeToEdit" formType="Update">
+            </app-employee-form>
+        </div>
     </ng-template>
 </ng-container>

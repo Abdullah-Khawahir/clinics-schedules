@@ -1,13 +1,23 @@
-<ng-container *ngIf="{clinics:this.clinics$ |async , clinicsError:this.clinicsError$ |async} as view">
+<ng-container *ngIf="{hospitals:AllHospitals$|async , hospitalsErr:this.AllHospitalsErr$ |async}as vm">
 
-    <ng-container *ngIf="view.clinics ||view.clinicsError ; else loading">
-        <ng-container *ngIf="view.clinicsError && !view.clinics then err"></ng-container>
-        <ng-container *ngIf="!view.clinicsError && view.clinics then schedules"></ng-container>
+    <ng-container *ngIf="!vm.hospitalsErr && vm.hospitals">
+        <button class="hospital-target-button" *ngFor="let hospital of vm.hospitals"
+            [ngClass]="{selected:this.hospitalId === hospital.id}" (click)="this.setHospitalID(hospital.id)">
+            {{hospital.hospitalName}}
+        </button>
+    </ng-container>
+</ng-container>
+
+<ng-container *ngIf=" {clinics:this.clinics$ |async , clinicsError:this.clinicsError$ |async} as view">
+
+    <ng-container *ngIf="view.clinics ||view.clinicsError; else loading">
+        <ng-container *ngIf="(view.clinicsError && !view.clinics) then err"></ng-container>
+        <ng-container *ngIf="(!view.clinicsError && view.clinics) then content"></ng-container>
     </ng-container>
 
 
     <ng-template #loading>
-        <h1 > loading ...</h1>
+        <app-loading></app-loading>
     </ng-template>
 
 
@@ -15,51 +25,53 @@
         <h1> {{view.clinicsError?.message}}</h1>
     </ng-template>
 
-    <ng-template #schedules>
+    <ng-template #content>
 
         <input class="clinic-filter-input" type="text" [(ngModel)]="this.clinicFilter"
             placeholder="Search Term Ex. Abdullah or 10:00 pm">
 
         <ng-template *ngFor="let clinic of view.clinics" [ngIf]="this.doesClinicPassFilter(clinic)">
+            <ng-container>
+                <div class="schedule-container" *ngIf="clinic.schedules.length != 0">
+                    <div class="clinic-info">
+                        <div class="clinic-info-item"> Name: {{clinic.englishName}}</div>
+                        <div class="clinic-info-item"> Number: {{clinic.number}} </div>
+                        <div class="clinic-info-item"> {{clinic.ext.trim() ? "Ext:" :"" }}{{clinic.ext}}</div>
+                    </div>
 
-            <div class="schedule-container" *ngIf="clinic.schedules.length != 0">
-                <div class="clinic-info">
-                    <div class="clinic-info-item"> Name: {{clinic.englishName}}</div>
-                    <div class="clinic-info-item"> Number: {{clinic.number}} </div>
-                    <div class="clinic-info-item"> {{clinic.ext ? "Ext:" :"" }}{{clinic.ext}}</div>
-                </div>
+                    <div class="clinic-schedule-event-container">
 
-                <div class="clinic-schedule-event-container ">
+                        <div class="clinic-schedule-event" *ngFor="let dayAndEvents of this.getAllEvents(clinic)">
 
-                    <div class="clinic-schedule-event " *ngFor="let dayAndEvents of this.getAllEvents(clinic)">
-
-                        <div class="event-day-info schedule-event-date ">
-                            {{dayAndEvents.day | date:"EEEE , MMM dd "}}
-                        </div>
-
-                        <div class="events-container">
-
-                            <div class="event-time-and-employees "
-                                *ngFor="let event of dayAndEvents.events ">
-                                <div class=" schedule-event-time  ">
-                                    {{event.eventStart | date:'hh:mmaaa'}} - {{event.eventFinish | date:"hh:mmaaa"}}
-                                </div>
-
-                                <div class="schedule-event-employees ">
-                                    <div class="event-employee" *ngFor="let employee of event.employees">
-                                        {{employee.englishName}}
-                                    </div>
-                                </div>
-
+                            <div class="event-day-info schedule-event-date">
+                                {{dayAndEvents.day | date:"EEEE , MMM dd "}}
                             </div>
 
+                            <ng-container *ngIf="dayAndEvents.events.length !=0">
+                                <div class="events-container">
+
+                                    <div class="event-time-and-employees " *ngFor="let event of dayAndEvents.events ">
+
+                                        <div class=" schedule-event-time  ">
+                                            {{event.eventStart | date:'hh:mmaaa'}} - {{event.eventFinish |
+                                            date:"hh:mmaaa"}}
+                                        </div>
+
+                                        <div class="schedule-event-employees ">
+                                            <div class="event-employee" *ngFor="let employee of event.employees">
+                                                {{employee.englishName}}
+                                            </div>
+                                        </div>
+                                        <p class="schedule-event-note" *ngIf="event.note">some note</p>
+                                    </div>
+                                </div>
+                            </ng-container>
                         </div>
 
                     </div>
-
+                    <p class="clinic-note"><strong>Note: </strong>{{clinic.note}}</p>
                 </div>
-
-            </div>
+            </ng-container>
         </ng-template>
 
     </ng-template>

@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Observable, Subject, catchError, ignoreElements, map, of, takeUntil } from 'rxjs';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Observable, catchError, ignoreElements, map, of } from 'rxjs';
 import { API } from 'src/app/api.service';
 import { ClinicDto } from 'src/app/dto/ClinicDto';
 import { FormType, SelectInputOption } from 'src/app/models/interfaces';
+import { NotifierService } from 'src/app/notifier.service';
 
 @Component({
   selector: 'app-clinic-form',
@@ -22,7 +23,7 @@ export class ClinicFormComponent implements OnInit {
     .pipe(ignoreElements(),
       catchError(err => of(new Error("cant fetch data"))))
 
-  constructor(private api: API) { }
+  constructor(private api: API, public notifier: NotifierService) { }
 
   ngOnInit(): void {
     if (!this.clinic) {
@@ -32,9 +33,9 @@ export class ClinicFormComponent implements OnInit {
         englishName: "",
         buildingId: "" as unknown as number,
         ext: "",
-        number: "" as unknown as number
+        number: "" as unknown as number,
+        note: ""
       }
-
     }
 
 
@@ -60,20 +61,19 @@ export class ClinicFormComponent implements OnInit {
       englishName: formValue.englishName,
       buildingId: Number.parseInt(buildingIdElement.value),
       ext: formValue.ext,
-      number: formValue.number
+      number: formValue.number,
+      note: formValue.note
     }
 
-    console.log(clinic);
 
     if (this.formType == 'Create') {
       this.api.clinicDataSource.save(clinic)
-        .subscribe({ next: () => this.close() })
+        .subscribe({ ... this.notifier.submitResponse({ completeLog: "complete" }) })
     }
 
     if (this.formType == 'Update') {
       this.api.clinicDataSource.update(this.clinic.id, clinic)
-        .subscribe({ next: () => this.close() })
-
+        .subscribe({ ... this.notifier.submitResponse({ completeLog: "complete" }) })
     }
 
   }

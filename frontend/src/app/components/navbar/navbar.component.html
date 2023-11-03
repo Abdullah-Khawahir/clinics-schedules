@@ -1,22 +1,32 @@
-<div id="nav">
+<div id="nav" *ngIf="{activeSetter:(this.activeSetter$|async )|| [] } as p">
+    <div id="nav-items-container">
 
-    <a routerLink="/" *ngIf="this.isLoggedIn$ | async" class="navbar-item" (click)="this.user.logout()">
-        logout
-    </a>
-    <a routerLink="/dashboard" *ngIf="this.isLoggedIn$ | async" class="navbar-item">
-        dashboard
-    </a>
+        <div routerLink="/" *ngIf="this.isLoggedIn$ | async" class="navbar-item" (click)="this.user.logout()">
+            logout
+        </div>
+        <div routerLink="/dashboard" *ngIf="this.isLoggedIn$ | async"
+            [class]="['navbar-item',p.activeSetter.includes('dashboard') ? 'active-nav-item':''].join(' ')"
+            (click)="this.setActive($event.target)">
+            dashboard
+        </div>
 
-    <a routerLink="/login" *ngIf="!(this.isLoggedIn$ | async)" class="navbar-item">
-        login
-    </a>
+        <div routerLink="/login" *ngIf="!(this.isLoggedIn$ | async)"
+            [class]="['navbar-item',p.activeSetter.includes('login') ? 'active-nav-item':''].join(' ')"
+            (click)="this.setActive($event.target)">
+            login
+        </div>
 
-    <a routerLink="/hospital-schedules" class="navbar-item">
-        schedules
-    </a>
-    <a routerLink="/" class="navbar-item" (click)="this.shouldSayHi()">
-        home
-    </a>
+        <div routerLink="/hospital-schedules" (click)="this.setActive($event.target)"
+            [class]="['navbar-item',p.activeSetter.length ==0 ? 'active-nav-item':''].join(' ')">
+            schedules
+        </div>
+        <!-- <div routerLink="/" (click)="this.setActive($event.target)"
+            [class]="['navbar-item',p.activeSetter.length ==0 ? 'active-nav-item':''].join(' ')">
+            home
+        </div> -->
 
-
+    </div>
+    <div id="nav-title-container">
+        <h1>title</h1>
+    </div>
 </div>

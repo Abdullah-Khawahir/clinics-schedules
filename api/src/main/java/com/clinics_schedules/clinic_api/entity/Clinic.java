@@ -52,13 +52,16 @@ public class Clinic {
     @Column(name = "clinic_ext")
     private String ext;
 
-    @OneToMany(mappedBy = "__ownerClinic" , orphanRemoval = true , cascade = CascadeType.ALL)
+    @Column(name = "clinic_note", nullable = true)
+    private String note;
+
+    @OneToMany(mappedBy = "ownerClinic", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<ClinicSchedule> schedules;
 
-    @ManyToOne(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "building_id", referencedColumnName = "building_id", insertable = false, updatable = false)
     @JsonBackReference
-    private Building __ownerBuilding;
+    private Building ownerBuilding;
 
     public Clinic(final ClinicDto clinicDto) {
         this.id = null; // this is handled by the database
@@ -67,6 +70,7 @@ public class Clinic {
         this.number = clinicDto.getNumber();
         this.buildingId = clinicDto.getBuildingId();
         this.ext = clinicDto.getExt();
+        this.note = clinicDto.getNote();
 
     }
 }

@@ -1,15 +1,14 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, OnDestroy, inject } from '@angular/core';
-import { Observable, Subject, map, throwError } from 'rxjs';
+import { Observable, Subject, map } from 'rxjs';
 import { BuildingDto } from './dto/BuildingDto';
 import { ClinicDto } from './dto/ClinicDto';
 import { ClinicScheduleDto } from './dto/ClinicScheduleDto';
 import { EmployeeDto } from './dto/EmployeeDto';
 import { HospitalDto } from './dto/HospitalDto';
-import Logger from './logger.service';
+import { UserDto } from './dto/UserDto';
 import { FullClinic } from './models/FullClinic';
 import { UserService } from './user.service';
-import { UserDto } from './dto/UserDto';
 const DEFAULT_HEADERS = {
   'lang': 'us-en',
   'Content-Type': 'application/json',
@@ -26,20 +25,25 @@ interface CRUD<T, ID> {
 }
 class crudAPI<T, ID> implements CRUD<T, ID> {
   _http: HttpClient = inject(HttpClient)
-  constructor(private url: string, private headers: HttpHeaders) { }
+  constructor(private url: string, private headers: () => HttpHeaders) { }
+  get(id: ID): Observable<T> {
+    return this._http.get<T>(`${this.url}/${id}`, {
+      headers: this.headers(), responseType: "json",
+    })
+  }
   getAll(): Observable<T[]> {
     return this._http.get<T[]>(this.url, {
-      headers: this.headers, responseType: "json",
+      headers: this.headers(), responseType: "json",
     })
   }
   save(entity: T): Observable<T> {
-    return this._http.post<T>(this.url, entity, { headers: this.headers, responseType: "json", })
+    return this._http.post<T>(this.url, entity, { headers: this.headers(), responseType: "json", })
   }
   delete(id: ID) {
-    return this._http.delete(this.url + `/${id}`, { headers: this.headers, responseType: 'json' })
+    return this._http.delete(this.url + `/${id}`, { headers: this.headers(), responseType: 'json' })
   }
   update(id: ID, entity: T): Observable<T> {
-    return this._http.put<T>(this.url + `/${id}`, entity, { headers: this.headers, responseType: "json", })
+    return this._http.put<T>(this.url + `/${id}`, entity, { headers: this.headers(), responseType: "json", })
   }
 }
 
@@ -56,39 +60,33 @@ export class API implements OnDestroy {
   }
 
   constructor(private http: HttpClient, private user: UserService) { }
+  AuthHeader = () => {
+    let Headers = new HttpHeaders(DEFAULT_HEADERS);
+    let user = this.user.getCurrentUser().getValue();
+    let basicAuth = `${user.username}:${user.password}`
+    Headers = Headers.append('Authorization', 'Basic ' + btoa(basicAuth));
+    return Headers;
+  }
 
 
   private readonly HOSPITAL_URI = this.url("/private/hospital")
-  readonly hospitalDataSource = new crudAPI<HospitalDto, number>(this.HOSPITAL_URI, this.AuthHeader())
+  readonly hospitalDataSource = new crudAPI<HospitalDto, number>(this.HOSPITAL_URI, this.AuthHeader)
 
   private readonly BUILDING_URI = this.url("/private/building")
-  readonly buildingDataSource = new crudAPI<BuildingDto, number>(this.BUILDING_URI, this.AuthHeader());
+  readonly buildingDataSource = new crudAPI<BuildingDto, number>(this.BUILDING_URI, this.AuthHeader);
 
 
   private readonly CLINIC_URI = this.url('/private/clinic')
-  readonly clinicDataSource = new crudAPI<ClinicDto, number>(this.CLINIC_URI, this.AuthHeader());
+  readonly clinicDataSource = new crudAPI<ClinicDto, number>(this.CLINIC_URI, this.AuthHeader);
 
   private readonly EMPLOYEE_URI = this.url('/private/employee')
-  readonly employeeDataSource = new crudAPI<EmployeeDto, number>(this.EMPLOYEE_URI, this.AuthHeader());
+  readonly employeeDataSource = new crudAPI<EmployeeDto, number>(this.EMPLOYEE_URI, this.AuthHeader);
 
   private readonly CLINIC_SCHEDULE_URI = this.url('/private/clinic-schedule')
-  readonly clinicScheduleDataSource = new crudAPI<ClinicScheduleDto, number>(this.CLINIC_SCHEDULE_URI, this.AuthHeader());
+  readonly clinicScheduleDataSource = new crudAPI<ClinicScheduleDto, number>(this.CLINIC_SCHEDULE_URI, this.AuthHeader);
 
   private readonly USER_URI = this.url('/private/user')
-  readonly userDataSource = new crudAPI<UserDto, number>(this.USER_URI, this.AuthHeader());
-
-
-  addEmployeesToScheduleByIds(scheduleId: number, employeesIds: number[]) {
-    return this.http.post(this.url(`/private/schedule-employee-list/${scheduleId}`), employeesIds, { headers: this.AuthHeader(), })
-  }
-
-  deleteEmployeeListByScheduleId(scheduleId: number) {
-    return this.http.delete<void>(this.url(`/private/schedule-employee-list/${scheduleId}`), { headers: this.AuthHeader(), })
-
-  }
-  deleteEmployeeFromListByScheduleIdAndEmployeeId(scheduleId: number, employeeId: number) {
-    return this.http.delete<void>(this.url(`/private/schedule-employee-list/${scheduleId}/${employeeId}`), { headers: this.AuthHeader(), })
-  }
+  readonly userDataSource = new crudAPI<UserDto, number>(this.USER_URI, this.AuthHeader);
 
 
 
@@ -115,15 +113,15 @@ export class API implements OnDestroy {
 
   }
 
-  getAllClinics() {
+  getAllClinics(hospitalId?: number | string) {
+
     return this.http.get<FullClinic[]>
-      (`http://localhost:8080/public/full-clinic`, { headers: new HttpHeaders(DEFAULT_HEADERS) })
+      (`http://localhost:8080/public/full-clinic?hospitalID=${hospitalId || ""}`, { headers: new HttpHeaders(DEFAULT_HEADERS) })
       .pipe(
         map(clinics => {
           clinics.forEach(clinic => clinic.schedules.forEach(schedule => {
             schedule.beginDate = this.convertDateFromStringToMs(schedule.beginDate)
             schedule.expireDate = this.convertDateFromStringToMs(schedule.expireDate)
-
             schedule.events.forEach(event => {
               event.beginTime = this.convertDateFromStringToMs(event.beginTime)
               event.finishTime = this.convertDateFromStringToMs(event.finishTime)
@@ -133,31 +131,13 @@ export class API implements OnDestroy {
         })
       )
   }
-  AuthHeader() {
-    let Headers = new HttpHeaders(DEFAULT_HEADERS);
-    let user = this.user.getCurrentUser().getValue();
-    let basicAuth = `${user.username}:${user.password}`
-    Headers = Headers.append('Authorization', 'Basic ' + btoa(basicAuth));
 
-    return Headers;
+  getAllHospitals() {
+    return this.http.get<HospitalDto[]>
+      (this.url("/public/hospital"), { headers: new HttpHeaders(DEFAULT_HEADERS) })
   }
 
 
-
-
-  private handleError(error: HttpErrorResponse) {
-    if (error.error instanceof ErrorEvent) {
-      Logger.error(`[HTTP-ERROR] an error accrued: ${error.message}`)
-    }
-    else {
-      console.info(
-        `[HTTP-ERROR] Backend returned code ${error.status} `);
-      console.error(error.error);
-
-    }
-    return throwError(
-      () => 'Something bad happened; please try again later.');
-  }
 
 
 

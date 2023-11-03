@@ -1,9 +1,116 @@
-/* You can add global styles to this file, and also import other style files */
 :root {
+  --nav-color: black;
+  --nav-font-color: rgba(255, 255, 255, 0.4);
+  --nav-font-color-active: rgba(255, 255, 255, 1);
+  --title-font-color: white;
+  --background: white;
+
+
+
+
+  --clinic-info-font-color: white;
+  --clinic-info-background-color: black;
+
+  --button-font-color: white;
+  --button-font-size: 16px;
+  --button-border-radius: 15px;
+
+  --button-color: #1473e6;
+  --button-color-hovered: hsl(213, 84%, 39%);
+
+  --normal-button-color: var(--button-color);
+  --normal-button-color-hovered: var(--button-color);
+
+
+  --edit-button-color: 0;
+  --edit-button-color-hovered: 0;
+
+  --delete-button-color: 0;
+  --delete-button-color-hovered: 0;
+
+
+  --confirm-button-color: 0;
+  --confirm-button-color-hovered: 0;
+
+  --cancel-button-color: 0;
+  --cancel-button-color-hovered: 0;
+
+  --transition-duration: 150ms;
+
+  --font-minor: rgb(75, 75, 75);
+  --font-major: rgba(255, 255, 255, 0.66);
+
+  --panel-border: 1px solid rgba(0, 0, 0, 0.66);
+  --panel-border-radius: 17px;
+  --panel-shadow: 0px 0px 15px rgba(0, 0, 0, 0.455);
+
+
+  --schedule-border: var(--panel-border);
+  --schedule-border-radius: var(--panel-border-radius);
+  --schedule-shadow: var(--panel-shadow);
 
 }
+
 
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: var(--background);
+}
+
+#content {
+  box-shadow: var(--panel-shadow);
+  width: 95vw;
+  margin-inline: auto;
+  padding: 15px;
+  border-radius: var(--panel-border-radius);
+  min-height: 80vh;
+}
+
+.btn {
+
+  text-align: center;
+  width: max-content;
+  height: 26px;
+  line-height: 26px;
+
+  vertical-align: middle;
+  border: none;
+  box-shadow: none;
+  padding-inline: 10px;
+  margin: 0;
+  font-size: var(--button-font-size);
+  background-color: var(--button-color);
+  color: var(--button-font-color);
+  border-radius: var(--button-border-radius);
+  cursor: default;
+  margin: 2px;
+
+}
+
+.edit-action-btn {
+  /* width: 45%; */
+}
+
+.btn:hover {
+  transition: 200ms;
+  background-color: var(--button-color-hovered);
+}
+
+.btn:focus-visible {
+  outline: 1px solid rgba(0, 0, 0, 0.88);
+}
+
+
+
+.panel {
+  min-height: 85vh;
+}
+
+a {
+  all: unset;
+}
+
+.input-text {
+  text-align: center;
 }

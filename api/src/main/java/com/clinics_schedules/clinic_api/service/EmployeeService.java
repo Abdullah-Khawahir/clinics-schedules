@@ -8,14 +8,19 @@ import org.springframework.stereotype.Service;
 
 import com.clinics_schedules.clinic_api.dto.EmployeeDto;
 import com.clinics_schedules.clinic_api.entity.Employee;
+import com.clinics_schedules.clinic_api.entity.ScheduleEmployeeList;
+import com.clinics_schedules.clinic_api.exception.ResourceDependencyException;
 import com.clinics_schedules.clinic_api.exception.ResourceNotFoundException;
 import com.clinics_schedules.clinic_api.interfaces.BasicCRUDService;
 import com.clinics_schedules.clinic_api.repository.EmployeeRepository;
+import com.clinics_schedules.clinic_api.repository.ScheduleEmployeeListRepository;
 
 @Service
 public class EmployeeService implements BasicCRUDService<Employee, EmployeeDto, Integer> {
     @Autowired
     private EmployeeRepository repository;
+    @Autowired
+    private ScheduleEmployeeListRepository employeeToScheduleListRepo;
 
     @Override
     public Employee save(EmployeeDto employeeDto) {
@@ -24,9 +29,7 @@ public class EmployeeService implements BasicCRUDService<Employee, EmployeeDto, 
                 null,
                 employeeDto.getEnglishName(),
                 employeeDto.getArabicName(),
-                employeeDto.getEmail(),
-                employeeDto.getPhoneNumber(),
-                employeeDto.getSecondPhoneNumber()));
+                employeeDto.getSpecialty()));
 
     }
 
@@ -43,9 +46,7 @@ public class EmployeeService implements BasicCRUDService<Employee, EmployeeDto, 
         currentUser
                 .setArabicName(employeeDto.getArabicName())
                 .setEnglishName(employeeDto.getEnglishName())
-                .setEmail(employeeDto.getEmail())
-                .setPhoneNumber(employeeDto.getPhoneNumber())
-                .setSecondPhoneNumber(employeeDto.getSecondPhoneNumber());
+                .setSpecialty(employeeDto.getSpecialty());
 
         return repository.save(currentUser);
     }
@@ -54,9 +55,14 @@ public class EmployeeService implements BasicCRUDService<Employee, EmployeeDto, 
     public void deleteById(Integer id) {
         if (!repository.existsById(id))
             throw new ResourceNotFoundException("Employee", "employee_id", id.toString());
-        else
-            repository.deleteById(id);
-
+        else {
+            var target = employeeToScheduleListRepo.findByEmployeeId(id);
+            if (target.isEmpty()) {
+                repository.deleteById(id);
+            } else {
+                throw new ResourceDependencyException("Employee", target);
+            }
+        }
     }
 
     @Override

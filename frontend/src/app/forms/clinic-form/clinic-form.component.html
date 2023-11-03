@@ -16,7 +16,7 @@
     <ng-template #loading>
         <div class="pop-up-form-background">
             <div class="pop-up-form">
-                loading ...
+                <app-loading></app-loading>
                 <button class="btn" type="button" (click)="this.close()">close</button>
             </div>
         </div>
@@ -73,6 +73,17 @@
                         </label>
                     </div>
                     <input class="pop-up-form-input text-input" name="ext" type="text" [(ngModel)]="this.clinic.ext">
+                </div>
+
+
+                <div class="pop-up-form-input-and-label-container">
+                    <div class="pop-up-form-label">
+                        <label>
+                            Note :
+                        </label>
+                    </div>
+                    <textarea class="pop-up-form-input text-input" name="note"
+                        [(ngModel)]="this.clinic.note"></textarea>
                 </div>
 
                 <div class="pop-up-form-input-and-label-container">

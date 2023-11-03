@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.clinics_schedules.clinic_api.dto.ClinicDto;
-import com.clinics_schedules.clinic_api.dto.FullClinicSchedule;
+import com.clinics_schedules.clinic_api.dto.FullClinicScheduleDto;
 import com.clinics_schedules.clinic_api.service.ClinicScheduleService;
 import com.clinics_schedules.clinic_api.service.ClinicService;
 
@@ -25,7 +25,7 @@ public class SchedulesView {
 	ClinicService clinicService;
 
 	@GetMapping(path = "/schedules")
-	public List<FullClinicSchedule> getMethodName(
+	public List<FullClinicScheduleDto> getMethodName(
 			@RequestParam(required = false) String name,
 			@RequestParam(required = false, defaultValue = "1000") Integer limit,
 			@RequestParam(required = false) Integer clinicId) {
@@ -42,7 +42,7 @@ public class SchedulesView {
 
 				.filter(s -> isEmpty(clinicId) ? true : s.getId() == clinicId)
 				.limit(limit)
-				.map(schedule -> FullClinicSchedule
+				.map(schedule -> FullClinicScheduleDto
 						.builder()
 						.id(schedule.getId())
 						.clinic(clinicService.getByID(schedule.getClinicId()).map(ClinicDto::new).get())

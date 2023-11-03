@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, catchError } from 'rxjs';
 import { UserDto } from './dto/UserDto';
 export interface LoginData {
   username: string,
@@ -20,13 +20,11 @@ export class UserService {
   private onLogInFunctions: (() => void)[] = []
   private onLogoutFunctions: (() => void)[] = []
 
-  private currentUser$ = new BehaviorSubject<LoginData>({
-    username: "abdullah", password: "4484", authorities: []
-  });
-  private isLogged$ = new BehaviorSubject<boolean>(true)
+  private currentUser$ = new BehaviorSubject<LoginData>(EMPTY_LOGIN_DATA);
+  private isLogged$ = new BehaviorSubject<boolean>(false)
 
   constructor(private http: HttpClient) {
-    console.warn("auto login is active");
+
     this.login("abdullah", "4484")
   }
 
@@ -38,7 +36,7 @@ export class UserService {
   login(username: string, password: string): Observable<LoginData> {
     this.auth({ id: 0, username: username, password: password, email: "", roles: [] })
       .subscribe(user => {
-        if (user.password == password && user.username == username) {
+        if (user.password == password && user.username == username) {          
           this.currentUser$.next({
             username: username,
             password: user.password,
@@ -65,7 +63,7 @@ export class UserService {
   getCurrentUser() {
     return this.currentUser$
   }
-  
+
   onLogin(fn: (() => void)) {
     this.onLogInFunctions.push(fn)
   }

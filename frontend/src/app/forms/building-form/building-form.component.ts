@@ -3,6 +3,7 @@ import { Observable, catchError, ignoreElements, map, of } from 'rxjs';
 import { API } from 'src/app/api.service';
 import { BuildingDto } from 'src/app/dto/BuildingDto';
 import { FormType, SelectInputOption } from 'src/app/models/interfaces';
+import { NotifierService } from 'src/app/notifier.service';
 
 @Component({
   selector: 'app-building-form',
@@ -21,7 +22,7 @@ export class BuildingFormComponent implements OnInit {
     ignoreElements(),
     catchError(err => of(new Error("cant fetch data")))
   )
-  constructor(private api: API) { }
+  constructor(private api: API, public notifier: NotifierService) { }
 
   ngOnInit(): void {
     if (!this.building)
@@ -45,25 +46,11 @@ export class BuildingFormComponent implements OnInit {
 
     if (this.formType == 'Create') {
       this.api.buildingDataSource.save(building)
-        .subscribe({
-          next: () => {
-            this.close()
-          },
-          error: (err) => {
-            console.log(err);
-          },
-        })
+        .subscribe({ ...this.notifier.submitResponse() })
     }
     if (this.formType == "Update") {
       this.api.buildingDataSource.update(building.id, building)
-        .subscribe({
-          next: () => {
-            this.close()
-          },
-          error: (err) => {
-            console.log(err);
-          },
-        })
+        .subscribe({ ...this.notifier.submitResponse() })
     }
   }
 

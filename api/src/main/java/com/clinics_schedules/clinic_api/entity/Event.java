@@ -42,7 +42,7 @@ public class Event {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY  )
     @JoinColumn(name = "schedule_id", referencedColumnName = "schedule_id",  insertable = false, updatable = false)
     @JsonBackReference
-    private ClinicSchedule __ownerSchedule; // the name schedule confuse JPA when deleting
+    private ClinicSchedule ownerSchedule; // the name schedule confuse JPA when deleting
 
     public Event(final Integer scheduleId, final Date begin, final Date finish) {
         this.scheduleId = scheduleId;

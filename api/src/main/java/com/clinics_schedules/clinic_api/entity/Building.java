@@ -47,13 +47,13 @@ public class Building {
     @Column(nullable = false, name = "hospital_id")
     private Integer hospitalId;
 
-    @OneToMany(mappedBy = "__ownerBuilding", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "ownerBuilding", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Clinic> clinics;
 
     @ManyToOne()
     @JoinColumn(name = "hospital_id", referencedColumnName = "hospital_id", insertable = false, updatable = false)
     @JsonBackReference
-    private Hospital __ownerHospital;
+    private Hospital ownerHospital;
 
     public Building(final BuildingDto buildingDto) {
         this.id = buildingDto.getId();

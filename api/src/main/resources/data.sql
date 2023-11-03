@@ -51,17 +51,15 @@ VALUES ('dental', 'dental_ARABIC', 19, null, 1),
 INSERT INTO tbl_clinical_employee (
         employee_english_name,
         employee_arabic_name,
-        employee_email,
-        employee_phone_number,
-        employee_second_phone_number
+        employee_specialty
     )
-VALUES ('husan', '0ARABIC_NAME', NULL, NULL, NULL),
-    ('ali', '2ARABIC2_NAME', NULL, NULL, NULL),
-    ('hasha', '5ARABI5C_NAME', NULL, NULL, NULL),
-    ('ocash', '6+A65RABICa_NAME', NULL, NULL, NULL),
-    ('salam', 'ARABIaC_NAME', NULL, NULL, NULL),
-    ('humaid', '196ARABIaC_NAME', NULL, NULL, NULL),
-    ('baker', 'A54RABIC_dsNAME', NULL, NULL, NULL);
+VALUES ('husan', '0ARABIC_NAME',  NULL),
+    ('ali', '2ARABIC2_NAME',  NULL),
+    ('hasha', '5ARABI5C_NAME',  NULL),
+    ('ocash', '6+A65RABICa_NAME',  NULL),
+    ('salam', 'ARABIaC_NAME',  NULL),
+    ('humaid', '196ARABIaC_NAME',  NULL),
+    ('baker', 'A54RABIC_dsNAME',  NULL);
 INSERT INTO tbl_clinic_schedule (
         schedule_id,
         clinic_id,
@@ -83,6 +81,7 @@ VALUES (
 INSERT INTO tbl_schedule_employees_list (schedule_id, employee_id)
 VALUES (0, 2),
     (0, 5);
+
 INSERT INTO tbl_user (
         user_id,
         user_username,

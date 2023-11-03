@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.clinics_schedules.clinic_api.entity.Clinic;
@@ -29,9 +30,13 @@ public class FullClinicController {
     }
 
     @GetMapping(path = "/full-clinic")
-    public ResponseEntity<List<Clinic>> getAll() {
+    public ResponseEntity<List<Clinic>> getAll(
+            @RequestParam(required = false) Integer hospitalID) {
         return ResponseEntity.ok(
-                this.service.getAll());
+                this.service.getAll().stream()
+                        .filter(clinic -> hospitalID == null ? true
+                                : clinic.getOwnerBuilding().getOwnerHospital().getId().equals(hospitalID))
+                        .toList());
     }
 
 }

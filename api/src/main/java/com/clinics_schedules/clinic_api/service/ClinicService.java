@@ -38,7 +38,8 @@ public class ClinicService implements BasicCRUDService<Clinic, ClinicDto, Intege
                 .setEnglishName(entity.getEnglishName())
                 .setBuildingId(entity.getBuildingId())
                 .setNumber(entity.getNumber())
-                .setExt(entity.getExt());
+                .setExt(entity.getExt())
+                .setNote(entity.getNote());
 
         return repository.save(currentClinic);
     }

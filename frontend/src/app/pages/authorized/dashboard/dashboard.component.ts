@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { NotifierService } from 'src/app/notifier.service';
 
 @Component({
   selector: 'app-dashboard',

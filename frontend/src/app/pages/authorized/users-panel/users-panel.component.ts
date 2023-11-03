@@ -3,6 +3,7 @@ import { catchError, ignoreElements, of } from 'rxjs';
 import { API } from 'src/app/api.service';
 import { UserDto } from 'src/app/dto/UserDto';
 import { Column } from 'src/app/models/interfaces';
+import { NotifierService } from 'src/app/notifier.service';
 // './../../../styles/popup-form.css'
 @Component({
   selector: 'app-users-panel',
@@ -29,7 +30,10 @@ export class UsersPanelComponent {
   openEmployeeForm = false;
 
   remove = (target: UserDto) => {
-    console.log(target);
+    this.notifier.confirm(`are you sure you want to delete ${target.username}?`,
+      () => {
+        this.api.userDataSource.delete(target.id).subscribe({ ... this.notifier.submitResponse() })
+      })
   }
 
   edit = (target: UserDto) => {
@@ -37,7 +41,7 @@ export class UsersPanelComponent {
     this.toggleEmployeeForm()
   }
 
-  constructor(public api: API) { }
+  constructor(public api: API, public notifier: NotifierService) { }
 
   toggleEmployeeForm() {
     this.openEmployeeForm = !this.openEmployeeForm
