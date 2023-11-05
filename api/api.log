@@ -1795,3 +1795,18 @@
 
 2023-11-05T23:20:05.224+03:00  INFO 236087 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-6 - Shutdown initiated...
 2023-11-05T23:20:05.237+03:00  INFO 236087 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-6 - Shutdown completed.
+2023-11-05T23:23:32.947+03:00  INFO 243172 --- [main] c.c.c.ClinicApiApplicationTests          : Starting ClinicApiApplicationTests using Java 17.0.9 with PID 243172 (started by abtuly in /home/abtuly/clinics-schedules/api)
+2023-11-05T23:23:32.953+03:00  INFO 243172 --- [main] c.c.c.ClinicApiApplicationTests          : No active profile set, falling back to 1 default profile: "default"
+2023-11-05T23:23:37.464+03:00  INFO 243172 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-11-05T23:23:38.007+03:00  INFO 243172 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@15214920
+2023-11-05T23:23:38.014+03:00  INFO 243172 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-11-05T23:23:38.432+03:00  INFO 243172 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-11-05T23:23:38.699+03:00  INFO 243172 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.9.Final
+2023-11-05T23:23:38.705+03:00  INFO 243172 --- [main] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2023-11-05T23:23:39.218+03:00  INFO 243172 --- [main] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-11-05T23:23:40.489+03:00  INFO 243172 --- [main] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-11-05T23:23:42.211+03:00  INFO 243172 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-11-05T23:23:46.599+03:00  INFO 243172 --- [main] c.c.c.ClinicApiApplicationTests          : Started ClinicApiApplicationTests in 15.157 seconds (process running for 18.611)
+2023-11-05T23:23:49.168+03:00  INFO 243172 --- [main] c.c.clinic_api.RandomTests               : "[\"a\",\"b\"]"
+2023-11-05T23:23:49.431+03:00  INFO 243172 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-11-05T23:23:49.439+03:00  INFO 243172 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
