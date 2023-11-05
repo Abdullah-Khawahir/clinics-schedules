@@ -8,6 +8,7 @@ import com.clinics_schedules.clinic_api.entity.Employee;
 import com.clinics_schedules.clinic_api.enums.TimeRepeatUnit;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -15,6 +16,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @AllArgsConstructor
+@Builder
 @Accessors(chain = true)
 public class ClinicScheduleDto {
     private Integer id;

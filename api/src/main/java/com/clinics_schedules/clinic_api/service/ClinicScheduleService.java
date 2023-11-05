@@ -52,9 +52,9 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 		final var employeesIds = scheduleDto.getEmployees().stream().map(Employee::getId).toList();
 		scheduleToSave.setEmployees(employeeRepository.findAllById(employeesIds));
 		final var savedSchedule = repository.save(scheduleToSave);
-		
+
 		final var events = getEvents(savedSchedule);
-		
+
 		eventService.saveEvents(events);
 
 		return savedSchedule;
@@ -77,7 +77,6 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 				.setEventStart(scheduleDto.getEventStart())
 				.setEventFinish(scheduleDto.getEventFinish())
 				.setRepeat(scheduleDto.getRepeat());
-				
 
 		var conflicts = getConflictList(currentSchedule);
 		if (!conflicts.isEmpty()) {
@@ -91,7 +90,7 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 		deleteOldEvents(currentSchedule);
 		final var employeesIds = scheduleDto.getEmployees().stream().map(Employee::getId).toList();
 		currentSchedule.setEmployees(employeeRepository.findAllById(employeesIds));
-		
+
 		final var updatedSchedule = repository.save(currentSchedule);
 		final var events = this.getEvents(updatedSchedule);
 
