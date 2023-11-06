@@ -103,8 +103,9 @@
 
 .event-time-and-employees:last-child {
     border-bottom: none;
-    
+
 }
+
 .schedule-event-note {
     text-align: left;
     /* border-left: 1px solid var(--button-color); */
@@ -127,4 +128,38 @@
     font-size: smaller;
     padding: 0;
     margin: 0 0 0 0.5%;
+}
+
+.hospital-target-button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-inline: 5px;
+    gap: 5px;
+}
+
+.hospital-target-button {
+    color: var(--button-font-color);
+    background-color: var(--button-color);
+    border: none;
+    height: 30px;
+    line-height: 30px;
+    font-size: medium;
+    overflow-x: hidden;
+    width: 100%;
+    border-radius: var(--schedule-border-radius);
+}
+
+.hospital-target-button.selected {
+    background-color: var(--button-color-selected);
+}
+
+.hospital-target-button:hover {
+    background-color: var(--button-color-hovered);
+
+}
+
+.hospital-target-button.selected:hover {
+    background-color: var(--button-color-selected);
+
 }

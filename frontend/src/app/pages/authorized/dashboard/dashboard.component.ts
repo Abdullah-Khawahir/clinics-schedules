@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { UserService } from 'src/app/user.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,6 +14,7 @@ export class DashboardComponent {
   openScheduleForm = false;
   openEmployeeForm = false;
   openUserForm = false;
+  constructor(public user:UserService){}
   toggleAddHospitalForm() {
     this.openHospitalForm = !this.openHospitalForm
   }

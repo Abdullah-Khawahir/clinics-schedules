@@ -31,6 +31,7 @@
   line-height: var(--nav-height);
   text-align: center;
   color: var(--title-font-color);
+  font-weight: 1200;
 }
 
 

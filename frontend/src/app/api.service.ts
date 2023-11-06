@@ -9,6 +9,7 @@ import { HospitalDto } from './dto/HospitalDto';
 import { UserDto } from './dto/UserDto';
 import { FullClinic } from './models/FullClinic';
 import { UserService } from './user.service';
+import { environment } from 'src/environments/environment';
 const DEFAULT_HEADERS = {
   'lang': 'us-en',
   'Content-Type': 'application/json',
@@ -51,7 +52,7 @@ class crudAPI<T, ID> implements CRUD<T, ID> {
   providedIn: 'root'
 })
 export class API implements OnDestroy {
-  readonly SERVER_ADDRESS: string = "http://localhost:8080"
+  readonly SERVER_ADDRESS: string = environment.API_SERVER;
 
   private unsubscribe$ = new Subject<void>()
   url(uri: string) {
@@ -95,7 +96,7 @@ export class API implements OnDestroy {
   }
   getFullClinic(id: number) {
     return this.http.get<FullClinic>
-      (`http://localhost:8080/public/full-clinic${'/' + id}`, { headers: new HttpHeaders(DEFAULT_HEADERS) })
+      (`${environment.API_SERVER}/public/full-clinic${'/' + id}`, { headers: new HttpHeaders(DEFAULT_HEADERS) })
       .pipe(
         map(clinic => {
           clinic.schedules.forEach(schedule => {
@@ -116,7 +117,7 @@ export class API implements OnDestroy {
   getAllClinics(hospitalId?: number | string) {
 
     return this.http.get<FullClinic[]>
-      (`http://localhost:8080/public/full-clinic?hospitalID=${hospitalId || ""}`, { headers: new HttpHeaders(DEFAULT_HEADERS) })
+      (`${environment.API_SERVER}/public/full-clinic?hospitalID=${hospitalId || ""}`, { headers: new HttpHeaders(DEFAULT_HEADERS) })
       .pipe(
         map(clinics => {
           clinics.forEach(clinic => clinic.schedules.forEach(schedule => {

@@ -1,10 +1,12 @@
 <ng-container *ngIf="{hospitals:AllHospitals$|async , hospitalsErr:this.AllHospitalsErr$ |async}as vm">
 
     <ng-container *ngIf="!vm.hospitalsErr && vm.hospitals">
+     <div class="hospital-target-button-container">
         <button class="hospital-target-button" *ngFor="let hospital of vm.hospitals"
-            [ngClass]="{selected:this.hospitalId === hospital.id}" (click)="this.setHospitalID(hospital.id)">
-            {{hospital.hospitalName}}
-        </button>
+        [ngClass]="{selected:this.hospitalId == hospital.id}" (click)="this.setHospitalID(hospital.id)">
+        {{hospital.hospitalName}}
+    </button>
+     </div>
     </ng-container>
 </ng-container>
 

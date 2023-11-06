@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { catchError, of } from 'rxjs';
 import { UserService } from 'src/app/user.service';
 
 @Component({
@@ -7,7 +8,7 @@ import { UserService } from 'src/app/user.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  message!: string;
+  message!: string ;
   password!: string;
   username!: string;
 
@@ -15,10 +16,10 @@ export class LoginComponent {
   constructor(public user: UserService) { }
 
   submit() {
-    console.log(this.password
-      , this.username);
-
-    this.user.login(this.username, this.password)
+    this.message = ""
+    this.user.login$(this.username, this.password)
+      .pipe(catchError(err => this.message = err.error.message))
+      .subscribe()
   }
 
 }

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnChanges, OnInit, ViewChild } from '@angular/core';
+import { tap } from 'rxjs';
 import { NotifierService } from 'src/app/notifier.service';
 
 @Component({
@@ -8,11 +9,8 @@ import { NotifierService } from 'src/app/notifier.service';
 })
 export class NotificationViewComponent {
   notificationSource = this.notifierService
-    .getNotifier();
+    .getNotifier()
+    
   constructor(public notifierService: NotifierService) { }
-
-
-
-
 
 }

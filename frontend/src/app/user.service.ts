@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, catchError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, tap } from 'rxjs';
 import { UserDto } from './dto/UserDto';
+import { environment } from 'src/environments/environment';
 export interface LoginData {
   username: string,
   password: string,
@@ -25,30 +26,39 @@ export class UserService {
 
   constructor(private http: HttpClient) {
 
-    this.login("abdullah", "4484")
+    // this.login$("abdullah", "4484")
   }
 
 
   private auth(user: UserDto) {
-    return this.http.post<UserDto>("http://localhost:8080" + "/public/auth", user)
+    return this.http.post<UserDto>(environment.API_SERVER + "/public/auth", user)
   }
 
-  login(username: string, password: string): Observable<LoginData> {
-    this.auth({ id: 0, username: username, password: password, email: "", roles: [] })
-      .subscribe(user => {
-        if (user.password == password && user.username == username) {          
-          this.currentUser$.next({
-            username: username,
-            password: user.password,
-            authorities: user.roles,
-          })
-          this.isLogged$.next(true)
-          this.onLogInFunctions.forEach(fn => fn())
+  login$(username: string, password: string) {
+    return this.auth({ id: 0, username: username, password: password, email: "", roles: [] })
+      .pipe(tap({
+        next: (user) => {
+          if (user.password == password && user.username == username) {
+            this.currentUser$.next({
+              username: username,
+              password: user.password,
+              authorities: user.roles,
+            })
+            this.isLogged$.next(true)
+            this.onLogInFunctions.forEach(fn => fn())
+          }
         }
-      })
-    return this.currentUser$
+      }))
+
   }
 
+  isAdmin() {
+    return this.currentUser$.value.authorities.map(i => i.toUpperCase()).includes('ADMIN');
+  }
+
+  isDev() {
+    return this.currentUser$.value.authorities.map(i => i.toUpperCase()).includes('DEV');
+  }
 
   isLoggedIn() {
     return this.isLogged$.asObservable();

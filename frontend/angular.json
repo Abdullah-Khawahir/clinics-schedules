@@ -5,9 +5,7 @@
 	"projects": {
 		"clinics-schedules-frontend": {
 			"projectType": "application",
-			"schematics": {
-			
-			},
+			"schematics": {},
 			"root": "",
 			"sourceRoot": "src",
 			"prefix": "app",
@@ -53,10 +51,16 @@
 							"vendorChunk": true,
 							"extractLicenses": false,
 							"sourceMap": true,
-							"namedChunks": true
+							"namedChunks": true,
+							"fileReplacements": [
+								{
+									"replace": "src/environments/environment.ts",
+									"with": "src/environments/environment.development.ts"
+								}
+							]
 						}
 					},
-					"defaultConfiguration": "production"
+					"defaultConfiguration": "development"
 				},
 				"serve": {
 					"builder": "@angular-devkit/build-angular:dev-server",
@@ -66,7 +70,6 @@
 						},
 						"development": {
 							"browserTarget": "clinics-schedules-frontend:build:development"
-						
 						}
 					},
 					"defaultConfiguration": "development"

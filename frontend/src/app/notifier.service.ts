@@ -16,7 +16,6 @@ export class NotifierService implements OnDestroy {
   notificationsList: Notice[] = []
   notification$ = new BehaviorSubject<Notice[]>(this.notificationsList);
   constructor(private user: UserService) { }
-  // notify()
 
   submitResponse = (ResponseData?: { nextLog?: string, completeLog?: string }) => {
     return {
@@ -70,7 +69,9 @@ export class NotifierService implements OnDestroy {
   getNotifier() {
     return this.notification$.asObservable()
   }
-
+  peekLastNotice() {
+    return { ... this.notification$.value.at(-1) }
+  }
 
   ngOnDestroy(): void {
     this.notification$.complete()

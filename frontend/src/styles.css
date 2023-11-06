@@ -2,7 +2,7 @@
   --nav-color: black;
   --nav-font-color: rgba(255, 255, 255, 0.4);
   --nav-font-color-active: rgba(255, 255, 255, 1);
-  --title-font-color: white;
+  --title-font-color: rgba(255, 255, 255, 1);
   --background: white;
 
 
@@ -17,6 +17,7 @@
 
   --button-color: #1473e6;
   --button-color-hovered: hsl(213, 84%, 39%);
+  --button-color-selected: hsl(213, 83%, 25%);
 
   --normal-button-color: var(--button-color);
   --normal-button-color-hovered: var(--button-color);
@@ -113,4 +114,20 @@ a {
 
 .input-text {
   text-align: center;
+}
+
+
+.password-input {
+  color: transparent;
+  user-select: none;
+}
+
+.password-input::placeholder {
+  color: #858585;
+  opacity: 1;
+  text-align: center;
+}
+
+.password-input::selection {
+  background: transparent;
 }

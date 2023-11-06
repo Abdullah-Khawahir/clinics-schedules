@@ -20,13 +20,14 @@
 
             <div>
 
-                <button class="btn" *ngIf="vm.notice?.at(-1)?.type != 'CONFIRM'"
-                    (click)="this.notifierService.dismissLast()">dismiss</button>
+                <button #dismissBtn id="dismiss-btn" class="btn" *ngIf="vm.notice?.at(-1)?.type != 'CONFIRM'"
+                    autofocus="true" (click)="this.notifierService.dismissLast()">Dismiss</button>
+
+                <button id="confirm-btn" class="btn" *ngIf="vm.notice?.at(-1)?.type == 'CONFIRM'" autofocus="true"
+                    (click)="this.notifierService.dismissLastWithAction()">Confirm</button>
 
                 <button class="btn" *ngIf="vm.notice?.at(-1)?.type == 'CONFIRM'"
-                    (click)="this.notifierService.dismissLastWithAction()">CONFIRM</button>
-                <button class="btn" *ngIf="vm.notice?.at(-1)?.type == 'CONFIRM'"
-                    (click)="this.notifierService.dismissLast()">CANCEL</button>
+                    (click)="this.notifierService.dismissLast()">Cancel</button>
             </div>
         </div>
     </div>

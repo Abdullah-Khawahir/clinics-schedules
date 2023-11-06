@@ -58,7 +58,7 @@
             </div>
         </li>
 
-        <li>
+        <li *ngIf="this.user.isAdmin()">
             <div class="dashboard-item">
                 <button class="dashboard-item-name btn" routerLink="/dashboard/users-panel">Users Panel</button>
                 <button class="dashboard-item-button btn" (click)="this.toggleAddUserForm()">add User</button>

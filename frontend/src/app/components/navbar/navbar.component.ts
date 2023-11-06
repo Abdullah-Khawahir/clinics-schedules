@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivationEnd, Router } from '@angular/router';
-import { filter, map, tap } from 'rxjs';
+import { filter, map } from 'rxjs';
 import { UserService } from 'src/app/user.service';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-
+  readonly title = environment.title
 
   isLoggedIn$ = this.user.isLoggedIn();
   activeSetter$ = this.router.events
@@ -28,10 +29,10 @@ export class NavbarComponent implements OnInit {
     (navItem as HTMLElement).classList.add('active-nav-item')
   }
   ngOnInit(): void {
-    // this.user.onLogin(() => {
-    //   console.log("login");
-    //   this.router.navigate(["/dashboard"])
-    // })
+    this.user.onLogin(() => {
+      console.log("login");
+      this.router.navigate(["/dashboard"])
+    })
     this.user.onLogOut(() => {
       console.log("logout");
       this.router.navigate(["/"])
