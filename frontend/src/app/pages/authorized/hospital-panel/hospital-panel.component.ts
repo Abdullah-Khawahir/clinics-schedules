@@ -39,8 +39,8 @@ export class HospitalPanelComponent implements OnInit {
   ngOnInit() {
     this.columnsDefinition = [
       { key: 'id', displayLabel: "ID" },
-      { key: 'englishName', displayLabel: "English Name" },
-      { key: 'arabicName', displayLabel: "Arabic Name" },
+      { key: 'englishName', displayLabel: "Name" },
+      // { key: 'arabicName', displayLabel: "Arabic Name" },
     ]
   }
 

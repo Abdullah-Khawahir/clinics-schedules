@@ -1,24 +1,24 @@
 DROP TABLE IF EXISTS tbl_hospital cascade;
 create Table tbl_hospital (
     hospital_id SERIAL PRIMARY KEY,
-    hospital_arabic_name VARCHAR(255) NOT NULL CONSTRAINT HOSPITAL_ARABIC_NAME_ALREADY_EXISTS UNIQUE,
+    -- hospital_arabic_name VARCHAR(255) NULL CONSTRAINT HOSPITAL_ARABIC_NAME_ALREADY_EXISTS UNIQUE,
     hospital_english_name VARCHAR(255) NOT NULL CONSTRAINT HOSPITAL_ENGLISH_NAME_ALREADY_EXISTS UNIQUE
 );
 DROP TABLE IF EXISTS tbl_Building cascade;
 CREATE TABLE tbl_Building(
     building_id SERIAL PRIMARY KEY,
-    building_arabic_name VARCHAR(255) NOT NULL,
+    -- building_arabic_name VARCHAR(255) NULL,
     building_english_name VARCHAR(255) NOT NULL,
     building_number INT NOT NULL,
     hospital_id INT NOT NULL REFERENCES tbl_Hospital(hospital_id),
-    CONSTRAINT BUILDING_ARABIC_NAME_ALREADY_EXISTS_IN_THE_SAME_HOSPITAL UNIQUE(hospital_id, building_arabic_name),
+    -- CONSTRAINT BUILDING_ARABIC_NAME_ALREADY_EXISTS_IN_THE_SAME_HOSPITAL UNIQUE(hospital_id, building_arabic_name),
     CONSTRAINT BUILDING_ENGLISH_NAME_ALREADY_EXISTS_IN_THE_SAME_HOSPITAL UNIQUE(hospital_id, building_english_name)
 );
 DROP TABLE IF EXISTS tbl_Clinic cascade;
 CREATE TABLE tbl_Clinic(
     clinic_id SERIAL PRIMARY KEY,
     clinic_english_name VARCHAR(255) NOT NULL,
-    clinic_arabic_name VARCHAR(255) NOT NULL,
+    -- clinic_arabic_name VARCHAR(255) NOT NULL,
     building_id INT NOT NULL REFERENCES tbl_Building(building_id),
     clinic_ext VARCHAR(255) NULL,
     clinic_number INT NULL,
@@ -26,21 +26,17 @@ CREATE TABLE tbl_Clinic(
     CONSTRAINT CLINIC_MUST_BE_UNIQUE_IN_EVERY_BUILDING UNIQUE(
         building_id,
         clinic_english_name,
-        clinic_arabic_name,
+        -- clinic_arabic_name,
         clinic_number
     )
 );
 DROP TABLE IF EXISTS tbl_Clinical_Employee cascade;
 CREATE Table tbl_Clinical_Employee(
     employee_id SERIAL PRIMARY KEY,
-    employee_arabic_name VARCHAR(255) NOT NULL,
+    -- employee_arabic_name VARCHAR(255) NOT NULL,
     employee_english_name VARCHAR(255) NOT NULL,
     employee_specialty VARCHAR(255) NULL,
-    CONSTRAINT EMPLOYEE_ARABIC_NAME_ALREADY_EXISTS UNIQUE(
-        employee_id,
-        employee_arabic_name,
-        employee_english_name
-    )
+    CONSTRAINT EMPLOYEE_ALREADY_EXISTS UNIQUE(employee_english_name)
 );
 DROP TABLE IF EXISTS tbl_Clinic_Schedule cascade;
 CREATE TABLE tbl_Clinic_Schedule(

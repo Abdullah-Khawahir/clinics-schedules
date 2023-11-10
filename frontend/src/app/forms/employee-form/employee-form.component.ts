@@ -20,7 +20,7 @@ export class EmployeeFormComponent implements OnInit {
     if (this.employee == undefined) {
       this.employee = {
         id: -1,
-        arabicName: "",
+        // arabicName: "",
         englishName: "",
         specialty: "",
       }
@@ -30,7 +30,7 @@ export class EmployeeFormComponent implements OnInit {
   submit(formValue: any) {
     const employee: EmployeeDto = {
       id: this.formType == 'Create' ? -1 : this.employee.id,
-      arabicName: formValue.arabicName,
+      // arabicName: formValue.arabicName,
       englishName: formValue.englishName,
       specialty: formValue.specialty
     }

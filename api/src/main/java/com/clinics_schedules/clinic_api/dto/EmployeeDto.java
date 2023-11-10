@@ -12,7 +12,7 @@ import lombok.Setter;
 public class EmployeeDto {
     private Integer id;
     private String englishName;
-    private String arabicName;
+    // private String arabicName;
 
     private String specialty;
     // private String phoneNumber;
@@ -21,7 +21,7 @@ public class EmployeeDto {
     public EmployeeDto(Employee employee) {
         this.id = employee.getId();
         this.englishName = employee.getEnglishName();
-        this.arabicName = employee.getArabicName();
+        // this.arabicName = employee.getArabicName();
         this.specialty = employee.getSpecialty();
         // this.phoneNumber = employee.getPhoneNumber();
         // this.secondPhoneNumber = employee.getSecondPhoneNumber();

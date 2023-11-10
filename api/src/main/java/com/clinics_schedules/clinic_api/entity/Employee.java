@@ -28,8 +28,8 @@ public class Employee {
     @Column(nullable = false, name = "employee_english_name")
     private String englishName;
 
-    @Column(nullable = false, name = "employee_arabic_name")
-    private String arabicName;
+    // @Column(nullable = false, name = "employee_arabic_name")
+    // private String arabicName;
 
     @Column(name = "employee_specialty")
     private String specialty;

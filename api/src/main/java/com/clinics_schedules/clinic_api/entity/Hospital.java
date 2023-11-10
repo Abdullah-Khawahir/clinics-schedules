@@ -33,18 +33,18 @@ public class Hospital {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, name = "hospital_arabic_name")
-    private String arabicName;
+    // @Column(nullable = false, name = "hospital_arabic_name")
+    // private String arabicName;
 
     @Column(nullable = false, name = "hospital_english_name")
     private String englishName;
 
-    @OneToMany(mappedBy = "ownerHospital", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "ownerHospital", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
     private List<Building> buildings;
 
     public Hospital(final HospitalDto hospitalDto) {
         this.id = hospitalDto.getId();
-        this.arabicName = hospitalDto.getArabicName();
+        // this.arabicName = hospitalDto.getArabicName();
         this.englishName = hospitalDto.getEnglishName();
     }
 

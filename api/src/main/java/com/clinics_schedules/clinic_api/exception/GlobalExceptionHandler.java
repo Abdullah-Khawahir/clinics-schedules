@@ -86,7 +86,7 @@ public class GlobalExceptionHandler {
 						.details(null)
 						.timestamp(new Date())
 						.build(),
-				HttpStatus.NOT_FOUND);
+				HttpStatus.UNAUTHORIZED);
 	}
 
 	@ExceptionHandler(ResourceDependencyException.class)
@@ -98,6 +98,6 @@ public class GlobalExceptionHandler {
 						.details(exception.dependentFields)
 						.timestamp(new Date())
 						.build(),
-				HttpStatus.CONFLICT);
+				HttpStatus.NOT_ACCEPTABLE);
 	}
 }

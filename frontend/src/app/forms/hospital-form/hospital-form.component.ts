@@ -23,7 +23,9 @@ export class HospitalFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.formType == 'Create') {
-      this.hospital = { id: -1, arabicName: "", englishName: "" }
+      this.hospital = { id: -1,
+        //  arabicName: "",
+       englishName: "" }
     }
   }
 
@@ -36,7 +38,7 @@ export class HospitalFormComponent implements OnInit, OnDestroy {
 
     const hospital: HospitalDto = {
       id: this.hospital.id,
-      arabicName: formValue.arabicName,
+      // arabicName: formValue.arabicName,
       englishName: formValue.englishName,
     }
 

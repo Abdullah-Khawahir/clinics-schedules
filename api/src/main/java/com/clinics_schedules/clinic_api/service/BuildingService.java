@@ -29,7 +29,7 @@ public class BuildingService implements BasicCRUDService<Building, BuildingDto, 
         return repository.save(
                 Building.builder()
                         .id(null)
-                        .arabicName(building.getArabicName())
+                        // .arabicName(building.getArabicName())
                         .englishName(building.getEnglishName())
                         .number(building.getNumber())
                         .hospitalId(building.getHospitalId())
@@ -41,7 +41,7 @@ public class BuildingService implements BasicCRUDService<Building, BuildingDto, 
         final Building currentBuilding = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("building", "building_id", id.toString()));
 
-        currentBuilding.setArabicName(buildingDto.getArabicName());
+        // currentBuilding.setArabicName(buildingDto.getArabicName());
         currentBuilding.setEnglishName(buildingDto.getEnglishName());
         currentBuilding.setNumber(buildingDto.getNumber());
 

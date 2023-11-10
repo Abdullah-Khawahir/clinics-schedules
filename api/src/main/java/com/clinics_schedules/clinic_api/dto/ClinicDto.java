@@ -19,9 +19,9 @@ import lombok.Data;
 public class ClinicDto implements Dto {
     private Integer id;
 
-    @Size(min = 3, max = 255, message = Const.VARIABLE_SIZE_VALIDATION_MESSAGE)
-    @NotBlank(message = Const.NON_BLANK_STRING_MESSAGE)
-    private String arabicName;
+    // @Size(min = 3, max = 255, message = Const.VARIABLE_SIZE_VALIDATION_MESSAGE)
+    // @NotBlank(message = Const.NON_BLANK_STRING_MESSAGE)
+    // private String arabicName;
 
     @Size(min = 3, max = 255, message = Const.VARIABLE_SIZE_VALIDATION_MESSAGE)
     @NotBlank(message = Const.NON_BLANK_STRING_MESSAGE)
@@ -41,7 +41,7 @@ public class ClinicDto implements Dto {
 
     public ClinicDto(final Clinic clinic) {
         this.id = clinic.getId();
-        this.arabicName = clinic.getArabicName();
+        // this.arabicName = clinic.getArabicName();
         this.englishName = clinic.getEnglishName();
         this.number = clinic.getNumber();
         this.buildingId = clinic.getBuildingId();

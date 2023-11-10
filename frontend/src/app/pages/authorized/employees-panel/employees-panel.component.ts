@@ -47,8 +47,8 @@ export class EmployeesPanelComponent implements OnInit, OnDestroy {
 
     this.columnDefinition = [
       { key: "id", displayLabel: "ID" },
-      { key: "englishName", displayLabel: "English Name" },
-      { key: "arabicName", displayLabel: "Arabic Name" },
+      { key: "englishName", displayLabel: "Name" },
+      // { key: "arabicName", displayLabel: "Arabic Name" },
       { key: "specialty", displayLabel: "Specialty" },
     ]
 

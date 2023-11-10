@@ -4,7 +4,7 @@ export class FullClinic {
 
     constructor(
         public id: number,
-        public arabicName: string,
+        // public arabicName: string,
         public englishName: string,
         public number: number,
         public buildingId: number,

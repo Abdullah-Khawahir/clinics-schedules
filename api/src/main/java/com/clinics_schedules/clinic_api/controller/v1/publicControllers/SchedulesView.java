@@ -35,7 +35,8 @@ public class SchedulesView {
 				.stream()
 				.filter(t -> isEmpty(name) ? true
 						: (t.getEmployees().stream()
-								.filter(emp -> emp.getArabicName().contains(name) ||
+								.filter(emp -> 
+								// emp.getArabicName().contains(name) ||
 										emp.getEnglishName().contains(name))
 
 								.count() != 0))

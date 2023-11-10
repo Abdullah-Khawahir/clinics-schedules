@@ -22,13 +22,17 @@ public class EmployeeService implements BasicCRUDService<Employee, EmployeeDto, 
     @Autowired
     private ScheduleEmployeeListRepository employeeToScheduleListRepo;
 
+    public Optional<Employee> getByEnglishName(String englishName) {
+        return this.repository.findByEnglishName(englishName);
+    }
+
     @Override
     public Employee save(EmployeeDto employeeDto) {
 
         return repository.save(new Employee(
                 null,
                 employeeDto.getEnglishName(),
-                employeeDto.getArabicName(),
+                // employeeDto.getArabicName(),
                 employeeDto.getSpecialty()));
 
     }
@@ -44,7 +48,7 @@ public class EmployeeService implements BasicCRUDService<Employee, EmployeeDto, 
                 .orElseThrow(() -> new ResourceNotFoundException("Employee", "employee_id", id.toString()));
 
         currentUser
-                .setArabicName(employeeDto.getArabicName())
+                // .setArabicName(employeeDto.getArabicName())
                 .setEnglishName(employeeDto.getEnglishName())
                 .setSpecialty(employeeDto.getSpecialty());
 

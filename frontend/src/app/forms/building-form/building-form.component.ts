@@ -28,7 +28,7 @@ export class BuildingFormComponent implements OnInit {
     if (!this.building)
       this.building = {
         id: -1,
-        arabicName: "",
+        // arabicName: "",
         englishName: "",
         hospitalId: -1,
         number: "" as unknown as number //  to keep it from appearing in the view number field  
@@ -37,7 +37,7 @@ export class BuildingFormComponent implements OnInit {
   submit(formValue: any) {
     const building: BuildingDto = {
       id: this.building.id || -1,
-      arabicName: formValue.arabicName,
+      // arabicName: formValue.arabicName,
       englishName: formValue.englishName,
       hospitalId: formValue.hospitalId,
       number: formValue.buildingNumber

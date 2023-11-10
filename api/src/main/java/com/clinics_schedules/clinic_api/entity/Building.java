@@ -35,8 +35,8 @@ public class Building {
     @Column(name = "building_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(nullable = false, name = "building_arabic_name")
-    private String arabicName;
+    // @Column(nullable = false, name = "building_arabic_name")
+    // private String arabicName;
 
     @Column(nullable = false, name = "building_english_name")
     private String englishName;
@@ -47,7 +47,7 @@ public class Building {
     @Column(nullable = false, name = "hospital_id")
     private Integer hospitalId;
 
-    @OneToMany(mappedBy = "ownerBuilding", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "ownerBuilding", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
     private List<Clinic> clinics;
 
     @ManyToOne()
@@ -57,7 +57,7 @@ public class Building {
 
     public Building(final BuildingDto buildingDto) {
         this.id = buildingDto.getId();
-        this.arabicName = buildingDto.getArabicName();
+        // this.arabicName = buildingDto.getArabicName();
         this.englishName = buildingDto.getEnglishName();
         this.number = buildingDto.getNumber();
         this.hospitalId = buildingDto.getHospitalId();

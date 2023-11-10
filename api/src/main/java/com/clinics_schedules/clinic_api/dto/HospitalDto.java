@@ -17,16 +17,17 @@ public class HospitalDto {
     @Size(min = 3, max = 255)
     @NotBlank
     private String englishName;
-    @Size(min = 3, max = 255)
-    @NotBlank
-    private String arabicName;
+   
+    // @Size(min = 3, max = 255)
+    // @NotBlank
+    // private String arabicName;
 
     public HospitalDto(final Hospital hospital) {
         if (hospital == null)
             throw new IllegalStateException();
         this.id = hospital.getId();
         this.englishName = hospital.getEnglishName();
-        this.arabicName = hospital.getArabicName();
+        // this.arabicName = hospital.getArabicName();
 
     }
 }

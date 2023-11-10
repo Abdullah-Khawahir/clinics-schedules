@@ -18,14 +18,14 @@ public class HospitalService implements BasicCRUDService<Hospital, HospitalDto, 
 
     @Autowired
     public HospitalRepository repository;
-    
+
     @Override
     public Hospital save(final HospitalDto hospital) {
 
         return repository.save(
                 Hospital.builder()
                         .id(null)
-                        .arabicName(hospital.getArabicName())
+                        // .arabicName(hospital.getArabicName())
                         .englishName(hospital.getEnglishName())
                         .build());
     }
@@ -47,7 +47,7 @@ public class HospitalService implements BasicCRUDService<Hospital, HospitalDto, 
         final Hospital currentHospital = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("hospital", "hospital_id", Integer.toString(id)));
 
-        currentHospital.setArabicName(hospital.getArabicName());
+        // currentHospital.setArabicName(hospital.getArabicName());
         currentHospital.setEnglishName(hospital.getEnglishName());
 
         return repository.save(currentHospital);
@@ -55,10 +55,10 @@ public class HospitalService implements BasicCRUDService<Hospital, HospitalDto, 
     }
 
     public Optional<Hospital> getHospitalByName(final String name) {
-        final Optional<Hospital> byArabic = this.repository.findByArabicName(name);
+        // final Optional<Hospital> byArabic = this.repository.findByArabicName(name);
         final Optional<Hospital> byEnglish = this.repository.findByEnglishName(name);
 
-        return Stream.of(byArabic, byEnglish)
+        return Stream.of(byEnglish)
                 .filter(Optional::isPresent)
                 .findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Hospital", "hospital_name", name));

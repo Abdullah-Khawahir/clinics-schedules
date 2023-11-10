@@ -126,10 +126,10 @@ export class HospitalSchedulesComponent implements OnDestroy {
     }
     const clinicAsString = Object.values(
       [
-        clinic.arabicName,
+        // clinic.arabicName,
         clinic.englishName,
         clinic.number,
-        clinic.schedules.map(schedule => schedule.employees.map(emp => [emp.arabicName, emp.englishName])),
+        clinic.schedules.map(schedule => schedule.employees.map(emp => [ emp.englishName])),
 
         clinic.schedules.map(schedule => [
           to12H(schedule.eventStart),

@@ -37,8 +37,8 @@ public class Clinic {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, name = "clinic_arabic_name")
-    private String arabicName;
+    // @Column(nullable = false, name = "clinic_arabic_name")
+    // private String arabicName;
 
     @Column(nullable = false, name = "clinic_english_name")
     private String englishName;
@@ -65,7 +65,7 @@ public class Clinic {
 
     public Clinic(final ClinicDto clinicDto) {
         this.id = null; // this is handled by the database
-        this.arabicName = clinicDto.getArabicName();
+        // this.arabicName = clinicDto.getArabicName();
         this.englishName = clinicDto.getEnglishName();
         this.number = clinicDto.getNumber();
         this.buildingId = clinicDto.getBuildingId();

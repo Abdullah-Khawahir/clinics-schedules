@@ -29,7 +29,7 @@ export class ClinicFormComponent implements OnInit {
     if (!this.clinic) {
       this.clinic = {
         id: -1,
-        arabicName: "",
+        // arabicName: "",
         englishName: "",
         buildingId: "" as unknown as number,
         ext: "",
@@ -57,7 +57,7 @@ export class ClinicFormComponent implements OnInit {
 
     const clinic: ClinicDto = {
       id: this.clinic.id,
-      arabicName: formValue.arabicName,
+      // arabicName: formValue.arabicName,
       englishName: formValue.englishName,
       buildingId: Number.parseInt(buildingIdElement.value),
       ext: formValue.ext,

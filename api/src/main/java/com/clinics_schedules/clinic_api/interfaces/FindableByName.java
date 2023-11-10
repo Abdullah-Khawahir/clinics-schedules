@@ -4,7 +4,7 @@ import java.util.Optional;
 
 public interface  FindableByName <T> {
     
-    Optional<T> findByArabicName(String name);
+    // Optional<T> findByArabicName(String name);
     Optional<T> findByEnglishName(String name);
 
 }

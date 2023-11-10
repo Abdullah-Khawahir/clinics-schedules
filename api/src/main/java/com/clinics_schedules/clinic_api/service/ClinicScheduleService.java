@@ -50,6 +50,7 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 			throw new ScheduleTimeConflictException(scheduleToSave, conflictSchedules);
 		}
 		final var employeesIds = scheduleDto.getEmployees().stream().map(Employee::getId).toList();
+		
 		scheduleToSave.setEmployees(employeeRepository.findAllById(employeesIds));
 		final var savedSchedule = repository.save(scheduleToSave);
 
@@ -60,6 +61,7 @@ public class ClinicScheduleService implements BasicCRUDService<ClinicSchedule, C
 		return savedSchedule;
 	}
 
+	
 	@Override
 	public List<ClinicSchedule> getAll() {
 		return repository.findAll();

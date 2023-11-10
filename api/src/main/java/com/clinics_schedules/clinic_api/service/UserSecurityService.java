@@ -17,7 +17,7 @@ public class UserSecurityService implements UserDetailsService {
     public SecurityUser loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
                 .map(SecurityUser::new)
-                .orElseThrow(() -> new UsernameNotFoundException("no user with the username :" + username));
+                .orElseThrow(() -> new UsernameNotFoundException("Username or Password is Wrong"));
     }
 
 }

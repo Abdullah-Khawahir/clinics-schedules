@@ -29,84 +29,95 @@ import com.clinics_schedules.clinic_api.service.ClinicService;
 import com.clinics_schedules.clinic_api.service.EmployeeService;
 import com.clinics_schedules.clinic_api.service.HospitalService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = ClinicApiApplication.class)
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application-integrationtest.properties")
+@Slf4j
 public class ClinicApiApplicationTests {
 
-    public ClinicApiApplicationTests() {
-    }
+        public ClinicApiApplicationTests() {
+        }
 
-    @Autowired
-    private HospitalService hospitalService;
-    @Autowired
-    private HospitalRepository hospitalRepository;
-    @Autowired
-    private BuildingService BuildingService;
-    @Autowired
-    private BuildingRepository BuildingRepository;
+        @Autowired
+        private HospitalService hospitalService;
+        @Autowired
+        private HospitalRepository hospitalRepository;
+        @Autowired
+        private BuildingService BuildingService;
+        @Autowired
+        private BuildingRepository BuildingRepository;
 
-    @Autowired
-    private ClinicService clinicService;
-    @Autowired
-    private ClinicRepository ClinicRepository;
+        @Autowired
+        private ClinicService clinicService;
+        @Autowired
+        private ClinicRepository ClinicRepository;
 
-    @Autowired
-    private ClinicScheduleService scheduleService;
-//     @Autowired
-//     private ClinicScheduleRepository ScheduleRepository;
-    @Autowired
-    private EmployeeService empService;
-    @Autowired
-    private EmployeeRepository EmployeeRepository;
+        @Autowired
+        private ClinicScheduleService scheduleService;
+        // @Autowired
+        // private ClinicScheduleRepository ScheduleRepository;
+        @Autowired
+        private EmployeeService empService;
+        @Autowired
+        private EmployeeRepository EmployeeRepository;
 
-//     @Autowired
-//     private EventRepository EventRepository;
+        // @Autowired
+        // private EventRepository EventRepository;
 
-    @Test
-    public void AddingScheduleTest() {
-        hospitalRepository.deleteAll();
-        var h = hospitalService.save(
-                HospitalDto.builder()
-                        .englishName("english name")
-                        .arabicName("arabic")
-                        .build());
-        BuildingRepository.deleteAll();
-        var b = BuildingService.save(
-                BuildingDto.builder()
-                        .hospitalId(h.getId())
-                        .arabicName("b1a")
-                        .englishName("b1e")
-                        .number(0)
-                        .build());
-        ClinicRepository.deleteAll();
-        var c = clinicService.save(
-                ClinicDto.builder()
-                        .buildingId(b.getId())
-                        .arabicName("c1a")
-                        .englishName("c1e")
-                        .number(0)
-                        .ext("6666")
-                        .note("bad clinic")
-                        .build());
-        EmployeeRepository.deleteAll();
-        var e = List.of(
-                empService.save(new EmployeeDto(null, "e1e", "e1a", "none")),
-                empService.save(new EmployeeDto(null, "e2e", "e2a", "none")),
-                empService.save(new EmployeeDto(null, "e3e", "e3a", "none")));
-        scheduleService.getAll().forEach(sch -> scheduleService.deleteById(sch.getId()));
-        scheduleService.save(
-                ClinicScheduleDto.builder()
-                        .clinicId(c.getId())
-                        .beginDate(new Date().getTime())
-                        .expireDate(new Date().getTime() + TimeUnit.DAYS.toMillis(20))
-                        .eventStart(LocalTime.of(8, 0, 0))
-                        .eventFinish(LocalTime.of(12, 0, 0))
-                        .employees(e)
-                        .repeat(TimeRepeatUnit.daily)
-                        .build());
-        // hospitalRepository.deleteAll();
+        @Test
+        public void AddingScheduleTest() {
+                hospitalRepository.deleteAll();
+                var h = hospitalService.save(
+                                HospitalDto.builder()
+                                                .englishName("english name")
+                                                // .arabicName("arabic")
+                                                .build());
+                log.info(h.toString());
 
-    }
+                BuildingRepository.deleteAll();
+                var b = BuildingService.save(
+                                BuildingDto.builder()
+                                                .hospitalId(h.getId())
+                                                // .arabicName("b1a")
+                                                .englishName("b1e")
+                                                .number(0)
+                                                .build());
+                log.info(b.toString());
+
+                ClinicRepository.deleteAll();
+                var c = clinicService.save(
+                                ClinicDto.builder()
+                                                .buildingId(b.getId())
+                                                // .arabicName("c1a")
+                                                .englishName("c1e")
+                                                .number(0)
+                                                .ext("6666")
+                                                .note("bad clinic")
+                                                .build());
+                log.info(c.toString());
+
+                EmployeeRepository.deleteAll();
+                var e = List.of(
+                                empService.save(new EmployeeDto(null, "e1e", "none")),
+                                empService.save(new EmployeeDto(null, "e2e", "none")),
+                                empService.save(new EmployeeDto(null, "e3e", "none")));
+                log.info(e.toString());
+                scheduleService.getAll().forEach(sch -> scheduleService.deleteById(sch.getId()));
+                var sch = scheduleService.save(
+                                ClinicScheduleDto.builder()
+                                                .clinicId(c.getId())
+                                                .beginDate(new Date().getTime())
+                                                .expireDate(new Date().getTime() + TimeUnit.DAYS.toMillis(20))
+                                                .eventStart(LocalTime.of(8, 0, 0))
+                                                .eventFinish(LocalTime.of(12, 0, 0))
+                                                .employees(e)
+                                                .repeat(TimeRepeatUnit.daily)
+                                                .build());
+                log.info(sch.toString());
+                // hospitalRepository.deleteAll();
+
+        }
 }

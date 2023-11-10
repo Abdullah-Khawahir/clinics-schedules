@@ -41,8 +41,8 @@ export class ClinicsPanelComponent implements OnInit, OnDestroy {
     // this.fetchAllClinics();
     this.ColumnsDefinition = [
       { key: "id", displayLabel: "ID" },
-      { key: "englishName", displayLabel: "English Name" },
-      { key: "arabicName", displayLabel: "Arabic Name" },
+      { key: "englishName", displayLabel: "Name" },
+      // { key: "arabicName", displayLabel: "Arabic Name" },
       { key: "number", displayLabel: "clinic number" },
       { key: "buildingId", displayLabel: "Building ID" },
       { key: "ext", displayLabel: "Ext." },

@@ -34,7 +34,7 @@ public class ClinicService implements BasicCRUDService<Clinic, ClinicDto, Intege
                 .orElseThrow(() -> new ResourceNotFoundException("Clinic", "clinic_id", id.toString()));
 
         currentClinic
-                .setArabicName(entity.getArabicName())
+                // .setArabicName(entity.getArabicName())
                 .setEnglishName(entity.getEnglishName())
                 .setBuildingId(entity.getBuildingId())
                 .setNumber(entity.getNumber())

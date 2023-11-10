@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import moment from 'moment';
-import { Observable, Subject, catchError, ignoreElements, map, of, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, catchError, ignoreElements, map, of } from 'rxjs';
 import { API } from 'src/app/api.service';
 import { ClinicScheduleDto, RepeatUnit } from 'src/app/dto/ClinicScheduleDto';
 import { EmployeeDto } from 'src/app/dto/EmployeeDto';
@@ -118,7 +118,7 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
       eventFinish,
       repeat,
       [],
-      this.employeesId.map(employeeId => new EmployeeDto(Number.parseInt(employeeId), "", "", "")),
+      this.employeesId.map(employeeId => new EmployeeDto(Number.parseInt(employeeId), "", "")),
       (formValue.elements.namedItem('note') as HTMLInputElement).value ?? ""
     )
     if (this.formType == 'Create') {

@@ -48,8 +48,8 @@ export class BuildingsPanelComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.columnDefinition = [
       { key: "id", displayLabel: "ID" },
-      { key: "arabicName", displayLabel: "Arabic Name" },
-      { key: "englishName", displayLabel: "English Name" },
+      // { key: "arabicName", displayLabel: "Arabic Name" },
+      { key: "englishName", displayLabel: "Name" },
       { key: "hospitalId", displayLabel: "Hospital Id" },
       { key: "number", displayLabel: "Clinic Number" },
     ]
