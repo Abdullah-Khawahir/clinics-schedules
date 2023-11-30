@@ -1,0 +1,15 @@
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    justify-self: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.day-colmun{
+    /* display: block; */
+width:calc(  100vw / 7);
+}
+/* .day-colmun   input {
+    width: 100%;
+} */

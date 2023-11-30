@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Subject, catchError, ignoreElements, of, retry } from 'rxjs';
+import { BehaviorSubject, Subject, catchError, ignoreElements, of, retry, switchMap } from 'rxjs';
 import { API } from 'src/app/api.service';
 import { HospitalDto } from 'src/app/dto/HospitalDto';
 import { Column } from 'src/app/models/interfaces';
@@ -12,12 +12,18 @@ import { NotifierService } from 'src/app/notifier.service';
 })
 export class HospitalPanelComponent implements OnInit {
   editFormClosed = true
+  event$ = new BehaviorSubject(true)
   hospitalToEdit!: HospitalDto;
   columnsDefinition!: Column[];
 
-  hospitalsList$ = this.api.hospitalDataSource
-    .getAll()
-    .pipe(retry(1),)
+  hospitalsList$ = this.event$
+    .pipe(
+      switchMap(() => this.api.hospitalDataSource
+        .getAll()
+        .pipe(retry(1))
+      )
+    )
+
   hospitalsListError$ = this.hospitalsList$
     .pipe(
       ignoreElements(),

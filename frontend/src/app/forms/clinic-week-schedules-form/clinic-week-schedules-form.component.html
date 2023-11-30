@@ -1,0 +1,53 @@
+<ng-container *ngIf="{employees:this.employees$|async}  as vm">
+
+    <ng-container *ngIf="vm.employees;then content; else loading">
+
+    </ng-container>
+
+    <ng-template #loading>
+        <app-loading></app-loading>
+    </ng-template>
+
+
+    <ng-template #content>
+        <div class="flex-row">
+            <div class="day-colmun"
+                *ngFor="let day of ['sunday','monday','tuesday','wednesday','thursday','friday','saturday']">
+                <div>
+                    <div>
+                        {{day}}
+                        <input #columnStateCheckBox type="checkbox">
+                    </div>
+                </div>
+
+                <div>
+                    <div><label>start :</label> <input type="time" /></div>
+                    <div><label>end :</label> <input type="time" /></div>
+                    <div>
+                        employees:
+                    </div>
+                    <div>
+                        <div>
+                            <input type="text" placeholder="Employee Name" name="employeeName">
+                            <input type="text" placeholder="Employee specialty" name="specialty">
+                            <button type="button">+</button>
+                        </div> OR
+
+                        <select>
+                            <option *ngFor="let emp of vm.employees" value={{emp.id}}>
+                                Please Select an Employee
+                            </option>
+                            <option *ngFor="let emp of vm.employees" value={{emp.id}}>
+                                {{emp.englishName}}
+                            </option>
+                            <button type="button">+</button>
+                        </select>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </ng-template>
+
+</ng-container>

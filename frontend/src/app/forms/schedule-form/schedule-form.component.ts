@@ -52,6 +52,7 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
         beginDate: moment().startOf('day').format('YYYY-MM-DD'),
         expireDate: "",
         clinicId: '' as unknown as number,
+        clinicName:undefined,
         eventFinish: "",
         eventStart: "",
         employees: [],
@@ -112,6 +113,7 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
     let schedule = new ClinicScheduleDto(
       this.formType == 'Create' ? -1 : this.schedule.id,
       Number.parseInt(clinicId),
+      undefined,
       moment(new Date(beginDate).getTime()).startOf('day').toDate().getTime(),
       moment(new Date(expireDate).getTime()).endOf('day').toDate().getTime(),
       eventStart,

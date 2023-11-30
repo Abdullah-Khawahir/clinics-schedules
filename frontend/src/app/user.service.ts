@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, catchError, tap } from 'rxjs';
-import { UserDto } from './dto/UserDto';
+import { BehaviorSubject, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { UserDto } from './dto/UserDto';
 export interface LoginData {
   username: string,
   password: string,
@@ -26,7 +26,7 @@ export class UserService {
 
   constructor(private http: HttpClient) {
 
-    // this.login$("abdullah", "4484")
+    this.login$("abdullah", "4484").subscribe()
   }
 
 

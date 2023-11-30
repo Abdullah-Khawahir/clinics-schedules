@@ -12,6 +12,7 @@ import { UsersPanelComponent } from './pages/authorized/users-panel/users-panel.
 import { LoginComponent } from './pages/public/auth/login/login.component';
 import { HospitalSchedulesComponent } from './pages/public/hospital-schedules/hospital-schedules.component';
 import { UserService } from './user.service';
+import { ClinicWeekSchedulesFormComponent } from './forms/clinic-week-schedules-form/clinic-week-schedules-form.component';
 
 const authenticatedRoutes: Routes = [
   {
@@ -52,6 +53,11 @@ const authenticatedRoutes: Routes = [
     component: UsersPanelComponent,
 
   },
+  {
+    path: "dashboard/clinic-week-schedules",
+    title: 'add schedule',
+    component: ClinicWeekSchedulesFormComponent
+  }
 ].map((route: Route) => {
   return { ...route, canActivate: [route.canActivate, authenticationGuard].flat().filter(gard => gard != undefined) }
 })
@@ -73,7 +79,7 @@ const publicRoutes: Routes = [
   {
     path: "**",
     redirectTo: "",
-  
+
   }
 ]
 export const routes: Routes = [

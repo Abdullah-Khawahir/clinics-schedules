@@ -40,6 +40,7 @@ import { SchedulesPanelComponent } from './pages/authorized/schedules-panel/sche
 import { UsersPanelComponent } from './pages/authorized/users-panel/users-panel.component';
 import { HomeComponent } from './pages/public/home/home.component';
 import { HttpErrorInterceptor } from './http-error.interceptor';
+import { ClinicWeekSchedulesFormComponent } from './forms/clinic-week-schedules-form/clinic-week-schedules-form.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -70,7 +71,8 @@ import { HttpErrorInterceptor } from './http-error.interceptor';
     UsersPanelComponent,
     NotificationViewComponent,
     LoadingComponent,
-    ErrorComponent
+    ErrorComponent,
+    ClinicWeekSchedulesFormComponent
 
   ],
   imports: [

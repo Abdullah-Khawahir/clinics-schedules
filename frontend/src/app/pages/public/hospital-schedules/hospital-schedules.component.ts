@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import moment from 'moment';
-import { BehaviorSubject, Subject, catchError, ignoreElements, map, of, retry, share, shareReplay, startWith, switchMap, takeUntil, takeWhile } from 'rxjs';
+import { BehaviorSubject, Subject, catchError, ignoreElements, map, of, retry, share, shareReplay, startWith, switchMap, takeUntil, takeWhile, tap } from 'rxjs';
 import { API } from 'src/app/api.service';
 import { EmployeeDto } from 'src/app/dto/EmployeeDto';
 import { FullClinic } from 'src/app/models/FullClinic';
@@ -40,8 +40,13 @@ export class HospitalSchedulesComponent implements OnDestroy {
   hospitalId = localStorage.getItem(HOSPITAL_ID_KEY) || undefined
 
   clinics$ = this.event$.pipe(
-    switchMap(() => this.api.getAllClinics(this.hospitalId)
-      .pipe(startWith(null)))
+    startWith(null),
+    switchMap(() => this.api
+      .getAllClinics(this.hospitalId)
+      .pipe(
+        startWith(null),
+      )
+    )
 
   )
 
@@ -69,7 +74,8 @@ export class HospitalSchedulesComponent implements OnDestroy {
   getAllEvents(clinic: FullClinic) {
     if (clinic.schedules.length == 0) return;
     if (!this.doesClinicPassFilter(clinic)) return;
-    let FourWeeksEvents = new Array<DayOfEvents>(7 * 4)
+    const weeks = 8 // TODO: make it env var
+    let FourWeeksEvents = new Array<DayOfEvents>(7 * weeks) // 8 weeks
 
     let currentWeek = moment().startOf('week').add(-1, "day")
     for (let i = 0; i < FourWeeksEvents.length; i++) {
@@ -80,9 +86,9 @@ export class HospitalSchedulesComponent implements OnDestroy {
     }
 
     clinic.schedules.forEach(schedule => {
-      if (this.isWithInFourWeeks(schedule.beginDate, schedule.expireDate)) {
+      if (this.isWithInNeededWeeks(schedule.beginDate, schedule.expireDate , weeks)) {
+    
         FourWeeksEvents.forEach(dailyEvent => {
-
           schedule.events.forEach(scheduleEvent => {
             if (moment(scheduleEvent.finishTime).isSame(dailyEvent.day, 'day')) {
               dailyEvent.events.push({
@@ -91,8 +97,6 @@ export class HospitalSchedulesComponent implements OnDestroy {
                 employees: schedule.employees,
                 note: schedule.note
               })
-              // console.log(schedule.note);
-
             }
 
           })
@@ -101,13 +105,14 @@ export class HospitalSchedulesComponent implements OnDestroy {
       }
     })
 
+
     return FourWeeksEvents
   }
+  
 
-
-  private isWithInFourWeeks(dateStart: number | string, dateEnd: number | string) {
+  private isWithInNeededWeeks(dateStart: number | string, dateEnd: number | string ,  numberOfWeeks:number ) {
     let weeksStart = moment().startOf('week')
-    let weeksEnd = moment().add(4, 'week')
+    let weeksEnd = moment().add(numberOfWeeks, 'week')
 
     return moment(dateStart).isBetween(weeksStart, weeksEnd) || moment(dateEnd).isBetween(weeksStart, weeksEnd);
   }
@@ -129,7 +134,7 @@ export class HospitalSchedulesComponent implements OnDestroy {
         // clinic.arabicName,
         clinic.englishName,
         clinic.number,
-        clinic.schedules.map(schedule => schedule.employees.map(emp => [ emp.englishName])),
+        clinic.schedules.map(schedule => schedule.employees.map(emp => [emp.englishName])),
 
         clinic.schedules.map(schedule => [
           to12H(schedule.eventStart),

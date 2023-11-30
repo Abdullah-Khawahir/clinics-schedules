@@ -31,6 +31,7 @@ export class BuildingFormComponent implements OnInit {
         // arabicName: "",
         englishName: "",
         hospitalId: -1,
+        hospitalName: undefined,
         number: "" as unknown as number //  to keep it from appearing in the view number field  
       }
   }
@@ -40,6 +41,7 @@ export class BuildingFormComponent implements OnInit {
       // arabicName: formValue.arabicName,
       englishName: formValue.englishName,
       hospitalId: formValue.hospitalId,
+      hospitalName: undefined,
       number: formValue.buildingNumber
     }
 

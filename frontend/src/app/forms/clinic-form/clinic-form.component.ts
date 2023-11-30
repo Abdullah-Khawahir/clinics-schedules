@@ -32,6 +32,7 @@ export class ClinicFormComponent implements OnInit {
         // arabicName: "",
         englishName: "",
         buildingId: "" as unknown as number,
+        buildingName: undefined,
         ext: "",
         number: "" as unknown as number,
         note: ""
@@ -60,6 +61,7 @@ export class ClinicFormComponent implements OnInit {
       // arabicName: formValue.arabicName,
       englishName: formValue.englishName,
       buildingId: Number.parseInt(buildingIdElement.value),
+      buildingName: undefined,
       ext: formValue.ext,
       number: formValue.number,
       note: formValue.note
