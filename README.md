@@ -4,7 +4,7 @@
     * change the database `url` and `username` and `password` in  [application.properties](api/src/main/resources/application.properties)
 - node.js
 - java 17+
-- liteServer
+- lite-server
 
 # running the application
 ## backend
