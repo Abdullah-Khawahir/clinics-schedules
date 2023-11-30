@@ -21,13 +21,16 @@ public class BuildingDto {
     @Size(min = 3, max = 255)
     @NotBlank
     private String englishName;
-    
+
     // @Size(min = 3, max = 255)
     // @NotBlank
     // private String arabicName;
     @NotNull
     @PositiveOrZero
     private Integer hospitalId;
+
+    private String hospitalName;
+
     @NotNull
     @PositiveOrZero
     private Integer number;
@@ -38,6 +41,7 @@ public class BuildingDto {
         // arabicName = building.getArabicName();
         number = building.getNumber();
         hospitalId = building.getHospitalId();
+        this.hospitalName = building.getOwnerHospital().getEnglishName();
 
     }
 

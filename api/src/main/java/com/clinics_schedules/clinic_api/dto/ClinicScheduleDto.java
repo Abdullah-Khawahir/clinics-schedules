@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 public class ClinicScheduleDto {
     private Integer id;
     private Integer clinicId;
+    private String clinicName;
     private Long beginDate;
     private Long expireDate;
     private LocalTime eventStart;
@@ -39,6 +40,7 @@ public class ClinicScheduleDto {
         this.eventFinish = schedule.getEventFinish();
         this.repeat = schedule.getRepeat();
         this.employees = schedule.getEmployees();
+        this.clinicName = schedule.getOwnerClinic().getEnglishName();
     }
 
 }

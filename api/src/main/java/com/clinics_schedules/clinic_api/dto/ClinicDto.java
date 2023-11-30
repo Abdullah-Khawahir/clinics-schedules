@@ -35,9 +35,10 @@ public class ClinicDto implements Dto {
     @PositiveOrZero(message = Const.NON_NEGATIVE_NUMBER_MESSAGE)
     private Integer buildingId;
 
+    private String buildingName;
     private String ext;
 
-    private String note; 
+    private String note;
 
     public ClinicDto(final Clinic clinic) {
         this.id = clinic.getId();
@@ -47,6 +48,7 @@ public class ClinicDto implements Dto {
         this.buildingId = clinic.getBuildingId();
         this.ext = clinic.getExt();
         this.note = clinic.getNote();
+        this.buildingName = clinic.getOwnerBuilding().getEnglishName();
     }
 
 }
