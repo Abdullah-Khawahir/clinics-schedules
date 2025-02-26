@@ -145,11 +145,6 @@ top of the webpage. Then the second component is the content of the webpage
 which differs based on the URL. Last component is the popup component for the
 add/edit forms and the notifier popup.
 
-##### 	Components
-
-| components ├── data-table ├── error ├── loading ├── navbar ├──notification-view └── popup-form | forms ├── building-form ├── clinic-form ├── clinic-week-schedules-form ├── employee-form ├── hospital-form ├── schedule-form └── user-form | pages ├── authorized  |   ├── buildings-panel  |   ├── clinics-panel  |   ├── dashboard  |   ├── employees-panel  |   ├── hospital-panel  |   ├── schedules-panel  |   └── users-panel └── public 	├── auth 	 |   └── login  	├── home 	└── hospital-schedules |
-| :---- | :---- | :---- |
-
 ###### *table 1 tree of folders in project*
 
 The previous columns are an output of tree command from the actual file tree
