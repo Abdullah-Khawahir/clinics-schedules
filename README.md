@@ -1,6 +1,6 @@
 # dependencies
 - postgres database with the following setup:
-    * make database with this [database scheme](api/src/main/resources/schema.sql)
+    * make database with this [database scheme](api/src/main/resources/01_schema.sql)
     * change the database `url` and `username` and `password` in  [application.properties](api/src/main/resources/application.properties)
 - node.js
 - java 17+
