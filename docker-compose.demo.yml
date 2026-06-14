@@ -1,0 +1,84 @@
+services:
+  db:
+    image: postgres:14-alpine
+    container_name: clinic_schedule_db_demo
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-clinics_schedules}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+
+    ports:
+      - "${POSTGRES_PORT_DEMO:-5433}:5432"
+
+    volumes:
+      - postgres_data_demo:/var/lib/postgresql/data
+      # Mount SQL scripts for initialization when using demo compose file
+      - ./api/src/main/resources:/docker-entrypoint-initdb.d:ro
+
+
+    networks:
+      - clinic_network_demo
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+
+    container_name: clinic_schedule_api_demo
+
+    ports:
+      - "${SPRING_PORT_DEMO:-8081}:8080"
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-clinics_schedules}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-postgres}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+
+      # Code-first schema generation (important)
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+
+      SPRING_PROFILES_ACTIVE: docker
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    networks:
+      - clinic_network_demo
+
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+
+    environment:
+      NODE_ENV: production
+      BACKEND_PUBLIC_URL: ${BACKEND_PUBLIC_URL}
+
+    ports:
+      - "${FRONTEND_PORT_DEMO:-8082}:80"
+
+    depends_on:
+      - api
+
+    networks:
+      - clinic_network_demo
+
+
+volumes:
+  postgres_data_demo:
+
+
+networks:
+  clinic_network_demo:
+    driver: bridge

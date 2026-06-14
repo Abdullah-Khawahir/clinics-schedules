@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:14-alpine
+    container_name: clinic_schedule_db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-clinics_schedules}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # Mount the SQL script for initialization
+      - ./api/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ./api/src/main/resources/data.sql:/docker-entrypoint-initdb.d/data.sql
+    networks:
+      - clinic_network
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: clinic_schedule_api
+    ports:
+      - "${SPRING_PORT:-8080}:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-clinics_schedules}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-admin}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      - db
+    networks:
+      - clinic_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: clinic_schedule_frontend
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    depends_on:
+      - api
+    networks:
+      - clinic_network
+
+volumes:
+  postgres_data:
+
+networks:
+  clinic_network:
+    driver: bridge
