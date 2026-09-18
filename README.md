@@ -56,7 +56,7 @@ As for the database it is composed of  6 **entity tables** and 3
 authorization.Employee , Hospital , Building , Clinic and Clinic Schedule
 are management entity tables.**Look at figure 1**.
 
-| *figure 1 database design.* |
+| *![][image11]figure 1 database design.* |
 | :---- |
 
 #### The back-end
@@ -240,3 +240,5 @@ turned out to be a suitable color.
 [image9]: <images/H-edit.png>
 
 [image10]: <images/colors.png>
+
+[image11]: <images/db.jpg>
